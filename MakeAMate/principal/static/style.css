@@ -1,0 +1,14 @@
+
+.login,
+.image {
+  min-height: 100vh;
+}
+
+.bg-image {
+  background-image: url('/static/compartir-piso.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+#all{
+  background-color: #FA8072;
+}
