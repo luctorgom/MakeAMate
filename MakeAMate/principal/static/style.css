@@ -4,6 +4,12 @@
   min-height: 100vh;
 }
 
+.bg-image {
+  background-size: cover;
+  background-position: center center;
+}
+
+
 #all{
   background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
 }

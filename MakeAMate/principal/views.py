@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 
 def login_view(request):
-    template='loggeos/login.html'
+    template='loggeos/index.html'
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
     else:
