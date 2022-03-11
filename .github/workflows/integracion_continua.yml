@@ -36,11 +36,6 @@ jobs:
         pip install codacy-coverage
     - name: Run migrations
       run: python MakeAMate/manage.py migrate;
-    - name: Codacy Coverage Reporter
-      uses: codacy/codacy-coverage-reporter-action@v1.1.0
-      with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: MakeAMate/coverage.xml
   deploy:
     if: ${{github.ref == 'refs/heads/pruebaDespliegue'}} 
     needs: build
