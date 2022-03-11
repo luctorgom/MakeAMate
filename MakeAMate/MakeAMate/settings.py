@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'principal',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'MakeAMate.wsgi.application'
+ASGI_APPLICATION = 'MakeAMate.asgi.application'
 
 
 # Database
@@ -81,6 +83,12 @@ DATABASES = {
         'PASSWORD': 'mate',
         'HOST': 'localhost',
         'PORT':5432,
+    }
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
 
