@@ -50,4 +50,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "makeamateprueba"
           heroku_email: "serfiggom@alum.us.es"
+          branch: pruebaDeploy
     - run: heroku run -a makeamateprueba sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
