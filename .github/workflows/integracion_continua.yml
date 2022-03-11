@@ -33,7 +33,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install codacy-coverage
     - name: Run migrations
-      run: python manage.py migrate;
+      run: python MakeAMate/manage.py migrate;
     - name: Codacy Coverage Reporter
       uses: codacy/codacy-coverage-reporter-action@v1.1.0
       with:
