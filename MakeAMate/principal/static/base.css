@@ -1,0 +1,147 @@
+
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: 'Josefin Sans', 'Roboto', sans-serif;
+}
+
+.main{
+    width: 100%;
+    height: auto;
+    background: rgb(240, 211, 252);
+    position: absolute;
+}
+
+.content-all{
+    width: 100%;
+    max-width: 1000px;
+    background:rgb(240, 211, 252);
+    margin-top: 80px;
+}
+
+
+#check{
+    display:none;
+}
+
+#check:checked ~ .menu{
+    width: 180px;
+}
+
+
+
+.menu{
+    position: fixed;
+    top: 60px;
+    width: 0px;
+    height: 100vh;
+    background: rgb(240, 211, 252); 
+    transition: all 500ms cubic-bezier(1,0,0,1);
+    transition-timing-function: cubic-bezier(1,0,0,1);
+    overflow: hidden;
+   
+    
+}
+.menu li{
+    list-style: none;
+    padding: 16px;
+    color: black;
+    cursor: pointer;
+    transition: all 300ms;
+    display: block;
+    width: 400px;
+    
+
+}
+
+.menu li:hover{
+    background:rgb(208, 122, 245); 
+}
+
+
+
+.content-all label.icon-paragraph-justify{
+    position: fixed;
+    top: 28px;
+    font-size: 26px;
+    color: black;
+    cursor: pointer;
+    margin-left: 20px;
+    z-index: 10;
+}
+
+
+.content-all img.logo{
+    width: 50px;
+    top: 38px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    
+}
+
+.content-all div.perfil{
+    position: fixed;
+    width: 120px;
+    height: auto;
+    top: 20px;
+    left: 85%;
+    font-size: 20px;
+    color: black;
+    background: rgb(208, 122, 245); 
+    border-radius: 10px;   
+    overflow: hidden; 
+    text-align: center;
+    margin-right: 0;
+
+}
+
+.miperfil{
+    position: absolute;
+    width: 120px;
+    height: 180px;
+    left: 85%;
+    background: rgb(240, 211, 252); 
+    transition: all 500ms cubic-bezier(1,0,0,1);
+    transition-timing-function: cubic-bezier(1,0,0,1);
+    overflow: hidden;
+    top: 50px;
+    margin-right: 0;
+    
+    
+ 
+
+}
+
+.miperfil li{
+    list-style: none;
+    padding: 16px;
+    color: black;
+    cursor: pointer;
+    transition: all 300ms;
+    display: block;
+    width: 120px;
+    text-align: center;
+    margin-right: 0;
+    position:absolute;
+
+
+}
+
+
+.foto img{
+  display: block;
+  width: 50px;
+  height:50px;
+  margin-right: 9px;
+  border-radius: 50%;
+  margin-top: 2px
+    
+}
+
+
+
+
