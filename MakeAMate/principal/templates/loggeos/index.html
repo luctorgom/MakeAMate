@@ -44,6 +44,12 @@
 						<input class="input100" type="password" name="pass" placeholder="Password" required>
 						<span class="focus-input100"></span>
 					</div>
+
+					{% if no_user %}
+                    <div id="loginFail" class="alert alert-danger" role="alert">
+                        El usuario no está registrado en el sistema.
+                    </div>
+               		 {% endif %}
 					
 					<div class="container-login100-form-btn">
 						<button type="submit" class="login100-form-btn">

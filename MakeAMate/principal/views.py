@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 
+
 def login_view(request):
-    #Si ya ha iniciado sesión, que no le deje volver al formulario del login
     if request.user.is_authenticated:
         return redirect(homepage)
     template='loggeos/index.html'
@@ -10,9 +10,11 @@ def login_view(request):
         nameuser = request.POST['username']
         passworduser = request.POST['pass']
         user = authenticate(username=nameuser, password=passworduser)
-        if user is not None:    
+        if user is  None:    
+            return render(request,template, {'no_user':True})
+        else:    
             login(request, user)
-            return redirect(homepage)
+            return redirect(homepage)  
     return render(request,template)
 
 def logout_view(request):
