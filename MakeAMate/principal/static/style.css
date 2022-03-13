@@ -116,6 +116,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .notifications h2 {
+  text-align: left;
   font-size: 14px;
   padding: 10px;
   border-bottom: 1px solid #eee;
@@ -123,7 +124,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .notifications h2 span {
-  color: #f00
+  color: rgb(211, 59, 224)
+  
 }
 
 .notifications-item {
@@ -144,16 +146,21 @@ h1, h2, h3, h4, h5, h6 {
   height: 50px;
   margin-right: 9px;
   border-radius: 50%;
+  border: 2px solid rgba(211, 59, 224, 0.637);
   margin-top: 2px
 }
 
-.notifications-item .text h4 {
-  color: #777;
+.notifications-item .text-notificaciones h4 {
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(211, 59, 224);
   font-size: 16px;
   margin-top: 3px
+
 }
 
-.notifications-item .text p {
+.notifications-item .text-notificaciones p {
+  font-family: Arial, Helvetica, sans-serif;
   color: #aaa;
   font-size: 12px
 }
