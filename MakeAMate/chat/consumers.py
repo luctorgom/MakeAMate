@@ -6,7 +6,7 @@ from chat.models import Chat,ChatRoom
 from django.contrib.auth.models import User
 
 
-class ChatConsumer(AsyncConsumer):
+class ChatConsumer(WebsocketConsumer):
     def connect(self):
         #me = self.scope['user']
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -56,7 +56,7 @@ class ChatConsumer(AsyncConsumer):
     def store_message(self,text):
         Chat.objects.create(
             content = text,
-            room = ChatRoom.objects.get(name = self.scope['url_route']['kwargs']['room_name'])
+            room = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
         )
 
     #El chatroom se guarda una vez que se envía el primer mensaje, lo suyo sería que cuando se creen grupos se guarde al inicio

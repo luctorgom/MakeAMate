@@ -1,0 +1,6 @@
+{% if request.user.is_authenticated %}
+
+Hola, has iniciado sesión como {{request.user.username}}
+<a class="nav-link" href="/logout">Logout</a>
+
+{% endif %}
