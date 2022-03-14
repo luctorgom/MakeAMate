@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 
-<<<<<<< HEAD
-=======
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -26,4 +24,4 @@ def logout_view(request):
 
 def homepage(request):
     return render(request, 'homepage.html')
->>>>>>> origin/B-004
+
