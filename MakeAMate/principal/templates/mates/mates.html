@@ -13,35 +13,65 @@
   </head>
   <body>
     <div class="content" id="all">
+
     <div class="container">
-      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+
         <div class="carousel-inner">
+          <!-- Para crear varios items en el carrusel
+            @{int i = 0;}
+            @foreach (var item in Model) {
+            {
+              i++;
+              var active = i == 1 ? "active" : "";
+              <div class="item @active">
+               <img src="@Url.Content(item.DessertArtUrl)" alt="Chania">
+              </div>
+            }
+          -->
           <div class="carousel-item active">
             <div class="card mb-3">
               <div class="card-body">
                 <div class="row justify-content-center">
-                  <div class="col-sm-8 align-self-center border-md-right border-xl-right border-lg-right">
+                  <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
+                      <!--<h5 class="card-title">Card title 1</h5>
                       <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+                      <img src="../../static/ejemploMates/JoseJuan.png" class="img-fluid float-left">
+                      <div class="infoPersonal">
+                        <p>José Juan Jiménez Jurado</p>
+                        <p class="edad">38 años</p>
+                        <p class="genero">Género: Hombre</p>
+                      </div>
+                      <p class="text-center">A 700 metros de ti y acercándose.</p>
                     </div>
                   </div>
                   <hr class="sm">
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                      <h5 class="card-title">Con piso</h5>
+                      <img src="../../static/ejemploMates/fotosPiso.png" class="img-fluid float-left">
+                      <img src="../../static/ejemploMates/Home-Logo-Transparent-File.png" class="img-fluid float-right">
                     </div>
                   </div>
                 </div>
               </div>
               <hr>
               <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <p class="card-text text-center">Soy José Juan y me interesan tus órganos. Vente a compartir piso conmigo.</p>
+                <div class="card-text text-center">
+                  <span class="badge badge-success">Fumo</span>
+                  <span class="badge badge-success">Mascotas</span>
+                  <span class="badge badge-success">Sin fiestas</span>
+                </div>
+                <div></div>
+                <div class="card-text text-center">
+                  <span class="badge badge-success">Limpio</span>
+                  <span class="badge badge-success">Vegano</span>
+                  <span class="badge badge-secondary">Tranquilo</span>
+                </div>
               </div>
             </div>
           </div>
@@ -51,7 +81,7 @@
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
+                      <h5 class="card-title">Card title 4</h5>
                       <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
@@ -59,7 +89,7 @@
                   <hr class="sm">
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
+                      <h5 class="card-title">Card title 5</h5>
                       <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
@@ -68,7 +98,7 @@
               </div>
               <hr>
               <div class="card-body">
-                <h5 class="card-title">Card title</h5>
+                <h5 class="card-title">Card title 6</h5>
                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                 <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
               </div>
@@ -86,7 +116,7 @@
         </a>
       </div>
     </div>
-    </div>
+  </div>
     
 
     <!-- Optional JavaScript -->
