@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        #me = self.scope['user']
+        
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
@@ -17,6 +17,8 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
+        #lo suyo sería que aquí al conectarse hubiese una query que devolviese todos los mensajes previos de una conversación
 
         self.accept()
 
@@ -50,12 +52,14 @@ class ChatConsumer(WebsocketConsumer):
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             "type": "chat_message",
+            'name': self.scope['user'].username,
             'message': message
         }))
     
     def store_message(self,text):
         Chat.objects.create(
             content = text,
+            user = self.scope['user'],
             room = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
         )
 
