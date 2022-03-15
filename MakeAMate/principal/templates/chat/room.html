@@ -115,7 +115,8 @@
             // JSON.parse() converts the JSON object back into the original object,
             // then examine and act upon its contents.
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += ('\n'+data.message + '\n' );
+            document.querySelector('#chat-log').value += (data.name + ": " + data.message + '\n');
+
         };
 
         // onclose - An event listener to be called when the connection is closed.

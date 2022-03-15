@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'principal',
     'channels',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,7 @@ STATICFILES_FINDERS = (
 'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 'django.contrib.staticfiles.finders.FileSystemFinder',
 )
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
