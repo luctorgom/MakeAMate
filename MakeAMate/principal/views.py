@@ -28,7 +28,6 @@ def homepage(request):
     if request.user.is_authenticated:
         template = 'homepage.html'
         us = Usuario.objects.all()
-        print(us)
         params = {'usuarios': us}
         
         return render(request,template,params)
