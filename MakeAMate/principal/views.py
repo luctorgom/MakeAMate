@@ -26,8 +26,16 @@ def logout_view(request):
 
 def homepage(request):
     if request.user.is_authenticated:
+       
         template = 'homepage.html'
-        us = Usuario.objects.all()
+        #us = Usuario.objects.all()
+    
+        registrado= Usuario.objects.filter(usuario=request.user)    
+        ciudad= registrado.values('lugar')
+        if(registrado.filter(piso=True)):
+            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso=False)
+        else:
+            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad)
         params = {'usuarios': us}
         
         return render(request,template,params)
