@@ -1,6 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
 {% if request.user.is_authenticated %}
 
 Hola, has iniciado sesión como {{request.user.username}}
 <a class="nav-link" href="/logout">Logout</a>
 
+{% for i in usuarios%}
+<h5>User: {{i.usuario.username}}</h5>
+<h5>Genero: {{i.genero}}</h5>
+<br></br>
+
+{% empty %}
+<h2>No hay usuarios registrados en la aplicación</h2>
+{% endfor %}
+
 {% endif %}
+{% endblock %} 

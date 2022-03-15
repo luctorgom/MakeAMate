@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="/static/base.css">
   <link rel="stylesheet" href="/static/fonts.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
   <div class="main">
     <div class="content-all">
       <a href="menu"><img class ="logo" src="/static/logotipo.png"></a>
@@ -24,7 +24,15 @@
         </ul>
       </nav>
     </div>
+    <div class="container-fluid pt-5 mt-xl-4">
+      <div class="row">
+          <div class="col-md-8 offset-md-2 text-center">
+              {% block content %}{% endblock %}
+          </div>
+      </div>
+    </div>
   </div>
+  
 
 </body>
 
