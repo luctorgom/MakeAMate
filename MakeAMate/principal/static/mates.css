@@ -1,0 +1,190 @@
+
+.login,
+.image {
+  min-height: 100vh;
+}
+
+#all{
+  background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat-Bold";
+  text-align: center;
+}
+
+
+.big-heading {
+  font-family: "Montserrat-Black";
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.login100-social-item {
+  font-size: 25px;
+  color: #3b5998;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #fff;
+  margin: 5px;
+  box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+  -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+.login100-social-item img {
+  width: 26px;
+}
+
+.login100-social-item:hover {
+  color: #3b5998;
+  box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2);
+  -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 575px) {
+  .border-top {
+      border-top: 1px solid #e0e0e0;
+  }
+  .border-left {
+      border-left: 1px solid #e0e0e0;
+  }
+  .border-bottom {
+      border-bottom: 1px solid #e0e0e0;
+  }
+  .border-right {
+      border-right: 1px solid #e0e0e0;
+  }
+  .border-top-0 {
+      border-top: none!important;
+  }
+  .border-left-0 {
+      border-left: none!important;
+  }
+  .border-bottom-0 {
+      border-bottom: none!important;
+  }
+  .border-right-0 {
+      border-right: none!important;
+  }
+}
+
+@media (min-width: 576px) {
+  .border-sm-top {
+      border-top: 1px solid #e0e0e0;
+  }
+  .border-sm-left {
+      border-left: 1px solid #e0e0e0;
+  }
+  .border-sm-bottom {
+      border-bottom: 1px solid #e0e0e0;
+  }
+  .border-sm-right {
+      border-right: 1px solid #e0e0e0;
+  }
+  .border-sm-top-0 {
+      border-top: none!important;
+  }
+  .border-sm-left-0 {
+      border-left: none!important;
+  }
+  .border-sm-bottom-0 {
+      border-bottom: none!important;
+  }
+  .border-sm-right-0 {
+      border-right: none!important;
+  }
+}
+
+@media (min-width: 768px) {
+  .border-md-top {
+      border-top: 1px solid #e0e0e0;
+  }
+  .border-md-left {
+      border-left: 1px solid #e0e0e0;
+  }
+  .border-md-bottom {
+      border-bottom: 1px solid #e0e0e0;
+  }
+  .border-md-right {
+      border-right: 1px solid #e0e0e0;
+  }
+  .border-md-top-0 {
+      border-top: none!important;
+  }
+  .border-md-left-0 {
+      border-left: none!important;
+  }
+  .border-md-bottom-0 {
+      border-bottom: none!important;
+  }
+  .border-md-right-0 {
+      border-right: none!important;
+  }
+}
+
+@media (min-width: 992px) {
+  .border-lg-top {
+      border-top: 1px solid #e0e0e0;
+  }
+  .border-lg-left {
+      border-left: 1px solid #e0e0e0;
+  }
+  .border-lg-bottom {
+      border-bottom: 1px solid #e0e0e0;
+  }
+  .border-lg-right {
+      border-right: 1px solid #e0e0e0;
+  }
+  .border-lg-top-0 {
+      border-top: none!important;
+  }
+  .border-lg-left-0 {
+      border-left: none!important;
+  }
+  .border-lg-bottom-0 {
+      border-bottom: none!important;
+  }
+  .border-lg-right-0 {
+      border-right: none!important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .border-xl-top {
+      border-top: 1px solid #e0e0e0;
+  }
+  .border-xl-left {
+      border-left: 1px solid #e0e0e0;
+  }
+  .border-xl-bottom {
+      border-bottom: 1px solid #e0e0e0;
+  }
+  .border-xl-right {
+      border-right: 1px solid #e0e0e0;
+  }
+  .border-xl-top-0 {
+      border-top: none!important;
+  }
+  .border-xl-left-0 {
+      border-left: none!important;
+  }
+  .border-xl-bottom-0 {
+      border-bottom: none!important;
+  }
+  .border-xl-right-0 {
+      border-right: none!important;
+  }
+}
