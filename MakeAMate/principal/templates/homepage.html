@@ -9,8 +9,6 @@
         <a class="nav-link" href="/logout">Logout</a>
 
         {% for i in usuarios%}
-        <h5>User: {{i.usuario.username}}</h5>
-        <h5>Genero: {{i.genero}}</h5>
         <br></br>
 
         {% empty %}
@@ -23,7 +21,8 @@
     </head>
     <body>
         <div>
-            <br>
+            <br></br>
+            <br></br>
             {% include "mates.html" %}
         </div>
     </body>
