@@ -35,6 +35,7 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
+        self.store_message(message)
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
@@ -56,10 +57,9 @@ class ChatConsumer(WebsocketConsumer):
             'name': username,
             'message': message
         }))
-        self.store_message(message)
+
     
     def store_message(self,text):
-        chatroom = (ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0])
         Chat.objects.create(
             content = text,
             user = self.scope['user'],
