@@ -17,10 +17,11 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
-        #lo suyo sería que aquí al conectarse hubiese una query que devolviese todos los mensajes previos de una conversación
-
         self.accept()
+        room = ChatRoom.objects.get_or_create(name = self.room_name)
+        self.get_all_messages()
+
+
 
     def disconnect(self, close_code):
         # Leave room group
@@ -34,13 +35,13 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        self.store_message(message)
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
+                'name': self.scope['user'].username,
                 'message': message
             }
         )
@@ -48,15 +49,17 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
-
+        username = event['name']
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             "type": "chat_message",
-            'name': self.scope['user'].username,
+            'name': username,
             'message': message
         }))
+        self.store_message(message)
     
     def store_message(self,text):
+        chatroom = (ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0])
         Chat.objects.create(
             content = text,
             user = self.scope['user'],
@@ -65,3 +68,17 @@ class ChatConsumer(WebsocketConsumer):
 
     #El chatroom se guarda una vez que se envía el primer mensaje, lo suyo sería que cuando se creen grupos se guarde al inicio
     #Faltan añadir a los usuarios implicados
+
+
+    def get_all_messages(self):
+        chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
+
+        mess = Chat.objects.filter(room=chatroom.name)
+
+        for  m in mess:
+            data = {
+                "type": "chat_message",
+                'name': m.user.username,
+                'message': m.content
+            }
+            self.send(text_data=json.dumps(data))
