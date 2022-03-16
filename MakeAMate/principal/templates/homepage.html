@@ -1,12 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" body id="all">
     <head>
+        <link rel="stylesheet" href="/static/style.css">
+
         {% include "base.html" %}
         {% block content %}
         {% if request.user.is_authenticated %}
-
-        Hola, has iniciado sesión como {{request.user.username}}
-        <a class="nav-link" href="/logout">Logout</a>
 
         {% for i in usuarios%}
         <br></br>
@@ -19,10 +18,8 @@
         {% endblock %}
 
     </head>
-    <body>
+    <body id="all">
         <div>
-            <br></br>
-            <br></br>
             {% include "mates.html" %}
         </div>
     </body>
