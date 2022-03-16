@@ -8,10 +8,6 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request,template,{'form':form})
-   
-def notification_view(request):
-    template='notificacion.html'
-    return render(request,template)
 
 def prueba(request):
     template='base.html'
