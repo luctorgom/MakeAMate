@@ -72,7 +72,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def get_all_messages(self):
         chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
-        mess = Chat.objects.filter(room = chatroom)
+        mess = Chat.objects.filter(room = chatroom).order_by('timestamp')
         for  m in mess:
             data = {
                 "type": "chat_message",
