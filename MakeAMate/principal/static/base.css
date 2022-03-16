@@ -142,6 +142,117 @@
     
 }
 
+/*NOTIFICACIONES*/
+.container-notificaciones {
+    display: flex;
+    align-items: center;
+    background: #AB47BC;
+    height: 60px;
+    position: relative;
+    border-bottom: 1px solid #495057
+  }
+  
+  .icon-notificaciones {
+    cursor: pointer;
+    margin-right: 50px;
+    line-height: 60px;
+    position: relative;
+    left: 80%;
 
+  }
+  
+  .icon-notificaciones span {
+    background: #f00;
+    position: relative;
+    left: 80%;
+    padding: 7px;
+    border-radius: 50%;
+    color: #fff;
+    vertical-align: top;
+    margin-left: -25px
+  }
+  
+  .icon-notificaciones img {
+    display: inline-block;
+    width: 26px;
+    margin-top: 4px
+
+  }
+  
+  .icon-notificaciones:hover {
+    opacity: .7
+  }
+  
+  .logo-notificaciones {
+    flex: 1;
+    margin-left: 50px;
+    color: #eee;
+    font-size: 20px;
+    font-family: monospace
+  }
+  
+  .notifications {
+    width: 1px;
+    height: 0px;
+    opacity: 0;
+    top: 63px;
+    right: 62px;
+    border-radius: 5px 0px 5px 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: relative;
+    left: 80%;
+  }
+  
+  .notifications h2 {
+    text-align: left;
+    font-size: 14px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #999
+  }
+  
+  .notifications h2 span {
+    color: rgb(211, 59, 224)
+    
+  }
+  
+  .notifications-item {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    padding: 6px 9px;
+    margin-bottom: 0px;
+    cursor: pointer
+  }
+  
+  .notifications-item:hover {
+    background-color: #eee
+  }
+  
+  .notifications-item img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-right: 9px;
+    border-radius: 50%;
+    border: 2px solid rgba(211, 59, 224, 0.637);
+    margin-top: 2px
+  }
+  
+  .notifications-item .text-notificaciones h4 {
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(211, 59, 224);
+    font-size: 16px;
+    margin-top: 3px
+  
+  }
+  
+  .notifications-item .text-notificaciones p {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #aaa;
+    font-size: 12px
+  }
+  
 
 

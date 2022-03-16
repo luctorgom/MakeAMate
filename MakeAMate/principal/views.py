@@ -11,3 +11,8 @@ def login_view(request):
    
 def notification_view(request):
     template='notificacion.html'
+    return render(request,template)
+
+def prueba(request):
+    template='base.html'
+    return render(request,template)

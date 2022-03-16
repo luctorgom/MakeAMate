@@ -2,10 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <link rel="stylesheet" href="/static/base.css">
   <link rel="stylesheet" href="/static/fonts.css">
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        var down=false;
+        document.querySelector('#bell').addEventListener('click', () => {
+            if(down){
+                document.getElementById("box").style.height = "0px";
+                document.getElementById("box").style.opacity = "0";
+                down=false
+            }
+            else{
+                document.getElementById("box").style.height = "auto";
+                document.getElementById("box").style.opacity = "1";
+                down=true
+            }
+        })
+    
+    })     
+</script>
 </head>
 <body>
+  
   <div class="main">
     <div class="content-all">
       <a href="menu"><img class ="logo" src="/static/logotipo.png"></a>
@@ -22,9 +42,10 @@
           <li><label for="check" class="icon-info"></label>   About us</li>
           <li><label class="icon-log-out"></label>   Log-out</li>
         </ul>
-      </nav>
-    </div>
+      </nav> 
+    </div> 
   </div>
+
 
 </body>
 
