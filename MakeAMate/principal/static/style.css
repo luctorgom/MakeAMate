@@ -9,7 +9,6 @@
   background-position: center center;
 }
 
-
 #all{
   background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
 }
@@ -164,3 +163,5 @@ h1, h2, h3, h4, h5, h6 {
   color: #aaa;
   font-size: 12px
 }
+
+
