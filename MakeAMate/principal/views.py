@@ -2,7 +2,9 @@ from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.views.generic import TemplateView
-from .models import Usuario
+from .models import Usuario,Mates
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 
 def login_view(request):
@@ -33,3 +35,37 @@ def homepage(request):
         return render(request,template,params)
 
     return login_view(request)
+
+def accept_mate(request):
+    id_us = request.POST['id_us']
+
+    try:
+        usuario = User.objects.get(pk=id_us)
+        mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
+    except:
+        response = { 'success': False }
+        return JsonResponse(response)
+
+    try:
+        reverse_mate = Mates.objects.get(userEntrada=usuario, userSalida=request.user)
+        mate_achieved = reverse_mate.mate
+    except Mates.DoesNotExist:
+        mate_achieved = False
+
+    response = {
+        'success': True,
+        'mate_achieved': mate_achieved,
+    }
+    return JsonResponse(response)
+
+def reject_mate(request):
+    id_us = request.POST['id_us']
+
+    try:
+        usuario = User.objects.get(pk=id_us)
+        mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
+        success = True
+    except:
+        success = False
+    response = { 'success': success }
+    return JsonResponse(response)

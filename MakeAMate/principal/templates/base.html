@@ -6,6 +6,10 @@
   <link rel="stylesheet" href="/static/base.css">
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/fonts.css">
+
+  <!-- Importar AJAX -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', () => {
         var down=false;
@@ -24,6 +28,11 @@
     
     })     
 </script>
+
+{% block extrahead %}
+
+    
+{% endblock %}
 </head>
 <body>
     <div class="content-all" id="all">

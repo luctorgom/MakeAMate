@@ -55,4 +55,7 @@ class Mates(models.Model):
     userSalida=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="salida",on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return str(self.mate)
+        return str(self.userEntrada.username + "-" + self.userSalida.username + ": " + str(self.mate))
+    
+    class Meta:
+        unique_together = ('userEntrada', 'userSalida',)
