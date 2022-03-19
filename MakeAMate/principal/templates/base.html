@@ -2,38 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <link rel="stylesheet" href="/static/base.css">
+  <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/fonts.css">
+
+  <!-- Importar AJAX -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        var down=false;
+        document.querySelector('#bell').addEventListener('click', () => {
+            if(down){
+                document.getElementById("box").style.height = "0px";
+                document.getElementById("box").style.opacity = "0";
+                down=false
+            }
+            else{
+                document.getElementById("box").style.height = "auto";
+                document.getElementById("box").style.opacity = "1";
+                down=true
+            }
+        })
+    
+    })     
+</script>
+
+{% block extrahead %}
+
+    
+{% endblock %}
 </head>
-<body class="d-flex flex-column min-vh-100">
-  <div class="main">
-    <div class="content-all">
-      <a href="menu"><img class ="logo" src="/static/logotipo.png"></a>
+<body>
+    <div class="content-all" id="all">
       <input type="checkbox" id="check">
       <label for="check" class="icon-paragraph-justify"></label>
       <nav class="menu">
         <ul>  
           <br>
-          <li class="mover"><div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">John Doe</div></li>
+          <li class="mover"><div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}</div></li>
           <br><br>
           <li><label for="check" class="icon-bubble2"></label>   Chat</li>
           <li><label for="check" class="icon-stats-dots"></label>   Statistics</li>
           <li><label for="check" class="icon-cart1"></label>   Shop</li>
           <li><label for="check" class="icon-info"></label>   About us</li>
-          <a href="{% url 'logout' %}"><li><label class="icon-log-out"></label>   Log-out</li></a>
+          <a  id="a" href="{% url 'logout' %}"><li><label class="icon-log-out"></label>   Log-out</li></a>
         </ul>
-      </nav>
-    </div>
-    <div class="container-fluid pt-5 mt-xl-4">
-      <div class="row">
-          <div class="col-md-8 offset-md-2 text-center">
-              {% block content %}{% endblock %}
-          </div>
-      </div>
-    </div>
+      </nav> 
+    </div> 
   </div>
-  
+  <div class="container-notificaciones" id="Notificaciones">
+    <div class="logo-notificaciones"></div>
+    <a href="menu"><img class ="logo" src="/static/logotipo.png"></a>
+    <div class="icon-notificaciones" id="bell"> <img src="https://i.imgur.com/AC7dgLA.png" alt="img"> </div>
+    <div class="notifications" id="box">
+        <h2 class="notificacion-text">Notifications - <span>2</span></h2>
+        <div class="notifications-item"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">
+            <div class="text-notificaciones">
+                <h4>Nuevo Mate!
+                </h4>
+                <p>Has hecho mate con El pana Miguel</p>
+            </div>
+        </div>
+        <div class="notifications-item"> <img src="https://cdn.icon-icons.com/icons2/2582/PNG/512/message_bubble_chat_icon_154003.png" alt="img">
+            <div class="text-notificaciones">
+                <h4>Miguel</h4>
+                <p>Tienes 2 mensajes sin leer</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% block content %}
 
+    
+{% endblock %}
 </body>
 
 </html>
