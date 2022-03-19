@@ -18,6 +18,8 @@ class LoginTest(TestCase):
         response = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
         user = auth.get_user(c)
         self.assertTrue(user.is_authenticated)
+        self.assertRedirects(response, '/', status_code=302, 
+        target_status_code=200, fetch_redirect_response=True)
 
 
     #Test de inicio de sesión con un usuario inexistente
