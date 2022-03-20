@@ -1,14 +1,91 @@
-from django.shortcuts import render
-from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
+from urllib import request
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.views.generic import TemplateView
+from .models import Usuario,Mates
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.db.models import Q
 
 def login_view(request):
-    template='loggeos/login.html'
-    if request.method == 'POST':
-        form = AuthenticationForm(request.POST)
-    else:
-        form = AuthenticationForm()
-    return render(request,template,{'form':form})
-
-def prueba(request):
-    template='base.html'
+    if request.user.is_authenticated:
+        return redirect(homepage)
+    template='loggeos/index.html'
+    if request.method == "POST":
+        nameuser = request.POST['username']
+        passworduser = request.POST['pass']
+        user = authenticate(username=nameuser, password=passworduser)
+        if user is  None:    
+            return render(request,template, {'no_user':True})
+        else:    
+            login(request, user)
+            return redirect(homepage)  
     return render(request,template)
+
+def logout_view(request):
+    logout(request)
+    return redirect(homepage)
+
+def homepage(request):
+    if request.user.is_authenticated:
+        template = 'homepage.html'
+        us = Usuario.objects.all()
+        params = {'usuarios': us}
+        
+        return render(request,template,params)
+
+    return login_view(request)
+
+def accept_mate(request):
+    id_us = request.POST['id_us']
+
+    try:
+        usuario = User.objects.get(pk=id_us)
+        mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
+    except:
+        response = { 'success': False }
+        return JsonResponse(response)
+
+    try:
+        reverse_mate = Mates.objects.get(userEntrada=usuario, userSalida=request.user)
+        mate_achieved = reverse_mate.mate
+    except Mates.DoesNotExist:
+        mate_achieved = False
+
+    response = {
+        'success': True,
+        'mate_achieved': mate_achieved,
+    }
+    return JsonResponse(response)
+
+def reject_mate(request):
+    id_us = request.POST['id_us']
+
+    try:
+        usuario = User.objects.get(pk=id_us)
+        mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
+        success = True
+    except:
+        success = False
+    response = { 'success': success }
+    return JsonResponse(response)
+
+def notificaciones_mates(request):
+    loggeado= request.user
+    lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
+    print("Usuario loggeado: " + str(loggeado))
+    print(loggeado)
+    print("Lista usuarios: " + str(lista_usuarios))
+    print(lista_usuarios)
+    lista_mates=[]
+    for i in lista_usuarios:
+        try:
+            mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
+            mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+            print("Mate 1: " + str(mate1))
+            print("Mate 2: " + str(mate2))
+            lista_mates.append(mate1)
+        except Mates.DoesNotExist:
+            print("NO EXISTE MATE CON "+ str(i))
+    print("lista_mates: " + str(lista_mates))
+    return render(request,'base.html',{'notificaciones':lista_mates})
