@@ -84,7 +84,7 @@ def notificaciones_mates(request):
             mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
             print("Mate 1: " + str(mate1))
             print("Mate 2: " + str(mate2))
-            lista_mates.append(mate1)
+            lista_mates.append(mate1.userSalida)
         except Mates.DoesNotExist:
             print("NO EXISTE MATE CON "+ str(i))
     print("lista_mates: " + str(lista_mates))
