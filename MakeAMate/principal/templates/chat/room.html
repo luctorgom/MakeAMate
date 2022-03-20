@@ -47,12 +47,14 @@
                                         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        <div class="name">Elena Nito</div>
+                                        
+                                        <div class="name" id="usuarioProv">{{request.user.username}}</div>
+                                        <!--<div id="ocultisimo">{{chatUser}}</div>-->
                                     </div>
                                 </div>  
                             </div>
                         </div>
-                        <div class="chat-history">
+                        <div class="chat-history" id="chat-history">
                             <ul class="m-b-0">
                                 <li class="clearfix">
                                     <div class="message-data text-right float-right">
@@ -76,7 +78,7 @@
                                 <li>
                                     <div class="message-data text-right float-right">
                                         <div class="message-data">
-                                            <textarea id="chat-log" cols="100" rows="20" ></textarea> <br>                                
+                                            <!--<textarea id="chat-log" cols="70" rows="9" ></textarea> <br>  -->                              
                                         </div>
                                     </div>
                                 </li>
@@ -110,13 +112,18 @@
             + '/'
         );
 
-        // onmessage - An event listener to be called when a message is received from the server.
         chatSocket.onmessage = function(e) {
-            // JSON.parse() converts the JSON object back into the original object,
-            // then examine and act upon its contents.
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.name + ": " + data.message + '\n');
 
+            var micapa = document.getElementById('chat-history');
+            var usuarioProv= document.getElementById('usuarioProv').textContent;
+
+            if("maria1" == data.user)
+                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.user + ":"+data.message+'</div></li>';
+            else
+                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.user + ":"+data.message+'</div></li>';
+        
+           
         };
 
         // onclose - An event listener to be called when the connection is closed.
@@ -147,3 +154,4 @@
     </script>
     
 </html>
+
