@@ -59,7 +59,8 @@
     </script>
   
 {% endblock %}
-    
+
+
 {% block content %}
   <div class="content">
     <div class="container">
@@ -126,7 +127,7 @@
                 <div class="card-body">
                   <div class="card-text text-center">
                     {% for t in i.tags.all %}
-                    <span class="badge badge-success">{{t}}</span>
+                      <span class="badge badge-success">{{t}}</span>
                     {% endfor %}
                   </div>
                   <div></div>

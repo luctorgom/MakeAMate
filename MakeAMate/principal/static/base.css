@@ -17,9 +17,18 @@
     position: relative;
 }
 
+.pepito {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  z-index: -1;
+}
+
 
 #check{
     display:none;
+    position: sticky;
 }
 
 #check:checked ~ .menu{
