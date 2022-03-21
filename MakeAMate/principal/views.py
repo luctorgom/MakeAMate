@@ -30,8 +30,8 @@ def homepage(request):
     if request.user.is_authenticated:
         template = 'homepage.html'
         us = Usuario.objects.all()
-        params = {'usuarios': us}
-        
+        lista_mates=notificaciones_mates(request)
+        params = {'notificaciones':lista_mates,'usuarios': us}
         return render(request,template,params)
 
     return login_view(request)
@@ -88,4 +88,4 @@ def notificaciones_mates(request):
         except Mates.DoesNotExist:
             print("NO EXISTE MATE CON "+ str(i))
     print("lista_mates: " + str(lista_mates))
-    return render(request,'base.html',{'notificaciones':lista_mates})
+    return lista_mates

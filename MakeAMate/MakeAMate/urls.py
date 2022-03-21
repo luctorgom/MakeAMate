@@ -25,5 +25,4 @@ urlpatterns = [
     path("accept-mate/", views.accept_mate, name= "accept-mate"),
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path('', views.homepage,name="home"),
-    path("notificaciones/",views.notificaciones_mates, name="notificaciones")
 ]
