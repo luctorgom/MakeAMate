@@ -36,7 +36,7 @@ jobs:
     - name: Run migrations
       run: python MakeAMate/manage.py makemigrations principal;python MakeAMate/manage.py migrate;
     - name: Run tests with coverage   
-      run: cd MakeAMate;coverage run manage.py test --keepdb; coverage xml;
+      run: cd MakeAMate;coverage run manage.py test; coverage xml;
     - name: Codacy Coverage Reporter
       uses: codacy/codacy-coverage-reporter-action@v1.1.0
       with:
