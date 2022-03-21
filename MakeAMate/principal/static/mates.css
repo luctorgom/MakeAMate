@@ -244,3 +244,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: red;
     border-radius: 12px;
 }
+
+.btn-light, .btn-light:active {
+    background-color: rgba(153,153,204,1) !important;
+}

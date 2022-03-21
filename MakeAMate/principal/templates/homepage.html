@@ -1,4 +1,4 @@
-{% include "base.html" %}
+{% extends "base.html" %}
 {% block extrahead %}
 
   <!-- Bootstrap CSS -->
@@ -59,7 +59,8 @@
     </script>
   
 {% endblock %}
-    
+
+
 {% block content %}
   <div class="content">
     <div class="container">
@@ -85,21 +86,25 @@
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <img src="../../static/ejemploMates/JoseJuan.png" class="img-fluid float-left">
+                      <img src="../static/images/JoseJuan.png" class="img-fluid float-left">
                       <div class="infoPersonal">
-                        <p>{{i.usuario.username}}</p>
-                        <p class="edad">38 años</p>
+                        <p>{{i.usuario.username}}, {{i.edad}} años</p>
                         <p class="genero">Género: {{i.genero}}</p>
                       </div>
-                      <p class="text-center">A 700 metros de ti y acercándose.</p>
+                      <p class="text-center">{{i.lugar}}</p>
                     </div>
                   </div>
                   <hr class="sm">
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
-                      <h5 class="card-title">Con piso</h5>
-                      <img src="../../static/ejemploMates/fotosPiso.png" class="img-fluid float-left">
-                      <img src="../../static/ejemploMates/Home-Logo-Transparent-File.png" class="img-fluid float-right">
+                      {% if i.piso == True %}
+                        <h5 class="card-title">Con piso</h5>
+                        <!--<img src="../static/images/fotosPiso.png" class="img-fluid float-left">-->
+                        <img src="../static/images/Home-Logo-Transparent-File.png" class="mx-auto d-block">
+                      {% elif i.piso == False %}
+                        <h5 class="card-title">Sin piso</h5>
+                        <img src="../static/images/sinpiso.png" class="mx-auto d-block">
+                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -109,28 +114,23 @@
                 <div class="row justify-content-center  special-card">
                   <div class="col-sm-8 align-self-center">
                     <div class="card-body">
-                      <p class="card-text text-center">Soy José Juan y me interesan tus órganos. Vente a compartir piso conmigo.</p>
+                      <p class="card-text text-center">Soy {{i.usuario.username}} estudio {{i.estudios}} en {{i.universidad}} en {{i.lugar}}</p>
                     </div>
                   </div>
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
-                      <button class="accept-mate" href="#carouselExampleControls" data-slide="next" id={{i.usuario.id}} type="button"><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
-                      <button class="reject-mate" href="#carouselExampleControls" data-slide="next" id={{i.usuario.id}} type="button"><img src="../../static/images/icons/cruz.png" height ="40" width="40"/></button>
+                      <button class="btn btn-light" href="#carouselExampleControls" data-slide="next" id={{i.usuario.id}} type="button"><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
+                      <button class="btn btn-danger" href="#carouselExampleControls" data-slide="next" id={{i.usuario.id}} type="button"><img src="../../static/images/icons/cruz.png" height ="40" width="40"/></button>
                     </div>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="card-text text-center">
-                    <span class="badge badge-success">Fumo</span>
-                    <span class="badge badge-success">Mascotas</span>
-                    <span class="badge badge-success">Sin fiestas</span>
+                    {% for t in i.tags.all %}
+                      <span class="badge badge-success">{{t}}</span>
+                    {% endfor %}
                   </div>
                   <div></div>
-                  <div class="card-text text-center">
-                    <span class="badge badge-success">Limpio</span>
-                    <span class="badge badge-success">Vegano</span>
-                    <span class="badge badge-secondary">Tranquilo</span>
-                  </div>
                 </div>
               </div>
             </div>

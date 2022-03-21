@@ -17,9 +17,15 @@
     position: relative;
 }
 
+.pepito {
+  position: fixed;
+  z-index: -1;
+}
+
 
 #check{
     display:none;
+    position: sticky;
 }
 
 #check:checked ~ .menu{
