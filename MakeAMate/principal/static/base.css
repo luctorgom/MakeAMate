@@ -1,0 +1,248 @@
+
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: 'Josefin Sans', 'Roboto', sans-serif;
+}
+
+
+.content-all{
+    width: 100%;
+    max-width: 1000px;
+    background:rgb(240, 211, 252);
+    margin-top: 80px;
+    position: relative;
+}
+
+
+#check{
+    display:none;
+}
+
+#check:checked ~ .menu{
+    width: 180px;
+}
+
+#a {
+    text-decoration: none;
+}
+
+.menu{
+    
+    position: absolute;
+    top: -20px;
+    width: 0px;
+    height: 100vh;
+    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    transition: all 500ms cubic-bezier(1,0,0,1);
+    transition-timing-function: cubic-bezier(1,0,0,1);
+    overflow: hidden;
+   
+    
+}
+.menu li{
+    list-style: none;
+    padding: 16px;
+    color: black;
+    cursor: pointer;
+    transition: all 300ms;
+    display: block;
+    width: 400px;
+    
+
+}
+
+.menu li:hover{
+    background:rgb(208, 122, 245); 
+}
+
+
+
+.content-all label.icon-paragraph-justify{
+    position: absolute;
+    top: -62px;
+    font-size: 26px;
+    color: black;
+    cursor: pointer;
+    margin-left: 20px;
+    z-index: 10;
+}
+
+
+.container-notificaciones img.logo{
+    width: 50px;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    
+}
+
+.content-all div.perfil{
+    position: fixed;
+    width: 120px;
+    height: auto;
+    top: 20px;
+    left: 85%;
+    font-size: 20px;
+    color: black;
+    background: rgb(208, 122, 245); 
+    border-radius: 10px;   
+    overflow: hidden; 
+    text-align: center;
+    margin-right: 0;
+
+}
+
+.miperfil{
+    position: absolute;
+    width: 120px;
+    height: 180px;
+    left: 85%;
+    background: rgb(240, 211, 252); 
+    transition: all 500ms cubic-bezier(1,0,0,1);
+    transition-timing-function: cubic-bezier(1,0,0,1);
+    overflow: hidden;
+    top: 50px;
+    margin-right: 0;
+    
+    
+ 
+
+}
+
+.miperfil li{
+    list-style: none;
+    padding: 16px;
+    color: black;
+    cursor: pointer;
+    transition: all 300ms;
+    display: block;
+    width: 120px;
+    text-align: center;
+    margin-right: 0;
+    position:absolute;
+
+
+}
+
+
+.foto img{
+  display: block;
+  width: 50px;
+  height:50px;
+  margin-right: 9px;
+  border-radius: 50%;
+  margin-top: 2px
+    
+}
+
+/*NOTIFICACIONES*/
+.container-notificaciones {
+    display: flex;
+    background: linear-gradient(180deg, rgb(166, 164, 250) 0%, rgb(188, 174, 245) 50%, rgb(197, 160, 240) 100%);
+    height: 60px;
+    position: relative;
+    top:-80px;
+
+  }
+  
+  .icon-notificaciones {
+    cursor: pointer;
+    margin-right: 50px;
+    line-height: 60px
+  }
+  
+  .icon-notificaciones span {
+    background: #f00;
+    padding: 7px;
+    border-radius: 50%;
+    color: #fff;
+    vertical-align: top;
+    margin-left: -25px
+  }
+  
+  .icon-notificaciones img {
+    width: 25px;
+    top: 30px;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+  }
+  
+  .icon-notificaciones:hover {
+    opacity: .7
+  }
+  
+  .logo-notificaciones {
+    flex: 1;
+    margin-left: 50px;
+    color: #eee;
+    font-size: 20px;
+    font-family: monospace
+  }
+  
+  .notifications {
+    width: 300px;
+    height: 0px;
+    opacity: 0;
+    position: absolute;
+    top: 63px;
+    right: 62px;
+    border-radius: 5px 0px 5px 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+  }
+  
+  .notifications h2 {
+    text-align: left;
+    font-size: 14px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #999
+  }
+  
+  .notifications h2 span {
+    color: rgb(211, 59, 224)
+    
+  }
+  
+  .notifications-item {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    padding: 6px 9px;
+    margin-bottom: 0px;
+    cursor: pointer
+  }
+  
+  .notifications-item:hover {
+    background-color: #eee
+  }
+  
+  .notifications-item img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-right: 9px;
+    border-radius: 50%;
+    border: 2px solid rgba(211, 59, 224, 0.637);
+    margin-top: 2px
+  }
+  
+  .notifications-item .text-notificaciones h4 {
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(211, 59, 224);
+    font-size: 16px;
+    margin-top: 3px
+  
+  }
+  
+  .notifications-item .text-notificaciones p {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #aaa;
+    font-size: 12px
+  }
