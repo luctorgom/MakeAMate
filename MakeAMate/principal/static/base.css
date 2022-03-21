@@ -18,9 +18,6 @@
 }
 
 .pepito {
-  align-items: center;
-  display: flex;
-  justify-content: center;
   position: fixed;
   z-index: -1;
 }
