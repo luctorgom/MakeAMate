@@ -35,6 +35,13 @@ jobs:
         pip install codacy-coverage
     - name: Run migrations
       run: python MakeAMate/manage.py migrate;
+    - name: Run tests with coverage   
+      run: cd decide;coverage run --branch --source=. ./manage.py test principal/tests.py --keepdb; coverage xml;
+    - name: Codacy Coverage Reporter
+      uses: codacy/codacy-coverage-reporter-action@v1.1.0
+      with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: MakeAMate/coverage.xml
   deploy:
     if: ${{github.ref == 'refs/heads/pruebaDespliegue'}} 
     needs: build
