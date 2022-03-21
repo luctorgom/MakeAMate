@@ -1,6 +1,7 @@
 from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from .models import Usuario,Mates
 from django.http import JsonResponse
@@ -37,35 +38,42 @@ def homepage(request):
     return login_view(request)
 
 def accept_mate(request):
-    id_us = request.POST['id_us']
+    if not request.user.is_authenticated:
+        return redirect(login_view)
 
-    try:
-        usuario = User.objects.get(pk=id_us)
-        mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
-    except:
+    id_us = request.POST['id_us']
+    usuario = get_object_or_404(User, pk=id_us)  
+
+    if usuario == request.user:
         response = { 'success': False }
         return JsonResponse(response)
 
+    mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
+
+    # Comprueba si el mate es mutuo
     try:
         reverse_mate = Mates.objects.get(userEntrada=usuario, userSalida=request.user)
         mate_achieved = reverse_mate.mate
     except Mates.DoesNotExist:
         mate_achieved = False
 
-    response = {
-        'success': True,
-        'mate_achieved': mate_achieved,
-    }
+    response = { 'success': True,
+        'mate_achieved': mate_achieved, }
+
     return JsonResponse(response)
 
 def reject_mate(request):
-    id_us = request.POST['id_us']
+    if not request.user.is_authenticated:
+        return redirect(login_view)
 
-    try:
-        usuario = User.objects.get(pk=id_us)
-        mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
-        success = True
-    except:
-        success = False
-    response = { 'success': success }
+    id_us = request.POST['id_us']
+    usuario = get_object_or_404(User, pk=id_us)  
+
+    if usuario == request.user:
+        response = { 'success': False, }
+        return JsonResponse(response)
+    
+    mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
+    
+    response = { 'success': True, }
     return JsonResponse(response)
