@@ -1,7 +1,7 @@
 /*@charset "utf-8";*/
 
 body{
-    background-color: #f4f7f6;
+    background-color: #fff;
     margin-top:20px;
 }
 .card {
@@ -10,13 +10,17 @@ body{
     border: 0;
     margin-bottom: 2%;
     border-radius: .55rem;
-    position: relative;
+    /*position: fixed;*/
     width: 100%;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+    height: 90%;
+    /*box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);*/
+
 }
 .chat-app .people-list {
     width: 280px;
     position: absolute;
+    position: sticky;
+    position: -webkit-sticky;
     left: 0;
     top: 0;
     padding: 20px;
@@ -25,7 +29,7 @@ body{
 
 .chat-app .chat {
     margin-left: 280px;
-    border-left: 20px solid #eaeaea
+    border-left: 20px solid rgb(255, 0, 157);
 }
 
 .people-list {
@@ -42,12 +46,12 @@ body{
 }
 
 .people-list .chat-list li:hover {
-    background: #efefef;
+    background: rgb(65, 83, 13);
     cursor: pointer
 }
 
 .people-list .chat-list li.active {
-    background: #efefef
+    background: rgb(0, 204, 255)
 }
 
 .people-list .chat-list li .name {
@@ -76,9 +80,38 @@ body{
 
 .chat .chat-header {
     padding: 15px 20px;
-    border-bottom: 2px solid #f4f7f6
+    border-bottom: 2px solid rgb(217, 255, 0);
+    position: sticky;
 }
 
+.botonesMensaje{
+    position: sticky;
+    bottom: 0;
+    position: fixed;
+    width:100%;
+    padding-bottom: 5px;
+    background-color: rgb(0, 38, 255);
+
+}
+.cuadroTexto{
+    width:70%;
+}
+
+.botonEnviar{
+    width:10%;
+}
+
+.row1{
+    position: sticky;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding-top: 12px;
+    padding-bottom: 5px;
+    z-index: 3;
+    background-color: rgb(0, 255, 128);
+
+}
 .chat .chat-header img {
     float: left;
     border-radius: 40px;
@@ -92,7 +125,7 @@ body{
 
 .chat .chat-history {
     padding: 20px;
-    border-bottom: 2px solid #fff
+    border-bottom: 2px solid rgb(255, 0, 0);
 }
 
 .chat .chat-history ul {
@@ -129,7 +162,7 @@ body{
     font-size: 16px;
     border-radius: 7px;
     display: inline-block;
-    position: relative
+    /*position: relative*/
 }
 
 .chat .chat-history .message:after {
@@ -159,7 +192,7 @@ body{
     width: 0;
     position: absolute;
     pointer-events: none;
-    border-bottom-color: #efefef;
+    border-bottom-color: #fff;
     border-width: 10px;
     margin-left: -10px
 }
@@ -170,7 +203,7 @@ body{
 }
 
 .chat .chat-history .other-message:after {
-    border-bottom-color: #e8f1f3;
+    border-bottom-color: #fff;
     left: 93%
 }
 
@@ -230,7 +263,6 @@ body{
         border-radius: 0.55rem 0.55rem 0 0
     }
     .chat-app .chat-history {
-        height: 300px;
         overflow-x: auto
     }
 }
@@ -239,6 +271,7 @@ body{
     .chat-app .chat-list {
         height: 650px;
         overflow-x: auto
+
     }
     .chat-app .chat-history {
         height: 600px;
