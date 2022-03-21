@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from .models import Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 def login_view(request):
@@ -26,6 +27,8 @@ def logout_view(request):
     logout(request)
     return redirect(homepage)
 
+
+@login_required(login_url="/login")
 def homepage(request):
     if request.user.is_authenticated:
        
