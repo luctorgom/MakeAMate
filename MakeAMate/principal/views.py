@@ -35,15 +35,17 @@ def homepage(request):
         template = 'homepage.html'
         #us = Usuario.objects.all()
 
-        registrado= Usuario.objects.filter(usuario=request.user)
-        ciudad= registrado.values('lugar')
-        if(registrado.filter(piso=True)):
+        registrado= Usuario.objects.get(usuario=request.user)
+        ciudad= registrado.lugar
+        if(registrado.piso):
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso=False)
         else:
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad)
 
         lista_mates=notificaciones_mates(request)
-        params = {'notificaciones':lista_mates,'usuarios': us}
+        tags_authenticated = registrado.tags.all()
+        tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us}
+        params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
         return render(request,template,params)
 
     return login_view(request)
