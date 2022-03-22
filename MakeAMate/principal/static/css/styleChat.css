@@ -19,8 +19,8 @@ body{
 .chat-app .people-list {
     width: 280px;
     position: absolute;
-    position: sticky;
-    position: -webkit-sticky;
+     /* position: sticky; */
+    /*position: -webkit-sticky; */
     left: 0;
     top: 0;
     padding: 20px;
@@ -94,7 +94,8 @@ body{
 
 }
 .cuadroTexto{
-    width:70%;
+    width:90%;
+    background-color: #e47297;
 }
 
 .botonEnviar{
@@ -130,6 +131,8 @@ body{
 .chat .chat-history {
     padding: 20px;
     border-bottom: 2px solid rgb(255, 0, 0);
+    overflow-y: scroll;
+    height: 700px;
 }
 
 .chat .chat-history ul {
@@ -215,13 +218,13 @@ body{
     padding: 20px;
     position: sticky;
     bottom: 0;
-    background-color: #00c3ff;
+    background-color: #e91414;
 }
 .chat-message-input{
-    width:80%;
+    width:90%;
 }
 .chat-message-submit{
-    width:10%;
+    width:8%;
 }
 
 .online,
@@ -277,29 +280,34 @@ body{
         border-radius: 0.55rem 0.55rem 0 0
     }
     .chat-app .chat-history {
-        overflow-x: auto
+        overflow-x: auto;
+        
     }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
     .chat-app .chat-list {
         height: 650px;
-        overflow-x: auto
+        overflow-x: auto;
+        
 
     }
     .chat-app .chat-history {
         height: 600px;
-        overflow-x: auto
+        overflow-x: auto;
+        
     }
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
     .chat-app .chat-list {
         height: 480px;
-        overflow-x: auto
+        overflow-x: auto;
+        
     }
     .chat-app .chat-history {
         height: calc(100vh - 350px);
-        overflow-x: auto
+        overflow-x: auto;
+        
     }
 }
