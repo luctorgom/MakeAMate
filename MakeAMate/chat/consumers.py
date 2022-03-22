@@ -1,7 +1,6 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from channels.consumer import AsyncConsumer
 from chat.models import Chat,ChatRoom
 from django.contrib.auth.models import User
 
@@ -20,8 +19,6 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
         room = ChatRoom.objects.get_or_create(name = self.room_name)
         self.get_all_messages()
-
-
 
     def disconnect(self, close_code):
         # Leave room group
@@ -69,7 +66,11 @@ class ChatConsumer(WebsocketConsumer):
     #El chatroom se guarda una vez que se envía el primer mensaje, lo suyo sería que cuando se creen grupos se guarde al inicio
     #Faltan añadir a los usuarios implicados
 
-
+    '''
+    def get_all_chatrooms(self):
+        user = self.scope['user']
+    '''
+    
     def get_all_messages(self):
         chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
         mess = Chat.objects.filter(room = chatroom).order_by('timestamp')

@@ -48,7 +48,8 @@
                                     </a>
                                     <div class="chat-about">
                                         
-                                        <div class="name" id="usuarioProv">{{request.user.username}}</div> 
+                                        <div class="name" id="usuarioProv">{{ room_name }}</div> 
+                                        <!--<div class="name" id="usuarioProv">{{request.user.username}}</div>--> 
                                         <!--<div id="ocultisimo">{{chatUser}}</div>-->
                                     </div>
                                 </div>  
@@ -118,12 +119,11 @@
             var micapa = document.getElementById('chat-history');
             var usuarioProv= document.getElementById('usuarioProv').textContent;
 
-            if("maria1" == data.user)
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.user + ":"+data.message+'</div></li>';
+            if("maria1" == data.name)
+                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.name + ":"+data.message+'</div></li>';
             else
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.user + ":"+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ":"+data.message+'</div></li>';
         
-           
         };
 
         // onclose - An event listener to be called when the connection is closed.
