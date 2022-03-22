@@ -125,3 +125,7 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+NOSE_ARGS = ['--with-xunit']
+import django_heroku
+django_heroku.settings(locals(),test_runner=False)
