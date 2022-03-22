@@ -69,3 +69,7 @@ def reject_mate(request):
         success = False
     response = { 'success': success }
     return JsonResponse(response)
+
+def payments(request):
+    template='payments.html'
+    return render(request,template) 
