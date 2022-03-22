@@ -6,7 +6,7 @@ from .models import Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -16,11 +16,11 @@ def login_view(request):
         nameuser = request.POST['username']
         passworduser = request.POST['pass']
         user = authenticate(username=nameuser, password=passworduser)
-        if user is  None:    
+        if user is  None:
             return render(request,template, {'no_user':True})
-        else:    
+        else:
             login(request, user)
-            return redirect(homepage)  
+            return redirect(homepage)
     return render(request,template)
 
 def logout_view(request):
@@ -31,18 +31,18 @@ def logout_view(request):
 @login_required(login_url="/login")
 def homepage(request):
     if request.user.is_authenticated:
-       
         template = 'homepage.html'
         #us = Usuario.objects.all()
-    
-        registrado= Usuario.objects.filter(usuario=request.user)    
+
+        registrado= Usuario.objects.filter(usuario=request.user)
         ciudad= registrado.values('lugar')
         if(registrado.filter(piso=True)):
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso=False)
         else:
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad)
-        params = {'usuarios': us}
-        
+
+        lista_mates=notificaciones_mates(request)
+        params = {'notificaciones':lista_mates,'usuarios': us}
         return render(request,template,params)
 
     return login_view(request)
@@ -80,3 +80,23 @@ def reject_mate(request):
         success = False
     response = { 'success': success }
     return JsonResponse(response)
+
+def notificaciones_mates(request):
+    loggeado= request.user
+    lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
+    print("Usuario loggeado: " + str(loggeado))
+    print(loggeado)
+    print("Lista usuarios: " + str(lista_usuarios))
+    print(lista_usuarios)
+    lista_mates=[]
+    for i in lista_usuarios:
+        try:
+            mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
+            mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+            print("Mate 1: " + str(mate1))
+            print("Mate 2: " + str(mate2))
+            lista_mates.append(mate1.userSalida)
+        except Mates.DoesNotExist:
+            print("NO EXISTE MATE CON "+ str(i))
+    print("lista_mates: " + str(lista_mates))
+    return lista_mates

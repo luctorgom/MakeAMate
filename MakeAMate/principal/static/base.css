@@ -242,6 +242,7 @@
   }
   
   .notifications-item .text-notificaciones p {
+    text-overflow: ellipsis;
     font-family: Arial, Helvetica, sans-serif;
     color: #aaa;
     font-size: 12px

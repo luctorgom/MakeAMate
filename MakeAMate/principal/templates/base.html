@@ -57,26 +57,26 @@
     <a href="menu"><img class ="logo" src="/static/logotipo.png"></a>
     <div class="icon-notificaciones" id="bell"> <img src="https://i.imgur.com/AC7dgLA.png" alt="img"> </div>
     <div class="notifications" id="box">
-        <h2 class="notificacion-text">Notifications - <span>2</span></h2>
-        <div class="notifications-item"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">
+        <h2 class="notificacion-text">Notifications - <span> {{notificaciones|length}} </span></h2>
+        {%for i in notificaciones %}
+        <div class="notifications-item"> <img src=".\..\static\images\icons\Choca_esos_5.png" alt="img">
             <div class="text-notificaciones">
                 <h4>Nuevo Mate!
                 </h4>
-                <p>Has hecho mate con El pana Miguel</p>
+                <p>Has hecho mate con {{i}}.</p>
             </div>
         </div>
-        <div class="notifications-item"> <img src="https://cdn.icon-icons.com/icons2/2582/PNG/512/message_bubble_chat_icon_154003.png" alt="img">
-            <div class="text-notificaciones">
-                <h4>Miguel</h4>
-                <p>Tienes 2 mensajes sin leer</p>
-            </div>
-        </div>
+
+        {% endfor %}
     </div>
 </div>
+
 {% block content %}
+
 
     
 {% endblock %}
+
 </body>
 
 </html>
