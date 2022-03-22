@@ -1,3 +1,4 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -103,4 +104,3 @@ ENV/
 
 # Visual Studio Code
 .vscode/
-© 2022 GitHub, Inc.
