@@ -3,6 +3,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from chat.models import Chat,ChatRoom
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from chat.views import index
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -11,14 +13,19 @@ class ChatConsumer(WebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
-        # Join room group
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name
-        )
-        self.accept()
-        room = ChatRoom.objects.get_or_create(name = self.room_name)
-        self.get_all_messages()
+        chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
+        lista = []
+        for p in chatroom.participants.all():
+            lista.append(p.username)
+        if self.scope['user'].username in lista:
+            # Join room group
+            async_to_sync(self.channel_layer.group_add)(
+                self.room_group_name,
+                self.channel_name
+            )
+            self.accept()
+            room = ChatRoom.objects.get_or_create(name = self.room_name)
+            self.get_all_messages()
 
     def disconnect(self, close_code):
         # Leave room group
