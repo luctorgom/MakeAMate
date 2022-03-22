@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 from .models import Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.http.response import HttpResponseRedirect
+from django.urls import reverse
 
 
 def login_view(request):
@@ -26,12 +28,14 @@ def logout_view(request):
     logout(request)
     return redirect(homepage)
 
+def pays_view(request):
+    template = 'pays.html'
+    return render(request,template)
 def homepage(request):
     if request.user.is_authenticated:
         template = 'homepage.html'
         us = Usuario.objects.all()
         params = {'usuarios': us}
-        
         return render(request,template,params)
 
     return login_view(request)
