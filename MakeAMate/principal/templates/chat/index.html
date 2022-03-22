@@ -8,12 +8,12 @@
 
     What chat room would you like to enter?<br>
     <input id="room-name-input" type="text" size="100"><br>
-    <!-- Who would you like to start chatting with?<br>
+    Who would you like to start chatting with?<br>
     <select name="Participantes" id="participants-input" class="form-control" id="Participantes" multiple required>
         {% for u in users %}      
             <option value="{{ u }}">{{ u }}</option>
         {% endfor %}
-      </select> -->
+      </select>
     <input id="room-name-submit" type="button" value="Enter">
 
     <script>
@@ -23,8 +23,11 @@
                 document.querySelector('#room-name-submit').click();
             }
         };
+        document.querySelector('#participants-input').focus();
+
 
         document.querySelector('#room-name-submit').onclick = function(e) {
+            var roomParticipants = document.querySelector('#participants-input').value;
             var roomName = document.querySelector('#room-name-input').value;
             //var roomName = document.querySelector('#participants-input').value;
             window.location.pathname = '/chat/' + roomName + '/';

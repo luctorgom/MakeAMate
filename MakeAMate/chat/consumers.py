@@ -14,10 +14,13 @@ class ChatConsumer(WebsocketConsumer):
         self.room_group_name = 'chat_%s' % self.room_name
 
         chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
-        lista = []
+        lista_participantes = []
         for p in chatroom.participants.all():
-            lista.append(p.username)
-        if self.scope['user'].username in lista:
+            lista_participantes.append(p.username)
+        
+        # Comprobación si el usuario pertenece a los participantes de ese grupo
+        if self.scope['user'].username in lista_participantes:
+
             # Join room group
             async_to_sync(self.channel_layer.group_add)(
                 self.room_group_name,
