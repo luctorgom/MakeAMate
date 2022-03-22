@@ -5,12 +5,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 
 
+
 # Create your models here.
 
 #class Foto(models.Model):
 
 class Gustos(models.Model):
-    opcionGustos=models.CharField(max_length=40)
+    opcionGustos=models.CharField(max_length=50)
 
     def __str__(self):
         return str(self.opcionGustos)
