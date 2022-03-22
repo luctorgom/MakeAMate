@@ -28,9 +28,6 @@ def logout_view(request):
     logout(request)
     return redirect(homepage)
 
-def pays_view(request):
-    template = 'pays.html'
-    return render(request,template)
 def homepage(request):
     if request.user.is_authenticated:
         template = 'homepage.html'
