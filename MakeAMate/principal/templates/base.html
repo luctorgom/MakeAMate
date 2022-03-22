@@ -70,13 +70,16 @@
         {% endfor %}
     </div>
 </div>
+  
+<div class="container-fluid pt-5 mt-xl-4 pepito">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            {% block content %}
 
-{% block content %}
-
-
-    
-{% endblock %}
-
+            {% endblock %}
+        </div>
+    </div>
+</div>
 </body>
 
 </html>
