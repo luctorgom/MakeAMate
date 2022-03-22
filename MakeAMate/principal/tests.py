@@ -175,7 +175,10 @@ class LoginTest(TestCase):
     def setUp(self):
         user = User(username='usuario')
         user.set_password('qwery')
+        perfil = Usuario(usuario=user,piso=True,fecha_nacimiento="2000-1-1",edad=1,lugar="Sevilla",nacionalidad="Española",
+                genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
         user.save()
+        perfil.save()
         super().setUp()
 
 
