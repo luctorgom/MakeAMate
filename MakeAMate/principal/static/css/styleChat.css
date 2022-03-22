@@ -100,7 +100,11 @@ body{
 .botonEnviar{
     width:10%;
 }
-
+.chat-header{
+    position: sticky;
+    top: 0;
+    background-color: #e47297;
+}
 .row1{
     position: sticky;
     position: fixed;
@@ -208,7 +212,16 @@ body{
 }
 
 .chat .chat-message {
-    padding: 20px
+    padding: 20px;
+    position: sticky;
+    bottom: 0;
+    background-color: #00c3ff;
+}
+.chat-message-input{
+    width:80%;
+}
+.chat-message-submit{
+    width:10%;
 }
 
 .online,
@@ -241,7 +254,8 @@ body{
     font-size: 0;
     content: " ";
     clear: both;
-    height: 0
+    height: 0;
+
 }
 
 @media only screen and (max-width: 767px) {
