@@ -35,7 +35,7 @@ def homepage(request):
         template = 'homepage.html'
         #us = Usuario.objects.all()
 
-        registrado= Usuario.objects.get(usuario=request.user)
+        registrado= get_object_or_404(Usuario, usuario=request.user)
         ciudad= registrado.lugar
         if(registrado.piso):
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso=False)
