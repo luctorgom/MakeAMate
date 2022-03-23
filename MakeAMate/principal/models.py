@@ -28,7 +28,7 @@ class Tags(models.Model):
         return str(self.etiqueta)
 
 class Usuario(models.Model):
-    usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     piso=models.BooleanField()
     #foto=models.ForeignKey('Foto')
     fecha_nacimiento=models.DateField()
@@ -51,8 +51,8 @@ class Usuario(models.Model):
 
 class Mates(models.Model):
     mate=models.BooleanField(default=NullBooleanField)
-    userEntrada=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="entrada", on_delete=models.DO_NOTHING)
-    userSalida=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="salida",on_delete=models.DO_NOTHING)
+    userEntrada=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="entrada", on_delete=models.CASCADE)
+    userSalida=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="salida",on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.userEntrada.username + "-" + self.userSalida.username + ": " + str(self.mate))
