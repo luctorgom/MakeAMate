@@ -43,7 +43,7 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: MakeAMate/coverage.xml
   deploy:
-    if: ${{github.ref == 'refs/heads/pruebaDespliegue'}} 
+    if: ${{github.ref == 'refs/heads/main'}} 
     needs: build
     runs-on: ubuntu-latest
     steps:
