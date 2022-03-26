@@ -116,3 +116,19 @@ def notificaciones_mates(request):
             print("NO EXISTE MATE CON "+ str(i))
     print("lista_mates: " + str(lista_mates))
     return lista_mates
+
+def visitas_mates(request):
+    loggeado= request.user
+    listmates=[]
+    matesRecibidos=Mates.objects.filter(mate=True,userSalida=loggeado)
+    for i in matesRecibidos:
+        listmates.append(i.userEntrada)
+    print(listmates)
+    matesDados=Mates.objects.filter(userEntrada=loggeado)
+    for i in matesDados:
+        print(i.userSalida)
+        if(i.userSalida in listmates):
+            listmates.remove(i.userSalida)
+            print(listmates)
+    params={"lista":listmates}
+    return render(request,'homepage.html',params)
