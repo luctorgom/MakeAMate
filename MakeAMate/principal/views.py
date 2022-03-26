@@ -10,6 +10,7 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from .forms import UsuarioForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -29,6 +30,12 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect(homepage)
+
+
+def register_view(request):
+    template='loggeos/register.html'    
+    params = {'form': UsuarioForm()}
+    return render(request,template, params)
 
 
 @login_required(login_url="/login")
