@@ -117,18 +117,31 @@ def notificaciones_mates(request):
     print("lista_mates: " + str(lista_mates))
     return lista_mates
 
-def visitas_mates(request):
+def estadisticas_mates(request):
     loggeado= request.user
     listmates=[]
     matesRecibidos=Mates.objects.filter(mate=True,userSalida=loggeado)
     for i in matesRecibidos:
         listmates.append(i.userEntrada)
-    print(listmates)
+    #print(listmates)
     matesDados=Mates.objects.filter(userEntrada=loggeado)
     for i in matesDados:
-        print(i.userSalida)
+        #print(i.userSalida)
         if(i.userSalida in listmates):
             listmates.remove(i.userSalida)
-            print(listmates)
-    params={"lista":listmates}
+            #print(listmates)
+    listtags=[]
+    tagsloggeado=Usuario.objects.get(usuario=loggeado).tags.all().values()
+    for i in tagsloggeado:
+        listtags.append(i['etiqueta'])
+    
+    listTop=[]
+    for m in listmates:
+        tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
+        for tm in tagsMates:
+            if tm['etiqueta'] in listtags:
+                listTop.append(tm['etiqueta'])
+    dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
+    
+    params={"lista":listmates, "topTags":dicTags}
     return render(request,'homepage.html',params)

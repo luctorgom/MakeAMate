@@ -25,6 +25,6 @@ urlpatterns = [
     path("accept-mate/", views.accept_mate, name= "accept-mate"),
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path("payments/",views.payments,name="payments"),
-    path("mates/",views.visitas_mates,name="mates"),
+    path("mates/",views.estadisticas_mates,name="mates"),
     path('', views.homepage,name="home"),
 ]
