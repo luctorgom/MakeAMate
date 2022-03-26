@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.forms import NullBooleanField
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import Use
+from django.contrib.auth.models import User
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
