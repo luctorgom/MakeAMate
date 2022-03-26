@@ -20,28 +20,32 @@ class Tags(models.Model):
     def __str__(self):
         return str(self.etiqueta)
 
+class Idiomas(models.Model):
+    idioma=models.CharField(max_length=20)
+
+    def __str__(self):
+        return str(self.idioma)        
+
 class Foto(models.Model):
-    foto=models.ImageField(label="Foto de perfil",upload_to="static/images/users")
+    foto=models.ImageField(upload_to="static/images/users")
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     piso=models.BooleanField()
-    foto=models.ForeignKey(Foto, on_delete=models.CASCADE)
+    foto=models.ForeignKey(Foto, on_delete=models.CASCADE, default=None, blank=True, null=True)
     fecha_nacimiento=models.DateField()
     lugar=models.CharField(max_length=40)
     nacionalidad=models.CharField(max_length=20)
     genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))
-    pronombres=models.CharField(max_length=4,choices=(('Ella', 'Ella'),('El','El'),('Elle','Elle')))
-    idiomas=models.CharField(max_length=10,choices=(('ES', 'Español'),('EN','Inglés'),('FR','Francés'),
-                                                    ('DE','Alemán'),('PT','Portugués'),('IT','Italiano'),
-                                                    ('SV','Sueco'),('OT','Otro')))
+    pronombres=models.CharField(max_length=4,choices=(('Ella', 'Ella'),('El','El'),('Elle','Elle')))    
     universidad=models.CharField(max_length=40)
     estudios=models.CharField(max_length=40)
+    idiomas=models.ManyToManyField(to=Idiomas)
     tags=models.ManyToManyField(to=Tags)
     aficiones=models.ManyToManyField(to=Aficiones)
 
     piso_encontrado=models.BooleanField(default=False)
-    fecha_premium=models.DateTimeField()
+    fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
 
     @classmethod
     def get_edad(cls):
@@ -50,6 +54,8 @@ class Usuario(models.Model):
 
     @classmethod
     def es_premium(cls):
+        if cls.fecha_premium==None:
+            return False
         today = datetime.time
         fecha_premium_fin = cls.fecha_premium + relativedelta(months=+1)
 
