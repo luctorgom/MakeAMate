@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
-from .models import Usuario,Mates
+
+from principal.forms import RegistroForm
+from .models import Idiomas, Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -145,3 +147,31 @@ def estadisticas_mates(request):
     
     params={"lista":listmates, "topTags":dicTags}
     return render(request,'homepage.html',params)
+
+def registro(request):
+    form = RegistroForm()
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid:
+            usuario = form['usuario']
+            contraseña = form['contraseña']
+            form_piso = form['piso']
+            form_foto = form['foto']
+            form_fecha_nacimiento = form['fecha_nacimiento']
+            form_lugar = form['lugar']
+            form_nacionalidad = form['nacionalidad']
+            form_genero = form['genero']
+            form_pronombres = form['pronombres']
+            form_universidad = form['universidad']
+            form_estudios = form['estudios']
+            form_idiomas = form['idiomas']
+            form_tags = form['tags']
+            form_aficiones = form['aficiones']
+
+            user = User.objects.create(username=usuario,password=contraseña)
+            user.save()
+            perfil = Usuario.objects.create(usuario = user, piso = form_piso, foto = form_foto,
+            fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad, genero = form_genero,
+            pronombres = form_pronombres, universidad = form_universidad, estudios = form_estudios, idiomas = form_idiomas, tags = form_tags, aficiones = form_aficiones)
+            perfil.save()
+    return render(request, 'registro.html', {'form': form})

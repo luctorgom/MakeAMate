@@ -27,4 +27,5 @@ urlpatterns = [
     path("payments/",views.payments,name="payments"),
     path("mates/",views.estadisticas_mates,name="mates"),
     path('', views.homepage,name="home"),
+    path('registro', views.registro, name="registro"),
 ]
