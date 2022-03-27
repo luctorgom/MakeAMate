@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    
     {%load static %}
     <link href="/static/css/styleChat.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -48,8 +49,7 @@
                                     </a>
                                     <div class="chat-about">
                                         
-                                        <div class="name" id="usuarioProv">{{ room_name }}</div> 
-                                        <!--<div class="name" id="usuarioProv">{{request.user.username}}</div>--> 
+                                        <div class="name" id="nombresala">{{ room_name }}</div> 
                                         <!--<div id="ocultisimo">{{chatUser}}</div>-->
                                     </div>
                                 </div>  
@@ -78,6 +78,7 @@
                 </div>
             </div>
         </div>
+        <div class="name" id="usuarioProv" hidden>{{request.user.username}}</div> 
     </div>
 
 </body>
@@ -96,7 +97,7 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-
+            document.getElementById("usuarioProv").style.display = "none"
             var micapa = document.getElementById('chat-history');
             var usuarioProv= document.getElementById('usuarioProv').textContent;            
               

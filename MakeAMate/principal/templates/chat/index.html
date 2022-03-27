@@ -1,37 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
-</head>
-<body>
 
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    Who would you like to start chatting with?<br>
-    <select name="Participantes" id="participants-input" class="form-control" id="Participantes" multiple required>
-        {% for u in users %}      
-            <option value="{{ u }}">{{ u }}</option>
-        {% endfor %}
-      </select>
-    <input id="room-name-submit" type="button" value="Enter">
+{% extends "base.html" %}
+{% block extrahead %}
+{%load static %}
+    <link href="/static/css/styleChat.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <title>Tus chats</title>
+{% endblock %}    
+{% block content %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card chat-app">
+                    <div id="plist" class="people-list">
+                        <ul class="list-unstyled chat-list mt-2 mb-0" id="people-chat-list">
+                                {% for c in chats %}
+                                    <a href="{{c.name}}">
+                                    <li class="clearfix">
+                                    {% if c.group is not True %}
+                                        {% for p in c.participants.all %}
+                                            {% if request.user != p%}
+                                                {{p.username}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {{c.room_name}}
+                                    {%endif%}
+                                    </li>
+                                    </a>
 
-    <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
-        document.querySelector('#participants-input').focus();
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-        document.querySelector('#room-name-submit').onclick = function(e) {
-            var roomParticipants = document.querySelector('#participants-input').value;
-            var roomName = document.querySelector('#room-name-input').value;
-            //var roomName = document.querySelector('#participants-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
-        };
-    </script>
-</body>
-</html>
+{% endblock %}
