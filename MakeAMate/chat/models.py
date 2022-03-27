@@ -11,11 +11,12 @@ class Chat(models.Model):
         return self.content
 
 class ChatRoom(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.AutoField(primary_key=True)
     participants = models.ManyToManyField(User)
-
-    def __str__(self):
-        return self.name
-
-
-#habría que cambiar el user por el perfil?
+    room_name = models.CharField(max_length=255, blank=True, default='')
+    @classmethod
+    def group(self):
+        if len(self.participants)>2:
+            return True
+        else:
+            return False
