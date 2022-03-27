@@ -10,6 +10,7 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from chat.views import crear_sala
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -68,6 +69,8 @@ def accept_mate(request):
     try:
         reverse_mate = Mates.objects.get(userEntrada=usuario, userSalida=request.user)
         mate_achieved = reverse_mate.mate
+        print([request.user.id, usuario.id])
+        crear_sala([request.user.id, usuario.id])
     except Mates.DoesNotExist:
         mate_achieved = False
 
