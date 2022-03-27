@@ -3,7 +3,7 @@ import json
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
-from .models import Aficiones, Gustos, Mates, Tags, Usuario
+from .models import Aficiones, Mates, Tags, Usuario
 from django.contrib.auth.models import User
 
 # Test mates
@@ -139,7 +139,6 @@ class FiltesTests(TestCase):
 
         etiquetas= Tags.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
-        gusto= Gustos.objects.create(opcionGustos="Fotografía")
         
         Pepe= Usuario.objects.create(usuario=userPepe, piso=False, fecha_nacimiento=date(2000,12,31),
         edad=20,lugar="Sevilla")
