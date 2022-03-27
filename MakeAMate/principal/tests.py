@@ -3,7 +3,7 @@ import json
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
-from .models import Aficiones, Mates, Tags, Usuario
+from .models import Aficiones, Mates, Tags, Usuario, Idiomas
 from django.contrib.auth.models import User
 
 # Test mates
@@ -18,11 +18,11 @@ class MateTestCase(TestCase):
         self.user3.set_password('123')
 
         perfil1 = Usuario(usuario=self.user1,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
+                            genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         perfil2 = Usuario(usuario=self.user2,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
+                            genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         perfil3 = Usuario(usuario=self.user3,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
+                            genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         
         mate = Mates(userEntrada=self.user3, userSalida=self.user1, mate=True)
 
@@ -139,7 +139,8 @@ class FiltesTests(TestCase):
 
         etiquetas= Tags.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
-        
+        idioma = Idiomas.objects.create(idioma="Español")
+
         Pepe= Usuario.objects.create(usuario=userPepe, piso=False, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
         Maria=Usuario.objects.create(usuario=userMaria, piso=True, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
         
@@ -172,7 +173,7 @@ class LoginTest(TestCase):
         user = User(username='usuario')
         user.set_password('qwery')
         perfil = Usuario(usuario=user,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
-                genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
+                genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         user.save()
         perfil.save()
         super().setUp()
