@@ -33,7 +33,7 @@ def logout_view(request):
 
 
 def register_view(request):
-    template='loggeos/register.html'    
+    template='loggeos/register2.html'    
     params = {'form': UsuarioForm()}
     return render(request,template, params)
 
