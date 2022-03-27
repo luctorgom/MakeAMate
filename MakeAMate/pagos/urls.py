@@ -3,6 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',views.hola ,name='paypal' ),
+    path('',views.paypal ,name='paypal' ),
 
 ]
