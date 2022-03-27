@@ -48,7 +48,8 @@
                                     </a>
                                     <div class="chat-about">
                                         
-                                        <div class="name" id="usuarioProv">{{request.user.username}}</div> 
+                                        <div class="name" id="usuarioProv">{{ room_name }}</div> 
+                                        <!--<div class="name" id="usuarioProv">{{request.user.username}}</div>--> 
                                         <!--<div id="ocultisimo">{{chatUser}}</div>-->
                                     </div>
                                 </div>  
@@ -99,6 +100,7 @@
             var micapa = document.getElementById('chat-history');
             var usuarioProv= document.getElementById('usuarioProv').textContent;            
               
+
 
             if(usuarioProv == data.name)
                 micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.name + ":"+data.message+'</div></li>';

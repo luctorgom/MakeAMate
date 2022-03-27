@@ -12,7 +12,7 @@ class Chat(models.Model):
 
 class ChatRoom(models.Model):
     name = models.CharField(max_length=255)
-    #participants = models.ManyToManyField(User)
+    participants = models.ManyToManyField(User)
 
     def __str__(self):
         return self.name
