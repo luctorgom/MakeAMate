@@ -57,25 +57,6 @@
                         </div>
                         <div class="chat-history" id="chat-history">
                             <ul class="m-b-0">
-                                <li class="clearfix">
-                                    <div class="message-data text-right float-right">
-                                        <span class="message-data-time">10:10, Hoy</span>
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
-                                    </div>
-                                    <div class="message other-message float-right"> Hola Elena soy Elena también jajaja, ¿eres de Sevilla verdad? </div>
-                                </li>
-                                <li class="clearfix">
-                                    <div class="message-data">
-                                        <span class="message-data-time">10:12, Hoy</span>
-                                    </div>
-                                    <div class="message my-message">Siiiiiiiiiiiii tocaya jajajaja</div>                                    
-                                </li>                               
-                                <li class="clearfix">
-                                    <div class="message-data">
-                                        <span class="message-data-time">10:15, Hoy</span>
-                                    </div>
-                                    <div class="message my-message">¿Es cierto que tienes un gato en casa? A mí me encantan</div>
-                                </li>
                                 <li>
                                     <div class="message-data text-right float-right">
                                         <div class="message-data">
@@ -88,8 +69,8 @@
 
                         <div class="chat-message clearfix">
                             <div class="input-group mb-0">
-                                <input id="chat-message-input" type="text" style='width:100%'>
-                                <input id="chat-message-submit" type="button" value="Enviar" style='width:10%'>                                    
+                                <input  class="chat-message-input" id="chat-message-input" type="text">
+                                <input class="chat-message-submit" id="chat-message-submit" type="button" value="Enviar">                                    
                             </div>
                         </div>
 
@@ -117,14 +98,19 @@
             const data = JSON.parse(e.data);
 
             var micapa = document.getElementById('chat-history');
-            var usuarioProv= document.getElementById('usuarioProv').textContent;
+            var usuarioProv= document.getElementById('usuarioProv').textContent;            
+              
 
-            if("maria1" == data.name)
+
+            if(usuarioProv == data.name)
                 micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.name + ":"+data.message+'</div></li>';
             else
                 micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ":"+data.message+'</div></li>';
+            
+            micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
         
         };
+        
 
         // onclose - An event listener to be called when the connection is closed.
         chatSocket.onclose = function(e) {
