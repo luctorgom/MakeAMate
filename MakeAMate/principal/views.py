@@ -97,6 +97,10 @@ def payments(request):
     template='payments.html'
     return render(request,template) 
 
+def notifications(request):
+    template='notifications.html'
+    return render(request,template) 
+
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
