@@ -7,3 +7,10 @@ class Suscripcion(models.Model):
 
     def __str__(self):
         return self.name
+class Order(models.Model):
+	suscripcion = models.ForeignKey(Suscripcion, max_length=200, null=True, blank=True, on_delete = models.SET_NULL)
+	created =  models.DateTimeField(auto_now_add=True) 
+
+	def __str__(self):
+		return self.product.name
+

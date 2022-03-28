@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+
+from pagos.models import Suscripcion
 from .models import Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -94,8 +96,10 @@ def reject_mate(request):
 
 
 def payments(request):
+    suscripcion=Suscripcion.objects.all()[0]
     template='payments.html'
-    return render(request,template) 
+    params={'suscripcion':suscripcion}
+    return render(request,template,params) 
 
 def notificaciones_mates(request):
     loggeado= request.user

@@ -23,20 +23,17 @@
                     <a href="#" class="pricingTable-signup">Plan Actual</a>
                 </div>
             </div>
+            
             <div class="col-md-6 col-sm-6">
                 <div class="pricingTable">
-                    <h3 class="title">PREMIUM</h3>
-                    <div class="price-value">5€
+                    <h3 class="title">{{suscripcion.name}}</h3>
+                    <div class="price-value">{{suscripcion.price}}
                         <span class="month">/mes</span>
                     </div>
                     <ul class="pricing-content">
-                        <li>Promociona tu perfil</li>
-                        <li>Todas las características del plan GRATIS</li>
-                        <li>Consulta quién te ha dado mate</li>
-                        <li>Deslizar hacia atrás</li>
-                        <li>Consulta tus estadísticas</li>
+                       {{suscripcion.description}}
                     </ul>
-                    <a href="{% url 'paypal' %}" class="pricingTable-signup">Consigue Premium</a>
+                    <a href="{% url 'paypal' suscripcion.id %}" class="pricingTable-signup">Consigue Premium</a>
                 </div>
             </div>
             
