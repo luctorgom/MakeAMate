@@ -28,7 +28,22 @@
     
     })     
 </script>
+{% comment %} <script type="text/javascript">
+    //CONTADOR PARA ACTUALIZAR NOTIFICACIONES
+    var n = 0;
+    var l = document.getElementById("number");
+    window.setInterval(function(){
+    l.innerHTML = n;
+    n++;
+    },1000);
 
+    if(document.getElementById("number").equals("60000")){
+        document.getElementById("number")="0";
+    }
+
+
+
+</script> {% endcomment %}
 {% block extrahead %}
 
     
@@ -55,7 +70,7 @@
   <div class="container-notificaciones" id="Notificaciones">
     <div class="logo-notificaciones"></div>
     <a href="{% url 'home' %}"><img class ="logo" src="/static/logotipo.png"></a>
-    <div class="icon-notificaciones" id="bell"> <img src="https://i.imgur.com/AC7dgLA.png" alt="img"> </div>
+    <div class="icon-notificaciones" id="bell"> <img src="..\static\images\icons\bell-on2.png" alt="img"> </div>
     <div class="notifications" id="box">
         <h2 class="notificacion-text">Notifications - <span> {{notificaciones|length}} </span></h2>
         {%for i in notificaciones %}
