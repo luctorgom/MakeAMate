@@ -17,6 +17,10 @@ def index(request):
         lista_usuarios.append(participantes[0])
     return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
 
+def grupos(request):
+    lista_mates = notificaciones_mates(request)
+    return render(request, 'chat/grupos.html',{'users': lista_mates})
+
 
 def room(request, room_name):
 
