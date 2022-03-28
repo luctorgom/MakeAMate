@@ -14,9 +14,9 @@ class ChatRoom(models.Model):
     name = models.AutoField(primary_key=True)
     participants = models.ManyToManyField(User)
     room_name = models.CharField(max_length=255, blank=True, default='')
-    @classmethod
+
     def group(self):
-        if len(self.participants)>2:
+        if len(self.participants.all()) > 2:
             return True
         else:
             return False

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    
     {%load static %}
     <link href="/static/css/styleChat.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -47,9 +48,7 @@
                                         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        
-                                        <div class="name" id="usuarioProv">{{ data.name }}</div> 
-                                        <!--<div class="name" id="usuarioProv">{{request.user.username}}</div>--> 
+                                        <div class="name" id="nombresala">{{ room_name }}</div> 
                                         <!--<div id="ocultisimo">{{chatUser}}</div>-->
                                     </div>
                                 </div>  
@@ -82,6 +81,7 @@
                 </div>
             </div>
         </div>
+        <div class="name" id="usuarioProv" hidden>{{request.user.username}}</div> 
     </div>
 
 </body>
@@ -100,14 +100,14 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-
+            document.getElementById("usuarioProv").style.display = "none"
             var micapa = document.getElementById('chat-history');
             var usuarioProv= document.getElementById('usuarioProv').textContent;            
               
 
 
             if(usuarioProv == data.name)
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.name + ":"+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
             else
                 micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ":"+data.message+'</div></li>';
             

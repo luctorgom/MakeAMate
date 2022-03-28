@@ -6,7 +6,16 @@ from django.db.models import Q
 
 def index(request):
     lista_mates = notificaciones_mates(request)
-    return render(request, 'chat/index.html',{'users': lista_mates})
+    lista_chat = []
+    chats = ChatRoom.objects.all()
+    for c in chats:
+        if request.user in c.participants.all():
+            lista_chat.append(c)
+    lista_usuarios = []
+    for c in lista_chat:
+        participantes = c.participants.filter(~Q(id=request.user.id))
+        lista_usuarios.append(participantes[0])
+    return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
 
 def grupos(request):
     lista_mates = notificaciones_mates(request)
@@ -27,7 +36,7 @@ def room(request, room_name):
             'room_name': room_name
         })
     else:
-        return render(request, 'chat/index.html')
+        return index(request)
 
 def crear_sala(room_participants):
     room = ChatRoom.objects.create()
