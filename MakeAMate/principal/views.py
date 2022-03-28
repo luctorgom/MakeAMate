@@ -11,7 +11,8 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
+from datetime import datetime
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -58,7 +59,7 @@ def accept_mate(request):
         return redirect(login_view)
 
     id_us = request.POST['id_us']
-    usuario = get_object_or_404(User, pk=id_us)  
+    usuario = get_object_or_404(User, pk=id_us)
 
     if usuario == request.user:
         response = { 'success': False }
@@ -83,60 +84,74 @@ def reject_mate(request):
         return redirect(login_view)
 
     id_us = request.POST['id_us']
-    usuario = get_object_or_404(User, pk=id_us)  
-    
+    usuario = get_object_or_404(User, pk=id_us)
+
     if usuario == request.user:
         response = { 'success': False, }
         return JsonResponse(response)
-    
+
     mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
-    
+
     response = { 'success': True, }
     return JsonResponse(response)
 
 
 def payments(request):
     template='payments.html'
-    return render(request,template) 
+    return render(request,template)
 
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
-    print("Usuario loggeado: " + str(loggeado))
-    print(loggeado)
-    print("Lista usuarios: " + str(lista_usuarios))
-    print(lista_usuarios)
+    #print("Usuario loggeado: " + str(loggeado))
+    #print(loggeado)
+    #print("Lista usuarios: " + str(lista_usuarios))
+    #print(lista_usuarios)
     lista_mates=[]
     for i in lista_usuarios:
         try:
             mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-            print("Mate 1: " + str(mate1))
-            print("Mate 2: " + str(mate2))
+            #print("Mate 1: " + str(mate1))
+            #print("Mate 2: " + str(mate2))
             lista_mates.append(mate1.userSalida)
         except Mates.DoesNotExist:
             print("NO EXISTE MATE CON "+ str(i))
-    print("lista_mates: " + str(lista_mates))
+    #print("lista_mates: " + str(lista_mates))
     return lista_mates
 
 def estadisticas_mates(request):
     loggeado= request.user
+    perfil=Usuario.objects.get(usuario=loggeado)
+
+    #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
+    mesActual=datetime.now().month
     listmates=[]
-    matesRecibidos=Mates.objects.filter(mate=True,userSalida=loggeado)
-    for i in matesRecibidos:
-        listmates.append(i.userEntrada)
+    matesRecibidos=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
+    #print(matesRecibidos)
+    for mR in matesRecibidos:
+        listmates.append(mR.userEntrada)
     #print(listmates)
     matesDados=Mates.objects.filter(userEntrada=loggeado)
-    for i in matesDados:
-        #print(i.userSalida)
-        if(i.userSalida in listmates):
-            listmates.remove(i.userSalida)
+    #print(matesDados)
+    eliminados=0
+    for mD in matesDados:
+        #print(mD.userSalida)
+        if(mD.userSalida in listmates):
+            eliminados+=1
+            listmates.remove(mD.userSalida)
             #print(listmates)
+
+    #LIKES POR DÍA PARA LA GRÁFICA
+    matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')-eliminados).order_by()
+    #print(matesporFecha[0]['fecha_mate__date']) Recorrer diccionario par dia-numero likes
+
+    #TOP TAGS CON QUIEN TE HA DADO LIKE
     listtags=[]
-    tagsloggeado=Usuario.objects.get(usuario=loggeado).tags.all().values()
-    for i in tagsloggeado:
-        listtags.append(i['etiqueta'])
-    
+    tagsloggeado=perfil.tags.all().values()
+    for tagl in tagsloggeado:
+        listtags.append(tagl['etiqueta'])
+
     listTop=[]
     for m in listmates:
         tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
@@ -144,7 +159,12 @@ def estadisticas_mates(request):
             if tm['etiqueta'] in listtags:
                 listTop.append(tm['etiqueta'])
     dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
-    
+
+    #COMPARATIVA NO PREMIUM VS PREMIUM
+    fechaPremium=perfil.fecha_premium
+    #mRNoPremium=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaPremium).count
+    #mRPremium=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaPremium).count
+
     params={"lista":listmates, "topTags":dicTags}
     return render(request,'homepage.html',params)
 
