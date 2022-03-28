@@ -27,11 +27,11 @@ class Idioma(models.Model):
         return str(self.idioma)        
 
 class Piso(models.Model):
-    direccion=models.CharField(max_length=100)
-    descripcion=models.CharField(max_length=1000)
+    zona=models.CharField(max_length=100)
+    descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
 
     def __str__(self):
-        return str(self.direccion)
+        return str(self.zona)
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -39,9 +39,7 @@ class Usuario(models.Model):
     fecha_nacimiento=models.DateField()
     lugar=models.CharField(max_length=40)
     nacionalidad=models.CharField(max_length=20)
-    genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))
-    pronombres=models.CharField(max_length=4,choices=(('Ella', 'Ella'),('El','El'),('Elle','Elle')))    
-    universidad=models.CharField(max_length=40)
+    genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))  
     estudios=models.CharField(max_length=40)
     idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
@@ -49,6 +47,8 @@ class Usuario(models.Model):
 
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
+    descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
+    foto=models.ImageField(upload_to="principal/static/images/users")
 
     @classmethod
     def get_edad(cls):
@@ -73,8 +73,7 @@ class Usuario(models.Model):
 
 class Foto(models.Model):
     titulo=models.CharField(max_length=30)
-    foto=models.ImageField(upload_to="principal/static/images/users")
-    usuario=models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    foto=models.ImageField(upload_to="principal/static/images/pisos")
     piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
 
     def __str__(self):
@@ -93,7 +92,7 @@ class Mate(models.Model):
         unique_together = ('userEntrada', 'userSalida',)
 
 class Oferta(models.Model):
-    precio=models.IntegerField()
+    precio=models.DecimalField(max_digits=6, decimal_places=2)
     descuento=models.FloatField(default=0)
     duracion_meses=models.IntegerField()
 

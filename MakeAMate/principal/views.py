@@ -100,19 +100,13 @@ def payments(request):
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
-    print("Usuario loggeado: " + str(loggeado))
-    print(loggeado)
-    print("Lista usuarios: " + str(lista_usuarios))
-    print(lista_usuarios)
     lista_mates=[]
     for i in lista_usuarios:
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-            print("Mate 1: " + str(mate1))
-            print("Mate 2: " + str(mate2))
+
             lista_mates.append(mate1.userSalida)
         except Mate.DoesNotExist:
-            print("NO EXISTE MATE CON "+ str(i))
-    print("lista_mates: " + str(lista_mates))
+            pass
     return lista_mates
