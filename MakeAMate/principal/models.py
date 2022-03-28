@@ -14,13 +14,13 @@ class Aficiones(models.Model):
     def __str__(self):
         return str(self.opcionAficiones)
 
-class Tags(models.Model):
+class Tag(models.Model):
     etiqueta=models.CharField(max_length=40)
 
     def __str__(self):
         return str(self.etiqueta)
 
-class Idiomas(models.Model):
+class Idioma(models.Model):
     idioma=models.CharField(max_length=20)
 
     def __str__(self):
@@ -43,8 +43,8 @@ class Usuario(models.Model):
     pronombres=models.CharField(max_length=4,choices=(('Ella', 'Ella'),('El','El'),('Elle','Elle')))    
     universidad=models.CharField(max_length=40)
     estudios=models.CharField(max_length=40)
-    idiomas=models.ManyToManyField(Idiomas)
-    tags=models.ManyToManyField(Tags)
+    idiomas=models.ManyToManyField(Idioma)
+    tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
 
     piso_encontrado=models.BooleanField(default=False)
@@ -80,7 +80,7 @@ class Foto(models.Model):
     def __str__(self):
         return str(self.titulo)        
 
-class Mates(models.Model):
+class Mate(models.Model):
     mate=models.BooleanField(default=NullBooleanField)
     userEntrada=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="entrada", on_delete=models.CASCADE)
     userSalida=models.ForeignKey(settings.AUTH_USER_MODEL, related_name="salida",on_delete=models.CASCADE)
@@ -92,7 +92,7 @@ class Mates(models.Model):
     class Meta:
         unique_together = ('userEntrada', 'userSalida',)
 
-class Ofertas(models.Model):
+class Oferta(models.Model):
     precio=models.IntegerField()
     descuento=models.FloatField(default=0)
     duracion_meses=models.IntegerField()

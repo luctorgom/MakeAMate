@@ -3,7 +3,7 @@ import json
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
-from .models import Aficiones, Mates, Tags, Usuario, Idiomas, Piso, Foto
+from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto
 from django.contrib.auth.models import User
 
 # Test mates
@@ -24,7 +24,7 @@ class MateTestCase(TestCase):
         perfil3 = Usuario(usuario=self.user3,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
                             genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         
-        mate = Mates(userEntrada=self.user3, userSalida=self.user1, mate=True)
+        mate = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
 
         self.user1.save()
         self.user2.save()
@@ -40,7 +40,7 @@ class MateTestCase(TestCase):
         data = {'id_us': 1}
         response = self.client.post('/accept-mate/', data, format='json')
         json_resp = json.loads(response.content)
-        mate = Mates.objects.get(userEntrada=self.user1, userSalida=self.user2)
+        mate = Mate.objects.get(userEntrada=self.user1, userSalida=self.user2)
 
         self.assertTrue(mate.mate)
         self.assertTrue(json_resp['success'])
@@ -53,7 +53,7 @@ class MateTestCase(TestCase):
         data = {'id_us': 1}
         response = self.client.post('/reject-mate/', data, format='json')
         json_resp = json.loads(response.content)
-        mate = Mates.objects.get(userEntrada=self.user1, userSalida=self.user2)
+        mate = Mate.objects.get(userEntrada=self.user1, userSalida=self.user2)
 
         self.assertFalse(mate.mate)
         self.assertTrue(json_resp['success'])
@@ -64,7 +64,7 @@ class MateTestCase(TestCase):
         data = {'id_us': 2}
         response = self.client.post('/accept-mate/', data, format='json')
         json_resp = json.loads(response.content)
-        mate = Mates.objects.get(userEntrada=self.user1, userSalida=self.user3)
+        mate = Mate.objects.get(userEntrada=self.user1, userSalida=self.user3)
 
         self.assertTrue(mate.mate)
         self.assertTrue(json_resp['success'])
@@ -137,9 +137,9 @@ class FiltesTests(TestCase):
         userSara.set_password("asdfg")
         userSara.save()
 
-        etiquetas= Tags.objects.create(etiqueta="No fumador")
+        etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
-        idioma = Idiomas.objects.create(idioma="Español")
+        idioma = Idioma.objects.create(idioma="Español")
         
         piso_maria = Piso.objects.create(direccion="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(direccion="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
@@ -156,7 +156,7 @@ class FiltesTests(TestCase):
         c= Client()
         login= c.login(username='Pepe', password= 'asdfg')
         response=c.get('/')
-        
+
         self.assertTrue( len(response.context['usuarios']) == 1)
         self.assertEqual(response.status_code, 200)
        
@@ -225,11 +225,11 @@ class NotificacionesTest(TestCase):
         sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
 
         #MATE ENTRE user y user2
-        mate1 = Mates.objects.create(mate=True,userEntrada=user, userSalida=user2)
-        mate2 = Mates.objects.create(mate=True,userEntrada=user2, userSalida=user)
+        mate1 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user2)
+        mate2 = Mate.objects.create(mate=True,userEntrada=user2, userSalida=user)
 
         #EL user LE DA MATE AL user3, PERO EL user3 NO LE DA MATE A ÉL
-        mate3 = Mates.objects.create(mate=True,userEntrada=user, userSalida=user3)
+        mate3 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user3)
         super().setUp()
 
 
