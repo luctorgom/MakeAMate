@@ -73,7 +73,7 @@ class Usuario(models.Model):
 
 class Foto(models.Model):
     titulo=models.CharField(max_length=30)
-    foto=models.ImageField(upload_to="static/images/users")
+    foto=models.ImageField(upload_to="principal/static/images/users")
     usuario=models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None, blank=True, null=True)
     piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
 
