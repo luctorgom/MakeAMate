@@ -8,6 +8,10 @@ def index(request):
     lista_mates = notificaciones_mates(request)
     return render(request, 'chat/index.html',{'users': lista_mates})
 
+def grupos(request):
+    lista_mates = notificaciones_mates(request)
+    return render(request, 'chat/grupos.html',{'users': lista_mates})
+
 
 def room(request, room_name):
 
