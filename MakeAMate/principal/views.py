@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from principal.forms import RegistroForm
-from .models import Idiomas, Usuario,Mates
+from principal.forms import UsuarioForm
+from .models import Idiomas, Tags, Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -13,6 +13,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
+from django.db.models import Q
+from .forms import UsuarioForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -32,6 +34,12 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect(homepage)
+
+
+def register_view(request):
+    template='loggeos/register2.html'    
+    params = {'form': UsuarioForm()}
+    return render(request,template, params)
 
 
 @login_required(login_url="/login")
@@ -169,29 +177,70 @@ def estadisticas_mates(request):
     return render(request,'homepage.html',params)
 
 def registro(request):
-    form = RegistroForm()
+    if request.user.is_authenticated:
+        return redirect(homepage)
+    form = UsuarioForm()
     if request.method == 'POST':
-        form = RegistroForm(request.POST)
-        if form.is_valid:
-            usuario = form['usuario']
-            contraseña = form['contraseña']
-            form_piso = form['piso']
-            form_foto = form['foto']
-            form_fecha_nacimiento = form['fecha_nacimiento']
-            form_lugar = form['lugar']
-            form_nacionalidad = form['nacionalidad']
-            form_genero = form['genero']
-            form_pronombres = form['pronombres']
-            form_universidad = form['universidad']
-            form_estudios = form['estudios']
-            form_idiomas = form['idiomas']
-            form_tags = form['tags']
-            form_aficiones = form['aficiones']
+        form = UsuarioForm(request.POST)
+        if form.is_valid():
+            form_usuario = form.cleaned_data["username"]
+            form_password = form.cleaned_data['password']
+            form_nombre = form.cleaned_data['nombre']
+            form_apellidos = form.cleaned_data['apellidos']
+            form_correo = form.cleaned_data['correo']
 
-            user = User.objects.create(username=usuario,password=contraseña)
-            user.save()
-            perfil = Usuario.objects.create(usuario = user, piso = form_piso, foto = form_foto,
-            fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad, genero = form_genero,
-            pronombres = form_pronombres, universidad = form_universidad, estudios = form_estudios, idiomas = form_idiomas, tags = form_tags, aficiones = form_aficiones)
-            perfil.save()
-    return render(request, 'registro.html', {'form': form})
+            form_piso = form.cleaned_data['piso']
+            #form_foto = form.cleaned_data['foto_usuario']
+            form_fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
+            form_lugar = form.cleaned_data['lugar']
+            form_nacionalidad = form.cleaned_data['nacionalidad']
+            form_genero = form.cleaned_data['genero']
+            form_idiomas = form.cleaned_data['idiomas']
+            form_tags = form.cleaned_data['tags']
+            form_aficiones = form.cleaned_data['aficiones']
+        
+
+            print(form_idiomas)
+            #form_universidad = form.cleaned_data['universidad']
+            #form_estudios = form.cleaned_data['estudios']
+
+            try:
+
+
+                user = User.objects.create(username=form_usuario,password=form_password,
+                first_name=form_nombre, last_name=form_apellidos, email=form_correo)
+                user.save()
+                print("User Guardado")
+
+                # idiomas = Idiomas.objects.create()
+                # idiomas.set(form_idiomas)
+
+                # print(idiomas)
+
+                # tags = Tags.objects.create()
+                # tags.set(form_tags)
+
+                # print(tags)
+
+                # aficiones = aficiones.objects.create()
+                # aficiones.set(form_aficiones)
+
+                # print(aficiones)
+
+                perfil = Usuario.objects.create(usuario = user, piso = form_piso,
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad, genero = form_genero)
+                perfil.idiomas.set(form_idiomas)
+                perfil.tags.set(form_tags)
+                perfil.aficiones.set(form_aficiones)
+
+                # Idiomas, tags y aficiones aún no están dentro del formulario. Al ser una ManyToMany habría que recorrerlos para ir añadiendo los datos
+                perfil.save()
+                print("Perfil Guardado")
+                return redirect(homepage)
+
+            except:
+                return redirect(registro)
+        else:
+            return redirect(registro)
+
+    return render(request, 'loggeos/register.html', {'form': form})
