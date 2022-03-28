@@ -3,7 +3,7 @@ import json
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
-from .models import Aficiones, Mates, Tags, Usuario, Idiomas
+from .models import Aficiones, Mates, Tags, Usuario, Idiomas, Piso, Foto
 from django.contrib.auth.models import User
 
 # Test mates
@@ -17,11 +17,11 @@ class MateTestCase(TestCase):
         self.user3 = User(id=2,username="us3")
         self.user3.set_password('123')
 
-        perfil1 = Usuario(usuario=self.user1,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
                             genero='F',pronombres="Ella",universidad="US",estudios="Informática")
-        perfil2 = Usuario(usuario=self.user2,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
                             genero='F',pronombres="Ella",universidad="US",estudios="Informática")
-        perfil3 = Usuario(usuario=self.user3,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
                             genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         
         mate = Mates(userEntrada=self.user3, userSalida=self.user1, mate=True)
@@ -140,11 +140,13 @@ class FiltesTests(TestCase):
         etiquetas= Tags.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
         idioma = Idiomas.objects.create(idioma="Español")
-
-        Pepe= Usuario.objects.create(usuario=userPepe, piso=False, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
-        Maria=Usuario.objects.create(usuario=userMaria, piso=True, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
         
-        Sara= Usuario.objects.create(usuario=userSara, piso=True,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
+        piso_maria = Piso.objects.create(direccion="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        piso_sara = Piso.objects.create(direccion="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
+
+        Pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
+        Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria)
+        Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara)
     
     
 
@@ -154,6 +156,7 @@ class FiltesTests(TestCase):
         c= Client()
         login= c.login(username='Pepe', password= 'asdfg')
         response=c.get('/')
+        
         self.assertTrue( len(response.context['usuarios']) == 1)
         self.assertEqual(response.status_code, 200)
        
@@ -172,7 +175,8 @@ class LoginTest(TestCase):
     def setUp(self):
         user = User(username='usuario')
         user.set_password('qwery')
-        perfil = Usuario(usuario=user,piso=True,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        piso = Piso.objects.create(direccion="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        perfil = Usuario(usuario=user,piso=piso,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
                 genero='F',pronombres="Ella",universidad="US",estudios="Informática")
         user.save()
         perfil.save()
@@ -212,10 +216,13 @@ class NotificacionesTest(TestCase):
         user3.set_password('qwery')
         user3.save()
 
+        piso_pepe = Piso.objects.create(direccion="Calle Marqués Luca de Tena 1", descripcion="Descripción de prueba 1")   
+        piso_maria = Piso.objects.create(direccion="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        piso_sara = Piso.objects.create(direccion="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
 
-        pepe= Usuario.objects.create(usuario=user, piso=False, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
-        maria=Usuario.objects.create(usuario=user2, piso=True, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
-        sara= Usuario.objects.create(usuario=user3, piso=True,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
+        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
+        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
+        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
 
         #MATE ENTRE user y user2
         mate1 = Mates.objects.create(mate=True,userEntrada=user, userSalida=user2)

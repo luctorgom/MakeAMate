@@ -26,13 +26,16 @@ class Idiomas(models.Model):
     def __str__(self):
         return str(self.idioma)        
 
-class Foto(models.Model):
-    foto=models.ImageField(upload_to="static/images/users")
+class Piso(models.Model):
+    direccion=models.CharField(max_length=100)
+    descripcion=models.CharField(max_length=1000)
+
+    def __str__(self):
+        return str(self.direccion)
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    piso=models.BooleanField()
-    foto=models.ForeignKey(Foto, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
     fecha_nacimiento=models.DateField()
     lugar=models.CharField(max_length=40)
     nacionalidad=models.CharField(max_length=20)
@@ -40,9 +43,9 @@ class Usuario(models.Model):
     pronombres=models.CharField(max_length=4,choices=(('Ella', 'Ella'),('El','El'),('Elle','Elle')))    
     universidad=models.CharField(max_length=40)
     estudios=models.CharField(max_length=40)
-    idiomas=models.ManyToManyField(to=Idiomas)
-    tags=models.ManyToManyField(to=Tags)
-    aficiones=models.ManyToManyField(to=Aficiones)
+    idiomas=models.ManyToManyField(Idiomas)
+    tags=models.ManyToManyField(Tags)
+    aficiones=models.ManyToManyField(Aficiones)
 
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
@@ -51,6 +54,10 @@ class Usuario(models.Model):
     def get_edad(cls):
         today = date.today()
         return today.year - cls.fecha_nacimiento.year - ((today.month, today.day) < (cls.fecha_nacimiento.month, cls.fecha_nacimiento.day))
+
+    @classmethod
+    def tiene_piso(cls):
+        return True if cls.piso != None else False
 
     @classmethod
     def es_premium(cls):
@@ -63,6 +70,15 @@ class Usuario(models.Model):
 
     def __str__(self):
         return str(self.usuario)
+
+class Foto(models.Model):
+    titulo=models.CharField(max_length=30)
+    foto=models.ImageField(upload_to="static/images/users")
+    usuario=models.ForeignKey(Usuario, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.titulo)        
 
 class Mates(models.Model):
     mate=models.BooleanField(default=NullBooleanField)
@@ -80,3 +96,6 @@ class Ofertas(models.Model):
     precio=models.IntegerField()
     descuento=models.FloatField(default=0)
     duracion_meses=models.IntegerField()
+
+    def __str__(self):
+        return str("Precio = " + str(self.precio) + ", descuento = " + str(self.descuento) + ", duración = " + str(self.duracion_meses))
