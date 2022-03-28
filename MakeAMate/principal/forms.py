@@ -22,8 +22,8 @@ class UsuarioForm(forms.Form):
              ##                                       ('SV','Sueco'),('OT','Otro')),required=True,widget=forms.SelectMultiple())
     ##universidad = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Centro de estudios'}))
     ##estudios = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Estudios'}))
-    tags = forms.MultipleChoiceField(label="Tags que te definen",required=True,choices=Tags.objects.all)    ##
-    gustos = forms.MultipleChoiceField(label="Tus gustos",required=True,choices=Gustos.objects.all)         ##
+    tags = forms.ModelMultipleChoiceField(queryset=Tags.objects.all(),required=True,widget=forms.SelectMultiple(attrs={'class': 'select_field_class'}))    ##
+    gustos = forms.ModelMultipleChoiceField(queryset=Gustos.objects.all(),required=True,widget=forms.SelectMultiple(attrs={'class': 'select_field_class'}))         ##
     ##otras_tags = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Añade otras tags de la siguente forma: amigable,activo,...'}))    ###
     ##otros_gustos = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Añade otros gustos de la siguente forma: amigable,activo,...'}))   ###
     fotos_usuario = forms.FileField(label="Fotos")

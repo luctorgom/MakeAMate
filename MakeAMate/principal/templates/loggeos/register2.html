@@ -6,6 +6,8 @@
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
      <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 <style>
 * {
     
@@ -272,6 +274,10 @@ p {
                                 </div>
                             </div> <label class="fieldlabels">Nombre: *</label>{{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento</label>  {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudios</label>   {{  form.lugar  }}  
                             <label class="fieldlabels">Género</label>   {{  form.genero  }}
+                            <br>
+                            <label class="fieldlabels">Tags</label>{{ form.tags }}
+                            <br>
+                            <label class="fieldlabels">Gustos</label> {{ form.gustos }}
                         </div> <input type="button" name="next" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
                     </fieldset>
                     <fieldset>
@@ -395,4 +401,5 @@ p {
 
     });
 </script>
+<script>$('.select_field_class').select2( { placeholder: "Selecciona etiquetas que te definan", maximumSelectionSize: 100 } );</script>
 {% endblock %}
