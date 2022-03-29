@@ -27,5 +27,5 @@ urlpatterns = [
     path("payments/",views.payments,name="payments"),
     path('', views.homepage,name="home"),
     path('paypal/<int:pk>/', include('pagos.urls')),
-    path('complete/', include('pagos.urls')),
+    path('', include('pagos.urls')),
 ]

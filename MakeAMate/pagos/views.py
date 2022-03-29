@@ -17,7 +17,6 @@ def paypal(request,pk):
 
 def paymentComplete(request):
     
-    print(Usuario.objects.get(request.user))
     body = json.loads(request.body)
     print('BODY:', body)
     suscripcion = Suscripcion.objects.get(id=body['suscripcionId'])

@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     path('',views.paypal ,name='paypal' ),
-    path('', views.paymentComplete, name="complete"),
+    path('complete/', views.paymentComplete, name="complete"),
 
 ]
