@@ -5,13 +5,9 @@ class CrearGrupo(forms.Form):
     def __init__(self, user_list, *args, **kwargs):
 
         super(CrearGrupo, self).__init__(*args, **kwargs)
-        self.fields['Grupo'] = forms.MultipleChoiceField(
+        self.fields['Personas'] = forms.MultipleChoiceField( required=False,
             widget = forms.CheckboxSelectMultiple,
             choices=tuple([(name.id, name) for name in user_list]),
-
             )
-    Nombre = forms.CharField()
-    Grupo = forms.MultipleChoiceField()
-
-    
-
+    Nombre = forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'nombrePartitipante'}))
+    Personas = forms.MultipleChoiceField()
