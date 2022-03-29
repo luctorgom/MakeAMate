@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.db import models
 from django.forms import NullBooleanField
-from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 

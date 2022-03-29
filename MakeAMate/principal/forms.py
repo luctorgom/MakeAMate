@@ -6,6 +6,9 @@ import re
 from datetime import *
 
 
+class SmsForm(forms.Form):
+    codigo = forms.CharField(required=True)
+
 class UsuarioForm(forms.Form):
     username = forms.CharField(max_length=100, min_length= 5,
                                required=True,
@@ -179,7 +182,6 @@ class UsuarioForm(forms.Form):
 
     def clean_telefono_usuario(self):
         telefono_usuario = self.cleaned_data.get('telefono_usuario')
-        print(telefono_usuario)
         regex = re.compile(r"^\+\d{1,3}\d{9}$")
 
         if not re.fullmatch(regex, telefono_usuario):
@@ -194,7 +196,6 @@ class UsuarioForm(forms.Form):
 
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')
-        print(piso)
         caracteres = len(piso)
 
         if caracteres > 100:

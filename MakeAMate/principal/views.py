@@ -13,7 +13,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
 from django.db.models import Q
-from .forms import UsuarioForm
+from .forms import UsuarioForm, SmsForm
+import os
+from twilio.rest import Client
+import json
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -192,8 +195,7 @@ def registro(request):
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
             form_telefono_usuario = form.cleaned_data['telefono_usuario']
-
-            print(form_telefono_usuario)
+            
             print("Cogemos los datos")
         
             #form_universidad = form.cleaned_data['universidad']
@@ -231,6 +233,45 @@ def registro(request):
             except:
                 print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
 
-            return redirect(login_view)
+            return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register.html', {'form': form})
+
+
+def twilio(request, user_id):
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+    service_sid = "VAcc9402703856690898876df078a910fa"
+    print(request)
+
+    user = User.objects.get(id = user_id)
+    usuario = Usuario.objects.get(usuario = user)
+    telefono_validar = usuario.telefono
+
+    verification = client.verify \
+                     .services(service_sid) \
+                     .verifications \
+                     .create(to=telefono_validar, channel='sms')
+
+    form = SmsForm()
+    if request.method == 'POST':
+        form = SmsForm(request.POST)
+        if form.is_valid():
+
+            form_codigo = form.cleaned_data["codigo"]
+
+            if verification.status=="pending":
+                verification_check = client.verify \
+                                    .services(service_sid) \
+                                    .verification_checks \
+                                    .create(to=telefono_validar, code=form_codigo)
+
+                if verification_check.status=="approved":
+                    print("Se ha verificado correctamente")
+                    #TODO: hay que guardar todas las cosas antes creadas
+                elif verification_check.status=="pending":
+                    print("No se ha verificado correctamente")
+                    #TODO: hay que redireccionar a la vista del formulario del sms de nuevo
+
+    return render(request, 'loggeos/registerSMS.html', {'form': form})
