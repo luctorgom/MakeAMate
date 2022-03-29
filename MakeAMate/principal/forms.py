@@ -3,6 +3,8 @@ from django.conf import settings
 from principal.models import Idiomas, Aficiones, Tags
 from django.contrib.auth.models import User
 import re
+from datetime import *
+
 
 class UsuarioForm(forms.Form):
     username = forms.CharField(max_length=100, min_length= 5,
@@ -75,6 +77,8 @@ class UsuarioForm(forms.Form):
 
         if len(nombre) > 150:
             raise forms.ValidationError('El nombre debe tener menos de 150 caracteres')
+        
+        return nombre
 
     def clean_apellidos(self):
         apellidos = self.cleaned_data.get('apellidos')
@@ -83,3 +87,80 @@ class UsuarioForm(forms.Form):
 
         if len(apellidos) > 150:
             raise forms.ValidationError('Los apellidos deben tener menos de 150 caracteres')
+
+        return apellidos
+
+    def clean_correo(self):
+        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+        correo = self.cleaned_data.get('correo')
+        if not re.fullmatch(regex, correo):
+            raise forms.ValidationError('Inserte un correo electrónico válido')
+
+        return correo
+
+    #Revisar
+    # def clean_piso(self):
+    #     piso = self.cleaned_data.get('piso')
+    #     print(piso)
+    #     if piso:
+    #         raise forms.ValidationError('Indica si tienes piso')
+
+    #     return piso
+    
+   # def clean_foto_usuario(self):
+
+    def clean_fecha_nacimiento(self):
+        hoy = datetime.now().date()
+        fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+        print(type(fecha_nacimiento))
+        if fecha_nacimiento > hoy:
+            raise forms.ValidationError('Tu fecha de nacimiento no puede ser posterior a la fecha actual')
+
+        today = date.today()
+        edad = today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+        if edad < 18:
+            raise forms.ValidationError('Tienes que ser mayor de edad')
+
+        return fecha_nacimiento
+
+    def clean_lugar(self):
+        lugar = self.cleaned_data.get('lugar')
+        if len(lugar) > 40:
+            raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
+
+        return lugar
+
+    def clean_nacionalidad(self):
+        nacionalidad = self.cleaned_data.get('nacionalidad')
+        if len(nacionalidad) > 20:
+            raise forms.ValidationError('La nacionalidad debe contener menos de 20 caracteres')
+
+        return nacionalidad
+
+    def clean_genero(self):
+        genero = self.cleaned_data.get('genero')
+        generos = ['M', 'F', 'O']
+        if genero not in generos:
+            raise forms.ValidationError('El género debe ser Masculino, Femenino u Otro')
+
+        return genero
+
+    def clean_idiomas(self):
+        idiomas = self.cleaned_data.get('idiomas')
+        if idiomas.count() < 1:
+            raise forms.ValidationError('Por favor, elige al menos un idioma')
+
+        return idiomas
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        if tags.count() < 3:
+            raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
+
+        return tags
+
+    def clean_aficiones(self):
+        aficiones = self.cleaned_data.get('aficiones')
+        if aficiones.count() < 3:
+            raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+
