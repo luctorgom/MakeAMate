@@ -1,26 +1,11 @@
+{% extends "base.html" %}
+{% block extrahead %}
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
     <!-- Add meta tags for mobile and IE -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title> PayPal Checkout Integration | Client Demo </title>
 
-
-</head>
-
-<body>
-    <h1>¡Solo un paso más!</h1>
-    <h3>Usa paypal o tu tarjeta de crédito para finalizar el pago</h3>
-    <!-- <div>{{suscripcion.name}}
-        {{suscripcion.price}} </div> -->
-    <div= id="#paypal-button-container"></div>
-    <!-- Set up a container element for the button -->
-    <div id="paypal-button-container"></div>
-
-    <!-- Include the PayPal JavaScript SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AceG47Y7C4m3kQzyaK2Mr1nQ-JHpQtlvKbkTNl_FaBYxjlt_ZiqwFl9isA1U43HVqTER90J1ygRrsgko&currency=EUR&intent=authorize"></script>
 
     <script>
@@ -85,6 +70,18 @@
 
         }).render('#paypal-button-container');
     </script>
-</body>
+{% endblock %}
 
-</html>
+{% block content %}
+    <h1>¡Solo un paso más!</h1>
+    <h3>Usa paypal o tu tarjeta de crédito para finalizar el pago</h3>
+ 
+    <div= id="#paypal-button-container"></div>
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+
+    
+  
+    
+{% endblock %}
+
