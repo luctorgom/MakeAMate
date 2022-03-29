@@ -14,7 +14,7 @@ class UsuarioForm(forms.Form):
     correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
     piso = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
-    #foto_usuario = forms.ImageField(label="Fotos")
+    foto_usuario = forms.ImageField(label="Fotos")
     fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': '01-01-2000'}), input_formats=settings.DATE_INPUT_FORMATS)
     lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
@@ -30,7 +30,7 @@ class UsuarioForm(forms.Form):
     ##estudios = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Estudios'}))
     ##descripcion = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Descripción'}))
 
-    #Validación del formulario
+    # Validación del formulario
     # def clean(self):
     #     #Se obtienen los datos del formulario
     #     super(UsuarioForm, self).clean()
@@ -53,5 +53,3 @@ class UsuarioForm(forms.Form):
 
     #     if password != password2:
     #         self._errors['password2'] = self.error_class(['Las contraseñas no coinciden'])
-
-    #     nombre = self.cleaned_data.get('nombre')

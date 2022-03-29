@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from principal.forms import UsuarioForm
-from .models import Idiomas, Tags, Usuario,Mates
+from .models import Foto, Idiomas, Tags, Usuario,Mates
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -181,7 +181,7 @@ def registro(request):
         return redirect(homepage)
     form = UsuarioForm()
     if request.method == 'POST':
-        form = UsuarioForm(request.POST)
+        form = UsuarioForm(request.POST, request.FILES)
         if form.is_valid():
             form_usuario = form.cleaned_data["username"]
             form_password = form.cleaned_data['password']
@@ -190,7 +190,7 @@ def registro(request):
             form_correo = form.cleaned_data['correo']
 
             form_piso = form.cleaned_data['piso']
-            #form_foto = form.cleaned_data['foto_usuario']
+            form_foto = form.cleaned_data['foto_usuario']
             form_fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
             form_lugar = form.cleaned_data['lugar']
             form_nacionalidad = form.cleaned_data['nacionalidad']
@@ -199,8 +199,6 @@ def registro(request):
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
         
-
-            print(form_idiomas)
             #form_universidad = form.cleaned_data['universidad']
             #form_estudios = form.cleaned_data['estudios']
 
@@ -212,23 +210,14 @@ def registro(request):
                 user.save()
                 print("User Guardado")
 
-                # idiomas = Idiomas.objects.create()
-                # idiomas.set(form_idiomas)
-
-                # print(idiomas)
-
-                # tags = Tags.objects.create()
-                # tags.set(form_tags)
-
-                # print(tags)
-
-                # aficiones = aficiones.objects.create()
-                # aficiones.set(form_aficiones)
-
-                # print(aficiones)
+                foto_perfil = Foto.objects.create(foto = form_foto)
+                print("Foto guardada")
 
                 perfil = Usuario.objects.create(usuario = user, piso = form_piso,
-                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad, genero = form_genero)
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                genero = form_genero, foto = foto_perfil)
+
+
                 perfil.idiomas.set(form_idiomas)
                 perfil.tags.set(form_tags)
                 perfil.aficiones.set(form_aficiones)
@@ -241,6 +230,6 @@ def registro(request):
             except:
                 return redirect(registro)
         else:
-            return redirect(registro)
+            print("La foto está rota")
 
     return render(request, 'loggeos/register.html', {'form': form})
