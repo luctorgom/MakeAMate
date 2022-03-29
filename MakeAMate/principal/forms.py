@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from principal.models import Idiomas, Aficiones, Tags
+from principal.models import Idioma, Aficiones, Tag, Usuario
 from django.contrib.auth.models import User
 import re
 from datetime import *
@@ -16,14 +16,18 @@ class UsuarioForm(forms.Form):
     apellidos = forms.CharField(required=True, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
     correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
-    piso = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
+
+    zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
+    telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    #VALIDAR TELEFONO, ZONA
+
     foto_usuario = forms.ImageField(label="Fotos")
     fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
     lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
-    idiomas = forms.ModelMultipleChoiceField(queryset=Idiomas.objects.all(), widget=forms.CheckboxSelectMultiple)
-    tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tags.objects.all(), widget=forms.CheckboxSelectMultiple)
+    idiomas = forms.ModelMultipleChoiceField(queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
+    tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
     aficiones = forms.ModelMultipleChoiceField(label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
 
     #fotos_piso = forms.FileField(label="Fotos de tu piso")
@@ -172,3 +176,28 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
 
         return aficiones
+
+    def clean_telefono_usuario(self):
+        telefono_usuario = self.cleaned_data.get('telefono_usuario')
+        print(telefono_usuario)
+        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+
+        if not re.fullmatch(regex, telefono_usuario):
+            raise forms.ValidationError('Inserte un teléfono válido')
+
+        existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
+
+        if existe_telefono:
+            raise forms.ValidationError('El teléfono ya está en uso')
+
+        return telefono_usuario
+
+    def clean_zona_piso(self):
+        piso = self.cleaned_data.get('zona_piso')
+        print(piso)
+        caracteres = len(piso)
+
+        if caracteres > 100:
+            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
+        
+        return piso

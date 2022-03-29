@@ -3,9 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
-
 from principal.forms import UsuarioForm
-from .models import Foto, Idiomas, Tags, Usuario,Mates
+from .models import FotoPiso, Idioma, Piso, Tag, Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -73,13 +72,13 @@ def accept_mate(request):
         response = { 'success': False }
         return JsonResponse(response)
 
-    mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
+    mate, _ = Mate.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
 
     # Comprueba si el mate es mutuo
     try:
-        reverse_mate = Mates.objects.get(userEntrada=usuario, userSalida=request.user)
+        reverse_mate = Mate.objects.get(userEntrada=usuario, userSalida=request.user)
         mate_achieved = reverse_mate.mate
-    except Mates.DoesNotExist:
+    except Mate.DoesNotExist:
         mate_achieved = False
 
     response = { 'success': True,
@@ -97,8 +96,8 @@ def reject_mate(request):
     if usuario == request.user:
         response = { 'success': False, }
         return JsonResponse(response)
-
-    mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
+    
+    mate, _ = Mate.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
 
     response = { 'success': True, }
     return JsonResponse(response)
@@ -111,21 +110,15 @@ def payments(request):
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
-    #print("Usuario loggeado: " + str(loggeado))
-    #print(loggeado)
-    #print("Lista usuarios: " + str(lista_usuarios))
-    #print(lista_usuarios)
     lista_mates=[]
     for i in lista_usuarios:
         try:
-            mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
-            mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-            #print("Mate 1: " + str(mate1))
-            #print("Mate 2: " + str(mate2))
+            mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
+            mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+
             lista_mates.append(mate1.userSalida)
-        except Mates.DoesNotExist:
-            print("NO EXISTE MATE CON "+ str(i))
-    #print("lista_mates: " + str(lista_mates))
+        except Mate.DoesNotExist:
+            pass
     return lista_mates
 
 def estadisticas_mates(request):
@@ -135,12 +128,12 @@ def estadisticas_mates(request):
     #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
     mesActual=datetime.now().month
     listmates=[]
-    matesRecibidos=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
+    matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
     #print(matesRecibidos)
     for mR in matesRecibidos:
         listmates.append(mR.userEntrada)
     #print(listmates)
-    matesDados=Mates.objects.filter(userEntrada=loggeado)
+    matesDados=Mate.objects.filter(userEntrada=loggeado)
     #print(matesDados)
     eliminados=0
     for mD in matesDados:
@@ -189,7 +182,6 @@ def registro(request):
             form_apellidos = form.cleaned_data['apellidos']
             form_correo = form.cleaned_data['correo']
 
-            form_piso = form.cleaned_data['piso']
             form_foto = form.cleaned_data['foto_usuario']
             form_fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
             form_lugar = form.cleaned_data['lugar']
@@ -198,30 +190,47 @@ def registro(request):
             form_idiomas = form.cleaned_data['idiomas']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
+            form_zona_piso = form.cleaned_data['zona_piso']
+            form_telefono_usuario = form.cleaned_data['telefono_usuario']
+
+            print(form_telefono_usuario)
+            print("Cogemos los datos")
         
             #form_universidad = form.cleaned_data['universidad']
             #form_estudios = form.cleaned_data['estudios']
 
+            if form_zona_piso != None:
+                piso_usuario = Piso.objects.create(zona = form_zona_piso)
+                print("Creado el piso")
 
             user = User.objects.create(username=form_usuario,first_name=form_nombre,
-             last_name=form_apellidos, email=form_correo)
+            last_name=form_apellidos, email=form_correo)
             user.set_password(form_password)
-            user.save()
-            
 
-            foto_perfil = Foto.objects.create(foto = form_foto)
-            
+            print("Creado el user")
 
-            perfil = Usuario.objects.create(usuario = user, piso = form_piso,
-            fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
-            genero = form_genero, foto = foto_perfil)
-
+            if form_zona_piso != None:
+                perfil = Usuario.objects.create(usuario = user, piso = piso_usuario,
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+            else:
+                perfil = Usuario.objects.create(usuario = user, 
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
 
             perfil.idiomas.set(form_idiomas)
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
 
-            perfil.save()
+            try:
+                if form_zona_piso != None:
+                    piso_usuario.save()
+                user.save()
+                perfil.save()
+                print("Creado el usuario")
+            except:
+                print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
+
             return redirect(login_view)
 
     return render(request, 'loggeos/register.html', {'form': form})
