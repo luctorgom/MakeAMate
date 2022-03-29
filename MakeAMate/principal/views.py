@@ -95,10 +95,12 @@ def reject_mate(request):
 
 def payments(request):
     template='payments.html'
-    return render(request,template) 
+    return render(request,template)
 
 def notificaciones_mates(request):
     loggeado= request.user
+    perfil=Usuario.objects.get(usuario=loggeado)
+    es_premium= perfil.es_premium
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
     for i in lista_usuarios:
@@ -109,4 +111,10 @@ def notificaciones_mates(request):
             lista_mates.append(mate1.userSalida)
         except Mate.DoesNotExist:
             pass
-    return lista_mates
+    lista_likes=[]
+    if(es_premium):
+        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado)
+        for mR in matesRecibidos:
+            if(mR.userEntrada not in lista_mates):
+                lista_likes.append(mR.userEntrada)
+    return lista_mates, lista_likes
