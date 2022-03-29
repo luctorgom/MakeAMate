@@ -247,6 +247,7 @@ def twilio(request, user_id):
 
     user = User.objects.get(id = user_id)
     usuario = Usuario.objects.get(usuario = user)
+    piso = usuario.piso
     telefono_validar = usuario.telefono
 
     verification = client.verify \
@@ -270,6 +271,10 @@ def twilio(request, user_id):
                 if verification_check.status=="approved":
                     print("Se ha verificado correctamente")
                     #TODO: hay que guardar todas las cosas antes creadas
+                    if usuario.piso != None: piso.save() 
+                    user.save()
+                    usuario.save()
+
                 elif verification_check.status=="pending":
                     print("No se ha verificado correctamente")
                     #TODO: hay que redireccionar a la vista del formulario del sms de nuevo
