@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
-from .models import Usuario,Mates
+from .models import Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -69,13 +69,13 @@ def accept_mate(request):
         response = { 'success': False }
         return JsonResponse(response)
 
-    mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
+    mate, _ = Mate.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':True})
 
     # Comprueba si el mate es mutuo
     try:
-        reverse_mate = Mates.objects.get(userEntrada=usuario, userSalida=request.user)
+        reverse_mate = Mate.objects.get(userEntrada=usuario, userSalida=request.user)
         mate_achieved = reverse_mate.mate
-    except Mates.DoesNotExist:
+    except Mate.DoesNotExist:
         mate_achieved = False
 
     response = { 'success': True,
@@ -94,7 +94,7 @@ def reject_mate(request):
         response = { 'success': False, }
         return JsonResponse(response)
     
-    mate, _ = Mates.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
+    mate, _ = Mate.objects.update_or_create(userEntrada=request.user, userSalida=usuario, defaults={'mate':False})
     
     response = { 'success': True, }
     return JsonResponse(response)
@@ -114,9 +114,9 @@ def notificaciones_mates(request):
     lista_mates=[]
     for i in lista_usuarios:
         try:
-            mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
-            mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+            mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
+            mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
             lista_mates.append(mate1.userSalida)
-        except Mates.DoesNotExist:
-            print("NO EXISTE MATE CON "+ str(i))
+        except Mate.DoesNotExist:
+            pass
     return lista_mates
