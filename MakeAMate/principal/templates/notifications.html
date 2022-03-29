@@ -10,34 +10,40 @@
 {% block content %}
 <div class="container">
     <h3 class="m-b-50 heading-line">Notificaciones<i class="fa fa-bell text-muted"></i></h3>
-    <div class="notification-ui_dd-content">
-        <div class="notification-list notification-list--unread">
-                <div class="notification-list_img">
-                    <img src="..\static\logotipo.png" alt="user">
-                </div>
-                <div class="notification-list_detail">
-                    <p><b>John Doe</b> hizo mate contigo</p>
-                    <p class="text-muted">Has hecho mate con John Doe. ¿Por qué no chateas con él?</p>
-                    <p class="text-muted"><small>Hace 10 minutos</small></p>
-                </div>
-                <div class="notification-list_feature-img">
-                    <img src="..\static\images\icons\Choca_esos_5.png" alt="Feature image">
-                </div>
-        </div>
-
-        <div class="notification-ui_dd-content">
+        {%for i in notificaciones%}
+        {%if not i.1%}
+        <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
             <div class="notification-list">
                     <div class="notification-list_img">
                         <img src="..\static\logotipo.png" alt="user">
                     </div>
                     <div class="notification-list_detail">
-                        <p><b>John Doe</b> hizo mate contigo</p>
-                        <p class="text-muted">Has hecho mate con John Doe. ¿Por qué no chateas con él?</p>
-                        <p class="text-muted"><small>Hace 10 minutos</small></p>
+                        <p><b>{{i.0.userSalida}}</b> hizo mate contigo</p>
+                        <p class="text-muted">Has hecho mate con {{i.0.userSalida}}. ¿Por qué no chateas con él?</p>
+                        <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
                     </div>
                     <div class="notification-list_feature-img">
                         <img src="..\static\images\icons\Choca_esos_5.png" alt="Feature image">
                     </div>
             </div>
+        {% endif %}
+        {%if i.1%}
+        <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
+            <div class="notification-list">
+                    <div class="notification-list_img">
+                        <img src="..\static\logotipo.png" alt="user">
+                    </div>
+                    <div class="notification-list_detail">
+                        <p><b>{{i.0.userEntrada}}</b> te ha dado like.👑</p>
+                        <p class="text-muted">Gracias a premium puedes conocer qué perfiles te han dado like.</p>
+                        <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
+                    </div>
+                    <div class="notification-list_feature-img">
+                        <img src="..\static\images\icons\heart.png" alt="Feature image">
+                    </div>
+            </div>
+        {% endif %}
+        {% endfor%}
+        </div>
 </div>
 {% endblock %}

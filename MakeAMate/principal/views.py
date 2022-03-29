@@ -97,20 +97,28 @@ def payments(request):
     template='payments.html'
     return render(request,template) 
 
-def notifications(request):
-    template='notifications.html'
-    return render(request,template) 
-
 def notificaciones_mates(request):
     loggeado= request.user
+    perfil=Usuario.objects.get(usuario=loggeado)
+    es_premium= perfil.es_premium
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
     for i in lista_usuarios:
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-
-            lista_mates.append(mate1.userSalida)
+            lista_mates.append((mate1,False))
         except Mate.DoesNotExist:
             pass
+    if(es_premium):
+        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado)
+        for mR in matesRecibidos:
+            if(mR.userEntrada not in lista_mates):
+                lista_mates.append((mR,True))
     return lista_mates
+
+def notifications_list(request):
+    template='notifications.html'
+    notis=notificaciones_mates(request)
+    response={'notificaciones':notis}
+    return render(request,template,response) 
