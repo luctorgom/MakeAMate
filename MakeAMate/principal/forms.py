@@ -1,7 +1,8 @@
 from django import forms
 from django.conf import settings
-
 from principal.models import Idiomas, Aficiones, Tags
+from django.contrib.auth.models import User
+import re
 
 class UsuarioForm(forms.Form):
     username = forms.CharField(max_length=100, min_length= 5,
@@ -9,8 +10,8 @@ class UsuarioForm(forms.Form):
                                widget=forms.TextInput(attrs={'placeholder': 'Usuario'}))
     password = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña'}))
     password2 = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'placeholder': 'Confirma la contraseña'}))
-    nombre = forms.CharField(required=True,max_length = 150, widget=forms.TextInput(attrs={'placeholder': 'Nombre'}))
-    apellidos = forms.CharField(required=True,max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
+    nombre = forms.CharField(required=True,min_length = 1, max_length = 150, widget=forms.TextInput(attrs={'placeholder': 'Nombre'}))
+    apellidos = forms.CharField(required=True, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
     correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
     piso = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
@@ -31,25 +32,54 @@ class UsuarioForm(forms.Form):
     ##descripcion = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Descripción'}))
 
     # Validación del formulario
-    # def clean(self):
-    #     #Se obtienen los datos del formulario
-    #     super(UsuarioForm, self).clean()
+    def clean_username(self):
+        #Se obtienen los datos del formulario
+        #super(UsuarioForm, self).clean()
 
-    #     username = self.cleaned_data.get('username')
+        username = self.cleaned_data.get('username')
 
-    #     if len(username) < 5:
-    #         self._errors['username'] = self.error_class([
-    #             'El nombre de usuario debe contener 5 caracteres como mínimo'])
+        if len(username) < 5:
+            raise forms.ValidationError('El nombre de usuario debe tener una longitud mínima de 5 caracteres')
 
-    #     if len(username) > 100:
-    #         self._errors['username'] = self.error_class([
-    #             'El nombre de usuario no puede superar los 100 caracteres'])
+        if len(username) > 100:
+            raise forms.ValidationError('El nombre de usuario debe tener una longitud máxima de 100 caracteres')
 
-    #     password = self.cleaned_data.get('password')
-    #     password2 = self.cleaned_data.get('password2')
+        user_exists = User.objects.filter(username=username).exists()
 
-    #     #Validar que la password sigue un patrón concreto
+        if(user_exists):
+            raise forms.ValidationError('El nombre de usuario ya existe.')
 
+        return username
 
-    #     if password != password2:
-    #         self._errors['password2'] = self.error_class(['Las contraseñas no coinciden'])
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        patron = re.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password)
+        if not patron:
+            raise forms.ValidationError('La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número')
+        
+        return password
+
+    def clean_password2(self):
+
+        password = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+        if password != password2:
+            raise forms.ValidationError('Las contraseñas no coinciden')
+
+        return password2
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if len(nombre) < 1:
+            raise forms.ValidationError('El nombre tiene que contener como mínimo un carácter')        
+
+        if len(nombre) > 150:
+            raise forms.ValidationError('El nombre debe tener menos de 150 caracteres')
+
+    def clean_apellidos(self):
+        apellidos = self.cleaned_data.get('apellidos')
+        if len(apellidos) < 1:
+            raise forms.ValidationError('Los apellidos tienen que contener como mínimo un carácter')        
+
+        if len(apellidos) > 150:
+            raise forms.ValidationError('Los apellidos deben tener menos de 150 caracteres')
