@@ -99,9 +99,14 @@ class UsuarioForm(forms.Form):
         if not re.fullmatch(regex, correo):
             raise forms.ValidationError('Inserte un correo electrónico válido')
 
+        existe_email = User.objects.filter(email=correo).exists()
+
+        if existe_email:
+            raise forms.ValidationError('La dirección de correo electrónico ya está en uso')
+
         return correo
 
-    #Revisar
+    
     # def clean_piso(self):
     #     piso = self.cleaned_data.get('piso')
     #     print(piso)
@@ -115,7 +120,6 @@ class UsuarioForm(forms.Form):
     def clean_fecha_nacimiento(self):
         hoy = datetime.now().date()
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
-        print(type(fecha_nacimiento))
         if fecha_nacimiento > hoy:
             raise forms.ValidationError('La fecha de nacimiento no puede ser posterior a la fecha actual')
 
@@ -166,4 +170,6 @@ class UsuarioForm(forms.Form):
         aficiones = self.cleaned_data.get('aficiones')
         if aficiones.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+
+        return aficiones
 
