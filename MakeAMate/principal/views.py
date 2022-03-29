@@ -202,34 +202,26 @@ def registro(request):
             #form_universidad = form.cleaned_data['universidad']
             #form_estudios = form.cleaned_data['estudios']
 
-            try:
+
+            user = User.objects.create(username=form_usuario,first_name=form_nombre,
+             last_name=form_apellidos, email=form_correo)
+            user.set_password(form_password)
+            user.save()
+            
+
+            foto_perfil = Foto.objects.create(foto = form_foto)
+            
+
+            perfil = Usuario.objects.create(usuario = user, piso = form_piso,
+            fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+            genero = form_genero, foto = foto_perfil)
 
 
-                user = User.objects.create(username=form_usuario,password=form_password,
-                first_name=form_nombre, last_name=form_apellidos, email=form_correo)
-                user.save()
-                print("User Guardado")
+            perfil.idiomas.set(form_idiomas)
+            perfil.tags.set(form_tags)
+            perfil.aficiones.set(form_aficiones)
 
-                foto_perfil = Foto.objects.create(foto = form_foto)
-                print("Foto guardada")
-
-                perfil = Usuario.objects.create(usuario = user, piso = form_piso,
-                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
-                genero = form_genero, foto = foto_perfil)
-
-
-                perfil.idiomas.set(form_idiomas)
-                perfil.tags.set(form_tags)
-                perfil.aficiones.set(form_aficiones)
-
-                # Idiomas, tags y aficiones aún no están dentro del formulario. Al ser una ManyToMany habría que recorrerlos para ir añadiendo los datos
-                perfil.save()
-                print("Perfil Guardado")
-                return redirect(homepage)
-
-            except:
-                return redirect(registro)
-        else:
-            print("La foto está rota")
+            perfil.save()
+            return redirect(login_view)
 
     return render(request, 'loggeos/register.html', {'form': form})

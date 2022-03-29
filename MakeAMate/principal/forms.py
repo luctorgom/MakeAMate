@@ -172,4 +172,3 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
 
         return aficiones
-
