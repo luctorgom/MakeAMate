@@ -14,7 +14,6 @@
 <body>
     <h1>¡Solo un paso más!</h1>
     <h3>Usa paypal o tu tarjeta de crédito para finalizar el pago</h3>
-    <h4> {{suscripcion.price}}</h4>
     <!-- <div>{{suscripcion.name}}
         {{suscripcion.price}} </div> -->
     <div= id="#paypal-button-container"></div>
@@ -22,7 +21,7 @@
     <div id="paypal-button-container"></div>
 
     <!-- Include the PayPal JavaScript SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AceG47Y7C4m3kQzyaK2Mr1nQ-JHpQtlvKbkTNl_FaBYxjlt_ZiqwFl9isA1U43HVqTER90J1ygRrsgko&currency=EUR"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AceG47Y7C4m3kQzyaK2Mr1nQ-JHpQtlvKbkTNl_FaBYxjlt_ZiqwFl9isA1U43HVqTER90J1ygRrsgko&currency=EUR&intent=authorize"></script>
 
     <script>
         function getCookie(name) {
@@ -44,18 +43,6 @@
         
         var total = '{{suscripcion.price}}'
 	 	var suscripcionId = '{{suscripcion.id}}'
-
-          function completeOrder(){
-            var url ="{% url 'complete' %}"
-            fetch(url, {
-                method:'POST',
-                headers:{
-                    'Content-type': 'application/json',
-                    'X-CSRFToken': csrftoken,
-                }, 
-                body: JSON.stringify({'suscripcionId':suscripcionId})
-            })
-        } 
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
 
@@ -72,19 +59,27 @@
 
             // Finalize the transaction
             onApprove: function(data, actions) {
-                return actions.order.capture().then(function(orderData) {
-                    
-                    var transaction = orderData.purchase_units[0].payments.captures[0];
-                    completeOrder()
-                   
-                    alert('Transaction '+ transaction.status);
+                actions.order.authorize().then(function(authorization) {
 
-                    // Replace the above to show a success message within this page, e.g.
-                    // const element = document.getElementById('paypal-button-container');
-                    // element.innerHTML = '';
-                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                    // Or go to another URL:  actions.redirect('thank_you.html');
+                // Get the authorization id
+                    var authorizationID = authorization.purchase_units[0]
+                        .payments.authorizations[0].id
+
+                    // Call your server to validate and capture the transaction
+                    var url ="{% url 'complete' %}"
+                    return fetch(url, {
+                        method: 'post',
+                        headers: {
+                            'content-type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body: JSON.stringify({
+                            orderID: data.orderID,
+                            authorizationID: authorizationID
+                        })
+                    });
                 });
+                alert('Transaction completed');
             }
 
 
