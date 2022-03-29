@@ -97,6 +97,8 @@ def reject_mate(request):
 
 
 def payments(request):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
     suscripcion=Suscripcion.objects.all()[0]
     template='payments.html'
     params={'suscripcion':suscripcion}

@@ -1,8 +1,9 @@
 from datetime import date, datetime
 import imp
 from multiprocessing import context
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
+from principal.views import login_view
 
 from principal.models import Usuario
 
@@ -11,6 +12,8 @@ import json
 
 
 def paypal(request,pk):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
     template_name='pagos/pagos.html'
     suscripcion= Suscripcion.objects.get(id=pk)
     context={'suscripcion': suscripcion}
@@ -18,6 +21,8 @@ def paypal(request,pk):
 
 
 def paymentComplete(request):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
     
     body = json.loads(request.body)
     print('BODY:', body)
