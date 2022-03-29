@@ -117,4 +117,4 @@ def notificaciones_mates(request):
         for mR in matesRecibidos:
             if(mR.userEntrada not in lista_mates):
                 lista_likes.append(mR.userEntrada)
-    return lista_mates, lista_likes
+    return lista_mates
