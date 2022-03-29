@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.forms import NullBooleanField
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator,RegexValidator
 from django.contrib.auth.models import User
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -44,7 +44,9 @@ class Usuario(models.Model):
     idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
-
+    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
+    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
+    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
