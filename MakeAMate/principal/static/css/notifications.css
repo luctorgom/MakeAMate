@@ -59,17 +59,22 @@ body {
     border-left: 2px solid #29B6F6;
   }
   
-  .notification-list .notification-list_content {
+  .notification-list .notification-list_content{
     display: -webkit-box;
     display: -ms-flexbox;
-    display: flex;
+    margin-left: 60px;
+    /* border: 1px red solid; */
   }
-  
+  .notification-list_img{
+    left: 0px;
+  }
   .notification-list .notification-list_content .notification-list_img img {
     height: 48px;
     width: 48px;
     border-radius: 50px;
     margin-right: 20px;
+    border: 2px rgb(136, 24, 158) solid;
+
   }
   
   .notification-list .notification-list_content .notification-list_detail p {
