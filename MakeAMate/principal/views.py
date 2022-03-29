@@ -10,6 +10,9 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+import os
+from twilio.rest import Client
+import json
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -110,3 +113,32 @@ def notificaciones_mates(request):
         except Mate.DoesNotExist:
             pass
     return lista_mates
+
+# TODO: Realizar integración continua en rama B-014
+def twilio(request):
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+    service_sid = "VAcc9402703856690898876df078a910fa"
+    telefono_validar = request.usuario.telefono
+
+    verification = client.verify \
+                     .services(service_sid) \
+                     .verifications \
+                     .create(to=telefono_validar, channel='sms')
+
+    verification_data = json.load(verification)
+    
+    if verification_data["status"]=="pending":
+        verification_check = client.verify \
+                            .services(service_sid) \
+                            .verification_checks \
+                            .create(to=telefono_validar, code=request.POST["sms-code"])
+
+        verification_check_data = json.load(verification_check)
+
+        if verification_check_data["status"]=="approved":
+            print("Se ha verificado correctamente")
+        elif verification_check_data["status"]=="pending":
+            print("No se ha verificado correctamente")
+    
