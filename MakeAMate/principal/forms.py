@@ -18,7 +18,7 @@ class UsuarioForm(forms.Form):
 
     piso = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
     foto_usuario = forms.ImageField(label="Fotos")
-    fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': '01-01-2000'}), input_formats=settings.DATE_INPUT_FORMATS)
+    fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
     lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
@@ -55,8 +55,8 @@ class UsuarioForm(forms.Form):
 
     def clean_password(self):
         password = self.cleaned_data['password']
-        patron = re.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password)
-        if not patron:
+        regex = re.compile("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
+        if not re.fullmatch(regex, password):
             raise forms.ValidationError('La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número')
         
         return password
@@ -65,6 +65,9 @@ class UsuarioForm(forms.Form):
 
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
+
+        if not password2:
+            raise forms.ValidationError('Por favor, confirma tu contraseña')
         if password != password2:
             raise forms.ValidationError('Las contraseñas no coinciden')
 
@@ -114,7 +117,7 @@ class UsuarioForm(forms.Form):
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
         print(type(fecha_nacimiento))
         if fecha_nacimiento > hoy:
-            raise forms.ValidationError('Tu fecha de nacimiento no puede ser posterior a la fecha actual')
+            raise forms.ValidationError('La fecha de nacimiento no puede ser posterior a la fecha actual')
 
         today = date.today()
         edad = today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
@@ -147,7 +150,7 @@ class UsuarioForm(forms.Form):
 
     def clean_idiomas(self):
         idiomas = self.cleaned_data.get('idiomas')
-        if idiomas.count() < 1:
+        if idiomas.count() == 0:
             raise forms.ValidationError('Por favor, elige al menos un idioma')
 
         return idiomas
