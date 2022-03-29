@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.db import models
 from django.forms import NullBooleanField
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import date, datetime
+
 
 
 # Create your models here.
@@ -50,6 +50,10 @@ class Usuario(models.Model):
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
     foto=models.ImageField(upload_to="principal/static/images/users")
 
+    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
+    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
+    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
+    
     @classmethod
     def get_edad(cls):
         today = date.today()
@@ -57,16 +61,12 @@ class Usuario(models.Model):
 
     @classmethod
     def tiene_piso(cls):
-        return True if cls.piso != None else False
+        return cls.piso != None
 
     @classmethod
     def es_premium(cls):
-        if cls.fecha_premium==None:
-            return False
         today = datetime.time
-        fecha_premium_fin = cls.fecha_premium + relativedelta(months=+1)
-
-        return True if fecha_premium_fin > today else False
+        return cls.fecha_premium > today or cls.fecha_premium!=None
 
     def __str__(self):
         return str(self.usuario)
