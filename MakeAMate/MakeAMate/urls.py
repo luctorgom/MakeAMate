@@ -26,5 +26,6 @@ urlpatterns = [
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path("payments/",views.payments,name="payments"),
     path("register/",views.register_view,name="register"),
+    path("register/terminos/",views.terminos,name="terminos"),
     path('', views.homepage,name="home"),
 ]

@@ -19,7 +19,7 @@ class UsuarioForm(forms.Form):
     ##pronombres = forms.ChoiceField(choices=(('Ella', 'Ella'),('El','El'),('Elle','Elle')),required=True)   
     ##idiomas = forms.MultipleChoiceField(choices=(('ES', 'Español'),('EN','Inglés'),('FR','Francés'),
           ##                                          ('DE','Alemán'),('PT','Portugués'),('IT','Italiano'),
-             ##                                       ('SV','Sueco'),('OT','Otro')),required=True,widget=forms.SelectMultiple())
+          ##                                       ('SV','Sueco'),('OT','Otro')),required=True,widget=forms.SelectMultiple())
     ##universidad = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Centro de estudios'}))
     ##estudios = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Estudios'}))
     tags = forms.MultipleChoiceField(label="Tags que te definen",required=True,choices=Tags.objects.all)    ##
