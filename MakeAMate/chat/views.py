@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from chat.models import ChatRoom
-from principal.models import Mates
+from principal.models import Mates, Usuario
 from django.db.models import Q
+from chat.forms import CrearGrupo
 
 def index(request):
     lista_mates = notificaciones_mates(request)
@@ -12,9 +13,10 @@ def index(request):
         if request.user in c.participants.all():
             lista_chat.append(c)
     lista_usuarios = []
-    for c in lista_chat:
-        participantes = c.participants.filter(~Q(id=request.user.id))
-        lista_usuarios.append(participantes[0])
+    usuarios = Usuario.objects.filter(~Q(id=request.user.id))
+    for u in usuarios:
+        lista_usuarios.append(u)
+    print (lista_usuarios)
     return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
 
 def grupos(request):
@@ -30,14 +32,29 @@ def room(request, room_name):
     for p in chatroom.participants.all():
         lista_participantes.append(p.username)
 
+
     # Comprobación si el usuario pertenece a los participantes de ese grupo
     if request.user.username in lista_participantes:
-        return render(request, 'chat/room.html', {
-            'room_name': room_name
-        })
+        return render(request, 'chat/room.html', {'room_name': room_name})
     else:
-        return index(request)
+        return redirect('/chat')
 
+def crear_grupo_form(request):
+    form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
+    if request.method=='POST':
+        form = CrearGrupo(notificaciones_mates(request), request.POST)
+        if form.is_valid():
+            lista = form.cleaned_data['Grupo']
+            nombre = form.cleaned_data['Nombre']
+            lista.append(request.user.id)
+            crear_sala_grupo(nombre, lista)
+        return redirect('/chat')
+
+    return render(request, 'chat/form.html',{'form':form, 'users':notificaciones_mates(request)})
+
+
+
+#Funciones para obtener atributos
 def crear_sala(room_participants):
     room = ChatRoom.objects.create()
     room.participants.set(room_participants)
@@ -45,8 +62,6 @@ def crear_sala(room_participants):
 def crear_sala_grupo(group_name, room_participants):
     room = ChatRoom.objects.create(room_name = group_name)
     room.participants.set(room_participants)
-
-
 
 def notificaciones_mates(request):
     loggeado= request.user
@@ -60,3 +75,6 @@ def notificaciones_mates(request):
         except Mates.DoesNotExist:
             print("NO EXISTE MATE CON "+ str(i))
     return lista_mates
+
+
+
