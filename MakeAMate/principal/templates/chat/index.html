@@ -19,7 +19,11 @@
                                     {% if c.group is not True %}
                                         {% for p in c.participants.all %}
                                             {% if request.user != p%}
-                                                {{p.username}}
+                                                {% for n in nombrechats%}
+                                                    {% if p.username == n.usuario.username %}
+                                                        {{n.usuario}}
+                                                    {%endif%}
+                                                {% endfor %}
                                             {% endif %}
                                         {% endfor %}
                                     {% else %}

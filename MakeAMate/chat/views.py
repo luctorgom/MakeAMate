@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from chat.models import ChatRoom
-from principal.models import Mates
+from principal.models import Mates, Usuario
 from django.db.models import Q
 
 def index(request):
@@ -14,7 +14,18 @@ def index(request):
     lista_usuarios = []
     for c in lista_chat:
         participantes = c.participants.filter(~Q(id=request.user.id))
-        lista_usuarios.append(participantes[0])
+        lista_aux = []
+        if c.group == True:
+            for p in participantes[0]:
+                usuarioApp = Mates.objects.filter(id = p.id)
+                lista_aux.append(usuarioApp)
+            lista_usuarios.append(lista_aux)
+        else:
+            usuario = Usuario.objects.filter(id = participantes[0].id)[0]
+            print(usuario.edad)
+            lista_usuarios.append(usuario)
+    print(lista_chat)
+    print(lista_usuarios)
     return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
 
 
@@ -26,13 +37,12 @@ def room(request, room_name):
     for p in chatroom.participants.all():
         lista_participantes.append(p.username)
 
+
     # Comprobación si el usuario pertenece a los participantes de ese grupo
     if request.user.username in lista_participantes:
-        return render(request, 'chat/room.html', {
-            'room_name': room_name
-        })
+        return render(request, 'chat/room.html', {'room_name': room_name})
     else:
-        return index(request)
+        return redirect('/chat')
 
 def crear_sala(room_participants):
     room = ChatRoom.objects.create()
