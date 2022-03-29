@@ -50,6 +50,7 @@ body {
             justify-content: space-between;
     padding: 20px;
     margin-bottom: 7px;
+    
     background: #fff;
     -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
@@ -57,18 +58,23 @@ body {
   
   .notification-list--unread {
     border-left: 2px solid #29B6F6;
+
   }
   
-  .notification-list .notification-list_content{
+  .notification-list {
     display: -webkit-box;
     display: -ms-flexbox;
     margin-left: 60px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     /* border: 1px red solid; */
   }
   .notification-list_img{
     left: 0px;
   }
-  .notification-list .notification-list_content .notification-list_img img {
+  .notification-list .notification-list_img img {
     height: 48px;
     width: 48px;
     border-radius: 50px;
