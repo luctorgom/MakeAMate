@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from principal.forms import UsuarioForm
-from .models import FotoPiso, Idioma, Piso, Tag, Usuario,Mate
+from .models import Idioma, Piso, Tag, Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -257,6 +257,8 @@ def twilio(request, user_id):
 
     form = SmsForm()
     if request.method == 'POST':
+        # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
+        # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
         form = SmsForm(request.POST)
         if form.is_valid():
 
@@ -269,14 +271,13 @@ def twilio(request, user_id):
                                     .create(to=telefono_validar, code=form_codigo)
 
                 if verification_check.status=="approved":
-                    print("Se ha verificado correctamente")
-                    #TODO: hay que guardar todas las cosas antes creadas
                     if usuario.piso != None: piso.save() 
                     user.save()
                     usuario.save()
-
+                    # TODO: hay que redigirir a la vista del perfil cuando esté creada
                 elif verification_check.status=="pending":
                     print("No se ha verificado correctamente")
                     #TODO: hay que redireccionar a la vista del formulario del sms de nuevo
+                    return twilio(request, user_id)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
