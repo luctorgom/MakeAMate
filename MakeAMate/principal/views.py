@@ -110,3 +110,7 @@ def notificaciones_mates(request):
         except Mate.DoesNotExist:
             pass
     return lista_mates
+
+
+def error_404(request,exception):
+    return render(request,'error404.html')

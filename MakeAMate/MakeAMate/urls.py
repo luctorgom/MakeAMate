@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from principal import views
+from django.conf.urls import handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,3 +28,5 @@ urlpatterns = [
     path("payments/",views.payments,name="payments"),
     path('', views.homepage,name="home"),
 ]
+
+handler404 = "principal.views.error_404"
