@@ -64,7 +64,7 @@ class Usuario(models.Model):
         if cls.fecha_premium==None:
             return False
         today = datetime.time
-        fecha_premium_fin = cls.fecha_premium + relativedelta(months=+1)
+        fecha_premium_fin = cls.fecha_premium + relativedelta(months=1)
 
         return True if fecha_premium_fin > today else False
 

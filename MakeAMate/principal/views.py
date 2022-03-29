@@ -14,6 +14,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
+from principal import models
+
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(homepage)
@@ -100,8 +102,10 @@ def payments(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
     suscripcion=Suscripcion.objects.all()[0]
+    loggeado=get_object_or_404(Usuario, usuario=request.user)
     template='payments.html'
-    params={'suscripcion':suscripcion}
+    premium= loggeado.es_premium
+    params={'suscripcion':suscripcion, 'premium':premium}
     return render(request,template,params) 
 
 def notificaciones_mates(request):

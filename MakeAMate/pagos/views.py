@@ -27,11 +27,10 @@ def paymentComplete(request):
     body = json.loads(request.body)
     print('BODY:', body)
     now = datetime.now()
-        
     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
     Usuario.objects.update_or_create(usuario=request.user, 
     defaults={'fecha_premium': now})
-    registrado=Usuario.objects.get(usuario=request.user)
+    
     return JsonResponse('Payment completed!', safe=False)
 
 

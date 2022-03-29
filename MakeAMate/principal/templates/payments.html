@@ -33,8 +33,11 @@
                     <ul class="pricing-content">
                        {{suscripcion.description}}
                     </ul>
-                    <a href="{% url 'paypal' suscripcion.id %}" class="pricingTable-signup">Consigue Premium</a>
-                </div>
+                    {% if not premium %}  
+                        <a href="{% url 'paypal' suscripcion.id %}" class="pricingTable-signup">Consigue Premium</a>
+                    {% else %}
+                        <a href="{% url 'home' %}" class="pricingTable-signup">Ya eres usuario premium</a>
+                    {% endif %}                </div>
             </div>
             
         </div>
