@@ -217,17 +217,16 @@ def registro(request):
             if form_zona_piso != None:
                 perfil = Usuario.objects.create(usuario = user, piso = piso_usuario,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
-                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+                genero = form_genero,foto = form_foto,telefono=form_telefono_usuario)
             else:
                 perfil = Usuario.objects.create(usuario = user, 
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
-                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario) 
 
            # perfil.idiomas.set(form_idiomas)
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
 
-            print(form_tags)
 
             try:
                 if form_zona_piso != None:

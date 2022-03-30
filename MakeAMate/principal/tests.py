@@ -6,6 +6,11 @@ from django.conf import settings
 from django.contrib import auth
 from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto
 from django.contrib.auth.models import User
+from PIL import Image
+from io import StringIO
+from django.core.files import File
+from io import BytesIO
+from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
@@ -271,9 +276,21 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 #         self.assertTrue(len(lista_mates) == 0)
 
 
+def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+
+        data = BytesIO()
+        Image.new(image_mode, size).save(data, image_format)
+        data.seek(0)
+        if not storage:
+            return data
+        image_file = ContentFile(data.read())
+        return storage.save(filename, image_file)
+    
+
 class RegistroTest(TestCase):
 
     def setUp(self):
+        
 
         Tag.objects.create(etiqueta='etiqueta1').save()
         Tag.objects.create(etiqueta='etiqueta2').save()
@@ -283,6 +300,9 @@ class RegistroTest(TestCase):
         Aficiones.objects.create(opcionAficiones='Aficion1').save()
         Aficiones.objects.create(opcionAficiones='Aficion2').save()
         Aficiones.objects.create(opcionAficiones='Aficion3').save()
+
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
 
 
         self.data = {
@@ -294,21 +314,25 @@ class RegistroTest(TestCase):
             'correo':'prueba@gmail.com',
             'zona_piso':'Ejemplo de zona',
             'telefono_usuario':'+34666777888',
-            'foto_usuario': SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg'),
+           'foto_usuario': avatar_file,
             'fecha_nacimiento':'01-01-2000',
             'lugar':'Ejemplo de lugar',
             'nacionalidad':'Ejemplo',
             'genero':'M',
-            'tags': Tag.objects.all(),
-            'aficiones': Aficiones.objects.all()
+           'tags': [1,2,3],
+           'aficiones': [1,2,3]
 
         }
         super().setUp()
+
+
+    
 
     def test_registro_positive(self):
         c = Client()
         response = c.post('/register/', self.data)
         existe_usuario = Usuario.objects.filter(telefono=self.data['telefono_usuario']).exists()
-        self.assertTrue(response.status_code == 200)
+        #print(response.context['form'].errors)
+        self.assertTrue(response.status_code == 302)
         self.assertTrue(existe_usuario)
 
