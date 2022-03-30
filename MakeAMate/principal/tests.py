@@ -319,20 +319,102 @@ class RegistroTest(TestCase):
             'lugar':'Ejemplo de lugar',
             'nacionalidad':'Ejemplo',
             'genero':'M',
-           'tags': [1,2,3],
-           'aficiones': [1,2,3]
+           'tags': [t.id for t in Tag.objects.all()],
+           'aficiones': [a.id for a in Aficiones.objects.all()]
 
         }
         super().setUp()
 
-
-    
-
-    def test_registro_positive(self):
+    def test_register_positive(self):
         c = Client()
+        print(self.data)
         response = c.post('/register/', self.data)
         existe_usuario = Usuario.objects.filter(telefono=self.data['telefono_usuario']).exists()
         #print(response.context['form'].errors)
         self.assertTrue(response.status_code == 302)
         self.assertTrue(existe_usuario)
+        Usuario.objects.all().delete()
+        User.objects.all().delete() 
+
+    def test_username_already_exists(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        self.data['correo'] = "correonuevo@gmail.com"
+        self.data['telefono_usuario'] = "+34666777333"
+        response2 = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        self.assertTrue(num_usuarios == 1)
+        Usuario.objects.all().delete()
+        User.objects.all().delete() 
+
+    def test_different_passwords(self):
+        c = Client()
+        self.data['password'] = "password01"
+        self.data['password2'] = "password02"
+        response = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        self.assertTrue(num_usuarios == 0)
+        error = response.context['form'].errors['password2'][0]
+        print(error)
+        self.assertTrue(error == "Las contraseñas no coinciden")
+        Usuario.objects.all().delete()
+        User.objects.all().delete() 
+
+    def test_email_already_exists(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        self.data['username'] = "NewUsername"
+        self.data['telefono_usuario'] = "+34666111222"
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+        self.data['foto_usuario'] = avatar_file
+        response2 = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        print(num_usuarios)
+        self.assertTrue(num_usuarios == 1)
+        error = response2.context['form'].errors['correo'][0]
+        self.assertTrue(error == "La dirección de correo electrónico ya está en uso")
+        Usuario.objects.all().delete()
+        User.objects.all().delete()
+
+    def test_phone_number_already_exists(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        #print(response.context['form'].errors)
+        self.data['username'] = "NewUsername"
+        self.data['correo'] = "newEmail@gmail.com"
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+        self.data['foto_usuario'] = avatar_file
+        response2 = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        print(num_usuarios)
+        self.assertTrue(num_usuarios == 1)
+        error = response2.context['form'].errors['telefono_usuario'][0]
+        self.assertTrue(error == "El teléfono ya está en uso")    
+        Usuario.objects.all().delete()
+        User.objects.all().delete()
+
+    def test_select_at_least_three_tags(self):
+        c = Client()
+        tags = self.data['tags'][0:2]
+        self.data['tags'] = tags
+        response = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        error = response.context['form'].errors['tags'][0]
+        self.assertTrue(num_usuarios == 0)
+        self.assertTrue(error == "Por favor, elige al menos tres etiquetas que te definan")
+
+    def test_select_at_least_three_aficiones(self):
+        c = Client()
+        aficiones = self.data['aficiones'][0:2]
+        self.data['aficiones'] = aficiones
+        response = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        error = response.context['form'].errors['aficiones'][0]
+        self.assertTrue(num_usuarios == 0)
+        self.assertTrue(error == "Por favor, elige al menos tres aficiones que te gusten")
+
+
+
 
