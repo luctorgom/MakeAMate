@@ -1,8 +1,9 @@
 /*@charset "utf-8";*/
 
 body{
-    background-color: #fff;
-    margin-top:20px;
+    /*background-color: #fff;*/
+    /*margin-top:20px;*/
+    position: relative;
 }
 .card {
     background: #fff;
@@ -17,19 +18,23 @@ body{
 
 }
 .chat-app .people-list {
-    width: 280px;
+    background: linear-gradient(180deg, rgb(210, 160, 240) 0%, rgb(210, 174, 245) 50%,  rgb(210, 164, 250) 100%);
+    width: 14%;
+    height:100%;
     position: absolute;
      /* position: sticky; */
     /*position: -webkit-sticky; */
     left: 0;
     /*top: 0;*/
     /*padding: 20px;*/
-    z-index: 7
+    /*z-index: 7*/
 }
 
 .chat-app .chat {
-    margin-left: 25%;
-    border-left: 20px solid rgb(255, 0, 157);
+    margin-left: 15%;
+    /*border-left: 20px solid rgb(255, 0, 157);*/
+    border-left:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+
 }
 
 .people-list {
@@ -46,7 +51,7 @@ body{
 }
 
 .people-list .chat-list li:hover {
-    background: rgb(65, 83, 13);
+    background: #9f6bf1;
     cursor: pointer
 }
 
@@ -80,7 +85,7 @@ body{
 
 .chat .chat-header {
     padding: 15px 20px;
-    border-bottom: 2px solid rgb(217, 255, 0);
+    border-bottom: 2px solid #9f6bf1;
     position: sticky;
 }
 
@@ -98,13 +103,19 @@ body{
     background-color: #e47297;
 }
 
+.name{
+    line-height: 40px;
+}
+
 .botonEnviar{
     width:10%;
 }
 .chat-header{
     position: sticky;
     top: 0;
-    background-color: #e47297;
+    /*background-color: #e47297;*/
+    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+
 }
 .row1{
     position: sticky;
@@ -130,7 +141,8 @@ body{
 
 .chat .chat-history {
     padding: 20px;
-    border-bottom: 2px solid rgb(255, 0, 0);
+    /*border-bottom: 2px solid rgb(255, 0, 0);*/
+    border-bottom:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
     overflow-y: scroll;
     height: 700px;
 }
@@ -218,7 +230,7 @@ body{
     padding: 20px;
     position: sticky;
     bottom: 0;
-    background-color: #e91414;
+    background-color: #c1a4f1;
 }
 .chat-message-input{
     width:90%;
@@ -263,7 +275,7 @@ body{
 
 @media only screen and (max-width: 767px) {
     .chat-app .people-list {
-        
+
         height: 465px;
         width: 100%;
         overflow-x: auto;
@@ -320,15 +332,15 @@ body{
 
 .open-button {
     float:left;
-    background-color: red;
+    background-color: #9f6bf1;
     cursor: pointer;
     color: white;
     padding: 16px 20px;
     border: none;
-    opacity: 0.8;
+    /*opacity: 0.8;*/
     position: fixed;
     bottom:0;
-    width: 264px;
+    width: 14%;
  
   }
   
