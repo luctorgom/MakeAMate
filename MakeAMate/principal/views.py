@@ -281,3 +281,8 @@ def twilio(request, user_id):
                     return twilio(request, user_id)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
+
+def profile(request):
+    template='profile.html'
+    params = {'form': UsuarioForm()}
+    return render(request,template,params)
