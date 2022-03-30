@@ -37,11 +37,10 @@
 <body>
     <div class="content-all" id="all">
       <input type="checkbox" id="check">
-      <label for="check" class="icon-paragraph-justify"></label>
       <nav class="menu">
         <ul>  
           <br>
-          <li class="mover"><div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}</div></li>
+          <a id="a" href="{% url 'profile' %}"><li class="mover"><div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}</div></li></a>
           <br><br>
           <li><label for="check" class="icon-bubble2"></label>   Chat</li>
           <li><label for="check" class="icon-stats-dots"></label>   Statistics</li>
@@ -53,6 +52,8 @@
     </div> 
   </div>
   <div class="container-notificaciones" id="Notificaciones">
+    <label for="check" class="icon-paragraph-justify icon-large"></label>
+
     <div class="logo-notificaciones"></div>
     <a href="{% url 'home' %}"><img class ="logo" src="/static/logotipo.png"></a>
     <div class="icon-notificaciones" id="bell"> <img src="https://i.imgur.com/AC7dgLA.png" alt="img"> </div>

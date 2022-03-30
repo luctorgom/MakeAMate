@@ -37,16 +37,15 @@
 }
 
 .menu{
-    
-    position: absolute;
-    top: -20px;
+    position: fixed;
+    top: 20px;
+    left:-36px;
     width: 0px;
     height: 100vh;
     background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
     transition: all 500ms cubic-bezier(1,0,0,1);
     transition-timing-function: cubic-bezier(1,0,0,1);
     overflow: hidden;
-   
     
 }
 .menu li{
@@ -65,8 +64,10 @@
     background:rgb(208, 122, 245); 
 }
 
+.icon-paragraph-justify{
+  padding:20px;
 
-
+}
 .content-all label.icon-paragraph-justify{
     position: absolute;
     top: -62px;
@@ -75,16 +76,7 @@
     cursor: pointer;
     margin-left: 20px;
     z-index: 10;
-}
 
-
-.container-notificaciones img.logo{
-    width: 50px;
-    top: 30px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    
 }
 
 .content-all div.perfil{
@@ -147,12 +139,21 @@
 }
 
 /*NOTIFICACIONES*/
+.container-notificaciones img.logo{
+  width: 50px;
+  top: 30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  
+}
 .container-notificaciones {
     display: flex;
     background: linear-gradient(180deg, rgb(166, 164, 250) 0%, rgb(188, 174, 245) 50%, rgb(197, 160, 240) 100%);
     height: 60px;
-    position: relative;
-    top:-80px;
+    width:100vw;
+    position: fixed;
+    top:0px;
 
   }
   
