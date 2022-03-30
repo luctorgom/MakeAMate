@@ -13,10 +13,12 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
 from django.db.models import Q
+
 from .forms import UsuarioForm, SmsForm
 import os
 from twilio.rest import Client
 import json
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -109,6 +111,10 @@ def reject_mate(request):
 def payments(request):
     template='payments.html'
     return render(request,template)
+
+def terminos(request):
+    template='loggeos/terminos_1.html'
+    return render(request,template) 
 
 def terminos(request):
     template='loggeos/terminos_1.html'

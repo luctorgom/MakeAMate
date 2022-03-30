@@ -30,4 +30,5 @@ urlpatterns = [
     path("register/terminos/",views.terminos,name="terminos"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
     path('', views.homepage,name="home")
+
 ]
