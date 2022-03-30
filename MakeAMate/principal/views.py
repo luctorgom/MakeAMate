@@ -247,7 +247,7 @@ def registro(request):
 
            # return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
-    return render(request, 'loggeos/register.html', {'form': form})
+    return render(request, 'loggeos/register2.html', {'form': form})
 
 
 def twilio(request, user_id):

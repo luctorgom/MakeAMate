@@ -25,14 +25,14 @@ class UsuarioForm(forms.Form):
 
     zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class'}))
     telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
-
+    piso_encontrado = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
     foto_usuario = forms.ImageField(label="Inserta una foto")
     fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
     lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
-    tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
-    aficiones = forms.ModelMultipleChoiceField(label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),widget=forms.SelectMultiple(attrs={'class': 'select_field_class'}))
+    aficiones = forms.ModelMultipleChoiceField(queryset=Aficiones.objects.all(),required=True,widget=forms.SelectMultiple(attrs={'class': 'select_field_class'}))
 
 
     # Validación del formulario
