@@ -9,6 +9,13 @@ from datetime import *
 class SmsForm(forms.Form):
     codigo = forms.CharField(required=True)
 
+    def clean_codigo(self):
+        codigo = self.cleaned_data.get("codigo")
+        if len(codigo)!= 6:
+            raise forms.ValidationError("El tamaño del código es de 6 caracteres")
+        return codigo
+        
+
 class UsuarioForm(forms.Form):
     username = forms.CharField(max_length=100, min_length= 5,
                                required=True,

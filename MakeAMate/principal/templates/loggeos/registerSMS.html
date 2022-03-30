@@ -1,6 +1,11 @@
 
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
     <table>
     {{ form.as_p }}
     </table>
