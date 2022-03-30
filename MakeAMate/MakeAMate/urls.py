@@ -15,7 +15,7 @@ Including another URLconf
 """
 #from turtle import home
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from principal import views
 
 urlpatterns = [
@@ -25,6 +25,8 @@ urlpatterns = [
     path("accept-mate/", views.accept_mate, name= "accept-mate"),
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path("payments/",views.payments,name="payments"),
+    path('paypal/<int:pk>/', include('pagos.urls')),
+    path('', include('pagos.urls')),
     path("mates/",views.estadisticas_mates,name="mates"),
     path("register/",views.registro,name="register"),
     path("register/terminos/",views.terminos,name="terminos"),

@@ -1,0 +1,87 @@
+
+{% block extrahead %}
+
+    <!-- Add meta tags for mobile and IE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title> PayPal Checkout Integration | Client Demo </title>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AceG47Y7C4m3kQzyaK2Mr1nQ-JHpQtlvKbkTNl_FaBYxjlt_ZiqwFl9isA1U43HVqTER90J1ygRrsgko&currency=EUR&intent=authorize"></script>
+
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+		var csrftoken = getCookie('csrftoken');
+        
+        var total = '{{suscripcion.price}}'
+	 	var suscripcionId = '{{suscripcion.id}}'
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(total).toFixed(2)
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                actions.order.authorize().then(function(authorization) {
+
+                // Get the authorization id
+                    var authorizationID = authorization.purchase_units[0]
+                        .payments.authorizations[0].id
+
+                    // Call your server to validate and capture the transaction
+                    var url ="{% url 'complete' %}"
+                    return fetch(url, {
+                        method: 'post',
+                        headers: {
+                            'content-type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body: JSON.stringify({
+                            orderID: data.orderID,
+                            authorizationID: authorizationID
+                        })
+                    });
+                });
+                alert('Transaction completed');
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>¡Solo un paso más!</h1>
+    <h3>Usa paypal o tu tarjeta de crédito para finalizar el pago</h3>
+ 
+    <div= id="#paypal-button-container"></div>
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+
+    
+  
+    
+{% endblock %}
+

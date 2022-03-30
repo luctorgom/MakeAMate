@@ -3,8 +3,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+
+
+from pagos.models import Suscripcion
+from .models import Usuario,Mate
+
+
 from principal.forms import UsuarioForm
 from .models import Idioma, Piso, Tag, Usuario,Mate
+
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -14,10 +21,14 @@ from django.db.models import Q, Count
 from datetime import datetime
 from django.db.models import Q
 
+
+from principal import models
+
 from .forms import UsuarioForm, SmsForm
 import os
 from twilio.rest import Client
 import json
+
 
 
 def login_view(request):
@@ -109,12 +120,22 @@ def reject_mate(request):
 
 
 def payments(request):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
+    suscripcion=Suscripcion.objects.all()[0]
+    loggeado=get_object_or_404(Usuario, usuario=request.user)
     template='payments.html'
+
+    premium= loggeado.es_premium
+    params={'suscripcion':suscripcion, 'premium':premium}
+    return render(request,template,params) 
+
     return render(request,template)
 
 def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
+
 
 def prueba(request):
     form = SmsForm()
@@ -129,6 +150,7 @@ def notificaciones_mates(request):
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+
             lista_mates.append(mate1.userSalida)
         except Mate.DoesNotExist:
             pass
