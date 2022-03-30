@@ -21,6 +21,8 @@ p {
     color: grey
 }
 
+
+
 .select2{
  width: 25% !important;
  height: 10% !important;
@@ -57,6 +59,8 @@ p {
 #msform fieldset:not(:first-of-type) {
     display: none
 }
+
+
 
 #msform input,
 #msform textarea {
@@ -305,7 +309,7 @@ p {
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 3 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nacionalidad </label>   {{  form.nacionalidad  }}  <label class="fieldlabels">Ciudad donde estudios</label>   {{  form.lugar  }}   
+                            </div> <label class="fieldlabels">Nacionalidad </label>   {{  form.nacionalidad  }}     
                             <label class="fieldlabels">¿Tienes piso?</label>   {{  form.piso_encontrado  }} 
                             <div class = "zona_piso">
                             <label class="fieldlabels">Zona: </label>   {{  form.zona_piso  }} 
@@ -324,23 +328,12 @@ p {
                                     <h2 class="steps">Paso 4 - 4</h2>
                                 </div>
                             </div> <br><br>
-                            <div class="form-checkbox">
-                                <label class="container"><p>Acepto <a href="terminos" class="text">los terminos y condiciones</a> de este sitio.</p>
-                                      <input type="checkbox" name="checkbox">
-                                      <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="w-full text-center">
-                                <a href="#" class="txt3">
-                                    Verificacion codigo sms
-                                </a>
-                            </div>
-                            
-                        
+                            <div class="" style ="display:flex;flex-direction:row">
+                               
+                                <label for="id_checkbox"> Acepto <a href="terminos" target="_blank" class="text">los terminos y condiciones de este sitio. <input type="checkbox" name="checkbox" id="id_checkbox"></a> </label>
+                            </div>                            
                         </div>
-
-                        <button type="submit" value="Registrarme">
-                            Registrarme</button>
+                        <br> <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button>
 
                     </fieldset>
                 </form>

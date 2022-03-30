@@ -116,9 +116,10 @@ def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
 
-def terminos(request):
-    template='loggeos/terminos_1.html'
-    return render(request,template) 
+def prueba(request):
+    form = SmsForm()
+    template='loggeos/registerSMS.html'
+    return render(request,template,{'form': form}) 
 
 def notificaciones_mates(request):
     loggeado= request.user
@@ -243,11 +244,12 @@ def registro(request):
             except:
                 print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
 
-            return redirect(login_view)
-
-           # return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
+            #return redirect(login_view)
+            return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
+            #return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register2.html', {'form': form})
+
 
 
 def twilio(request, user_id):
