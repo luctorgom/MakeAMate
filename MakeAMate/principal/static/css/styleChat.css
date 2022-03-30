@@ -22,13 +22,13 @@ body{
      /* position: sticky; */
     /*position: -webkit-sticky; */
     left: 0;
-    top: 0;
+    /*top: 0;*/
     /*padding: 20px;*/
     z-index: 7
 }
 
 .chat-app .chat {
-    margin-left: 280px;
+    margin-left: 25%;
     border-left: 20px solid rgb(255, 0, 157);
 }
 
@@ -263,6 +263,7 @@ body{
 
 @media only screen and (max-width: 767px) {
     .chat-app .people-list {
+        
         height: 465px;
         width: 100%;
         overflow-x: auto;
