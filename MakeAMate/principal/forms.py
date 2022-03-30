@@ -4,10 +4,27 @@ from principal.models import Idioma, Aficiones, Tag, Usuario
 from django.contrib.auth.models import User
 import re
 from datetime import *
+from soupsieve import select
+from .models import Tag,Aficiones
 
 
 class SmsForm(forms.Form):
     codigo = forms.CharField(required=True)
+
+
+#nombre = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Nombre'}))
+    # apellidos = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
+    # correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
+    # telefono = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Teléfono'}))
+    # piso_encontrado = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
+    # fecha_nacimiento= forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': '01-01-2000'}))
+    # lugar = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    # nacionalidad = forms.CharField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
+    # genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
+    # tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),widget=forms.SelectMultiple(attrs={'class': 'select_field_class'}))   
+    # aficiones = forms.ModelMultipleChoiceField(queryset=Aficiones.objects.all(),required=True,widget=forms.SelectMultiple(attrs={'class': 'select_field_class'}))         
+    # fotos_usuario = forms.ImageField(label="Fotos")
+    # zona_piso = forms.CharField(required=True,widget=forms.TextInput(attrs={'class':'zona_piso','placeholder': 'Describe la zona de tu piso'}))
 
 class UsuarioForm(forms.Form):
     username = forms.CharField(max_length=100, min_length= 5,
@@ -20,16 +37,15 @@ class UsuarioForm(forms.Form):
     correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
 
-    zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
+    zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class'}))
     telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
-    #VALIDAR TELEFONO, ZONA
 
-    foto_usuario = forms.ImageField(label="Fotos")
+    foto_usuario = forms.ImageField(label="Inserta una foto")
     fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
     lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
-    idiomas = forms.ModelMultipleChoiceField(queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
+   # idiomas = forms.ModelMultipleChoiceField(queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
     tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
     aficiones = forms.ModelMultipleChoiceField(label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
 
@@ -159,12 +175,12 @@ class UsuarioForm(forms.Form):
 
         return genero
 
-    def clean_idiomas(self):
-        idiomas = self.cleaned_data.get('idiomas')
-        if idiomas.count() == 0:
-            raise forms.ValidationError('Por favor, elige al menos un idioma')
+    # def clean_idiomas(self):
+    #     idiomas = self.cleaned_data.get('idiomas')
+    #     if idiomas.count() == 0:
+    #         raise forms.ValidationError('Por favor, elige al menos un idioma')
 
-        return idiomas
+    #     return idiomas
 
     def clean_tags(self):
         tags = self.cleaned_data.get('tags')
@@ -202,3 +218,4 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
         
         return piso
+

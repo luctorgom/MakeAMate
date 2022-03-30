@@ -110,6 +110,10 @@ def payments(request):
     template='payments.html'
     return render(request,template)
 
+def terminos(request):
+    template='loggeos/terminos_1.html'
+    return render(request,template) 
+
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
@@ -118,7 +122,6 @@ def notificaciones_mates(request):
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-
             lista_mates.append(mate1.userSalida)
         except Mate.DoesNotExist:
             pass
@@ -190,7 +193,7 @@ def registro(request):
             form_lugar = form.cleaned_data['lugar']
             form_nacionalidad = form.cleaned_data['nacionalidad']
             form_genero = form.cleaned_data['genero']
-            form_idiomas = form.cleaned_data['idiomas']
+           # form_idiomas = form.cleaned_data['idiomas']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
@@ -220,9 +223,11 @@ def registro(request):
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
 
-            perfil.idiomas.set(form_idiomas)
+           # perfil.idiomas.set(form_idiomas)
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
+
+            print(form_tags)
 
             try:
                 if form_zona_piso != None:
@@ -233,7 +238,9 @@ def registro(request):
             except:
                 print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
 
-            return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
+            return redirect(login_view)
+
+           # return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register.html', {'form': form})
 
