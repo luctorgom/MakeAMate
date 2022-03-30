@@ -25,7 +25,10 @@ urlpatterns = [
     path("accept-mate/", views.accept_mate, name= "accept-mate"),
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path("payments/",views.payments,name="payments"),
-    path("register/",views.register_view,name="register"),
+    path("mates/",views.estadisticas_mates,name="mates"),
+    path("register/",views.registro,name="register"),
     path("register/terminos/",views.terminos,name="terminos"),
-    path('', views.homepage,name="home"),
+    path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
+    path('', views.homepage,name="home")
+
 ]
