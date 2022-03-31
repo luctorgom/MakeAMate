@@ -10,7 +10,7 @@
 
 {% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="containerchat">
         <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card chat-app">
@@ -43,6 +43,15 @@
 
                             {% endfor %}
                         </ul>
+                        <button class="open-button" onclick="openForm()">Crear un grupo</button>
+                        <div class="form-popup" id="myForm">
+                            <h3>Seleccione las personas con las que desee crear el grupo:</h3>
+                            <form id="form-control" method="POST" action='' class="form-container">{% csrf_token %}
+                                {{form.as_p}}
+                                <input class="btn btn-primary btn-xl" type='submit' value='Crear grupo'/>
+                                <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
+                            </form>
+                        </div>  
                     </div>
                     <div class="chat">
                         <div class="chat-header clearfix">
@@ -78,15 +87,7 @@
                         </div>
 
                     </div>
-                    <button class="open-button" onclick="openForm()">Crear un grupo</button>
-                    <div class="form-popup" id="myForm">
-                        <h3>Seleccione las personas con las que desee crear el grupo:</h3>
-                        <form id="form-control" method="POST" action='' class="form-container">{% csrf_token %}
-                            {{form.as_p}}
-                            <input class="btn btn-primary btn-xl" type='submit' value='Crear grupo'/>
-                            <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
-                        </form>
-                    </div>  
+                    
                 </div>
             </div>
         </div>
@@ -118,7 +119,7 @@
             if(usuarioProv == data.name)
                 micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
             else
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ":"+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ": "+data.message+'</div></li>';
             
             micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
         

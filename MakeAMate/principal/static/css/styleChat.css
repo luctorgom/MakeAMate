@@ -18,9 +18,9 @@ body{
 
 }
 .chat-app .people-list {
-    background: linear-gradient(180deg, rgb(210, 160, 240) 0%, rgb(210, 174, 245) 50%,  rgb(210, 164, 250) 100%);
+    background: linear-gradient(180deg, rgb(166, 164, 250) 0%, rgb(188, 174, 245) 50%, rgb(197, 160, 240) 100%);
     width: 14%;
-    height:100vh;
+    height:100%;
     position: absolute;
      /* position: sticky; */
     /*position: -webkit-sticky; */
@@ -141,7 +141,8 @@ body{
     /*border-bottom: 2px solid rgb(255, 0, 0);*/
     border-bottom:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
     overflow-y: scroll;
-    height: 100vh;
+        /*height: 100vh;*/
+        height: 95vh;
 }
 
 .chat .chat-history ul {
@@ -196,10 +197,13 @@ body{
 }
 
 .chat .chat-history .my-message {
-    background: #e0c0d9
+    background: #e0c0d9;
+    word-wrap: break-word;
+    max-width: 50vh;
 }
 
 .chat .chat-history .my-message:after {
+    word-wrap: break-word;
     bottom: 100%;
     left: 30px;
     border: solid transparent;
@@ -215,16 +219,20 @@ body{
 
 .chat .chat-history .other-message {
     background: #e8f1f3;
-    text-align: right
+    text-align: right;
+    word-wrap: break-word;
+    max-width: 50vh;
+
 }
 
 .chat .chat-history .other-message:after {
     border-bottom-color: #fff;
-    left: 93%
+    left: 93%;
+    word-wrap: break-word;
 }
 
 .chat .chat-message {
-    padding: 20px;
+    padding: 3vh;
     position: sticky;
     bottom: 0;
     background-color: #c1a4f1;
@@ -267,6 +275,7 @@ body{
     content: " ";
     clear: both;
     height: 0;
+    
     /*bottom:0;*/
 
 }
@@ -339,7 +348,10 @@ body{
     position: fixed;
     bottom:0;
     width: 14%;
- 
+    /*padding: 3vh;
+    position: sticky;
+    bottom: 0;
+    background-color: #c1a4f1;*/
   }
   
   .form-popup {
