@@ -29,4 +29,11 @@ def dice_coefficient(tag1, tag2, pref1, pref2):
     tags_comunes  = len(tag1.intersection(tag2))
     tags_total = len(tag1) + len(tag2)
 
-    return 2 * (tags_comunes + PONDERACION_AFICIONES*aficiones_comunes) / (tags_total + PONDERACION_AFICIONES*aficiones_total)
+    interseccion_total = tags_comunes + PONDERACION_AFICIONES*aficiones_comunes
+    suma_total = tags_total + PONDERACION_AFICIONES*aficiones_total
+
+    #Si ninguno de los dos usuarios tiene gustos o preferencias, se devuelve por defecto 0.
+    if(suma_total == 0):
+        return 0
+
+    return 2 * (interseccion_total) / (suma_total)
