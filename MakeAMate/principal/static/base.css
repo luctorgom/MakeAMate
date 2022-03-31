@@ -25,13 +25,15 @@
 }
 
 #check:checked ~ .menu{
-    width: 17%;
+    width: 18%;
 }
 
 #a {
     text-decoration: none;
 }
-
+.menu ul {
+  padding-left: 0rem;
+}
 .menu{
     
     position: absolute;

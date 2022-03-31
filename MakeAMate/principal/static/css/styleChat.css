@@ -4,6 +4,7 @@ body{
     /*background-color: #fff;*/
     /*margin-top:20px;*/
     position: relative;
+    overflow-y:hidden;
 }
 .card {
     background: #fff;
@@ -141,12 +142,15 @@ body{
     /*border-bottom: 2px solid rgb(255, 0, 0);*/
     border-bottom:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
     overflow-y: scroll;
-        /*height: 100vh;*/
-        height: 95vh;
+    /*height: 100vh;*/
+    height: 75vh;
 }
+/*.divDeLosMensajes{
+    height: 70vh;
+}*/
 
 .chat .chat-history ul {
-    padding: 0
+    padding: 0;
 }
 
 .chat .chat-history ul li {
@@ -199,7 +203,7 @@ body{
 .chat .chat-history .my-message {
     background: #e0c0d9;
     word-wrap: break-word;
-    max-width: 50vh;
+    max-width: 45vh;
 }
 
 .chat .chat-history .my-message:after {
@@ -221,7 +225,7 @@ body{
     background: #e8f1f3;
     text-align: right;
     word-wrap: break-word;
-    max-width: 50vh;
+    max-width: 45vh;
 
 }
 
@@ -231,17 +235,20 @@ body{
     word-wrap: break-word;
 }
 
-.chat .chat-message {
+.BotonesEnviarChat {
     padding: 3vh;
     position: sticky;
-    bottom: 0;
+    /*bottom: 0;*/
+    /*float: right;*/
     background-color: #c1a4f1;
+    width:90%;
+    position:fixed;
 }
 .chat-message-input{
     width:90%;
 }
 .chat-message-submit{
-    width:8%;
+    width:7%;
 }
 
 .online,
@@ -279,59 +286,6 @@ body{
     /*bottom:0;*/
 
 }
-
-@media only screen and (max-width: 767px) {
-    .chat-app .people-list {
-
-        height: 465px;
-        width: 100%;
-        overflow-x: auto;
-        background: #fff;
-        left: -400px;
-        display: none
-    }
-    .chat-app .people-list.open {
-        left: 0
-    }
-    .chat-app .chat {
-        margin: 0
-    }
-    .chat-app .chat .chat-header {
-        border-radius: 0.55rem 0.55rem 0 0
-    }
-    .chat-app .chat-history {
-        overflow-x: auto;
-        
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 992px) {
-    .chat-app .chat-list {
-        height: 650px;
-        overflow-x: auto;
-        
-
-    }
-    .chat-app .chat-history {
-        height: 600px;
-        overflow-x: auto;
-        
-    }
-}
-
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
-    .chat-app .chat-list {
-        height: 480px;
-        overflow-x: auto;
-        
-    }
-    .chat-app .chat-history {
-        height: calc(100vh - 350px);
-        overflow-x: auto;
-        
-    }
-}
-
 
 
 /*Estilo del formulario de grupos:*/
