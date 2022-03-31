@@ -1,8 +1,12 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
+from fernet_fields import EncryptedTextField
+import base64, os
+
 
 class Chat(models.Model):
-    content = models.CharField(max_length=1000)
+    content = EncryptedTextField(max_length=2000)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey('ChatRoom', on_delete=models.CASCADE)
@@ -13,6 +17,7 @@ class Chat(models.Model):
 class ChatRoom(models.Model):
     name = models.AutoField(primary_key=True)
     participants = models.ManyToManyField(User)
+    publicKey = models.TextField(default=base64.urlsafe_b64encode(os.urandom(32)).decode())
     room_name = models.CharField(max_length=255, blank=True, default='')
 
     def group(self):
