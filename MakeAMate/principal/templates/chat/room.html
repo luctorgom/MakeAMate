@@ -17,7 +17,7 @@
                     <div id="plist" class="people-list">
                         <ul class="list-unstyled chat-list mt-2 mb-0" id="people-chat-list">
                             {% for c in chats %}
-                                <a href="{{c.name}}">
+                                <a href="/chat/{{c.name}}">
                                 <li class="clearfix">
                                 {% if c.group is not True %}
                                     {% for p in c.participants.all %}
