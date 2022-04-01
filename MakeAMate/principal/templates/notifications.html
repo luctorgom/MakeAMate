@@ -11,7 +11,7 @@
 <div class="container">
     <h3 class="m-b-50 heading-line">Notificaciones<i class="fa fa-bell text-muted"></i></h3>
         {%for i in notificaciones%}
-        {%if not i.1%}
+        {%if i.1 == "Mates" %}
         <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
             <div class="notification-list">
                     <div class="notification-list_img">
@@ -27,7 +27,7 @@
                     </div>
             </div>
         {% endif %}
-        {%if i.1%}
+        {%if i.1 == "Premium" %}
         <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
             <div class="notification-list">
                     <div class="notification-list_img">
