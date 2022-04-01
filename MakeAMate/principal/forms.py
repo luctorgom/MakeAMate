@@ -19,10 +19,8 @@ class UsuarioForm(forms.Form):
     apellidos = forms.CharField(required=True, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
     correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
-
     zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
     telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
-    #VALIDAR TELEFONO, ZONA
 
     foto_usuario = forms.ImageField(label="Fotos")
     fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
@@ -202,3 +200,30 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
         
         return piso
+
+#Formulario para editar perfil
+class UsuarioFormEdit(forms.Form):
+    zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
+    telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    foto_usuario = forms.ImageField(label="Fotos")
+    fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
+    lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
+    genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
+    idiomas = forms.ModelMultipleChoiceField(queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
+    tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
+    aficiones = forms.ModelMultipleChoiceField(label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+    def clean_telefono_usuario(self):
+        telefono_usuario = self.cleaned_data.get('telefono_usuario')
+        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+
+        if not re.fullmatch(regex, telefono_usuario):
+            raise forms.ValidationError('Inserte un teléfono válido')
+
+        existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
+
+        if existe_telefono:
+            raise forms.ValidationError('El teléfono ya está en uso')
+
+        return telefono_usuario

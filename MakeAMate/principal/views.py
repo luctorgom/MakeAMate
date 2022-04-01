@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
 from django.db.models import Q
-from .forms import UsuarioForm, SmsForm
+from .forms import UsuarioForm, SmsForm, UsuarioFormEdit
 import os
 from twilio.rest import Client
 import json
@@ -281,3 +281,73 @@ def twilio(request, user_id):
                     return twilio(request, user_id)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
+
+def profile_view(request):
+    if request.user.is_authenticated:
+        userActual = request.user
+        usuario = Usuario.objects.get(usuario = userActual)
+        return render(request, 'profile.html', {'user': userActual.id, 'usuario': usuario})
+    else:
+        return redirect(homepage)
+
+def edit_profile_view(request):
+    if not request.user.is_authenticated:
+        return redirect(homepage)
+    form = UsuarioFormEdit()
+    if request.method == 'POST':
+        print("HOLA?")
+        form = UsuarioFormEdit(request.POST, request.FILES)
+        if form.is_valid():
+            form_foto = form.cleaned_data['foto_usuario']
+            form_fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
+            form_lugar = form.cleaned_data['lugar']
+            form_nacionalidad = form.cleaned_data['nacionalidad']
+            form_genero = form.cleaned_data['genero']
+            form_idiomas = form.cleaned_data['idiomas']
+            form_tags = form.cleaned_data['tags']
+            form_aficiones = form.cleaned_data['aficiones']
+            form_zona_piso = form.cleaned_data['zona_piso']
+            form_telefono_usuario = form.cleaned_data['telefono_usuario']
+
+            print(form_idiomas)
+            print("Cogemos los datos")
+
+            userActual = request.user
+            usuario = Usuario.objects.get(usuario = userActual)
+
+            if form_zona_piso != None:
+                piso_usuario = Piso.objects.filter(id = usuario.piso.id).update(zona = form_zona_piso)
+                print("Creado el piso")
+
+            print("Creado el user")
+
+            if form_zona_piso != None:
+                perfil = Usuario.objects.filter(id = usuario.id).update(piso = piso_usuario,
+                    fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, 
+                    nacionalidad = form_nacionalidad,
+                    genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+            else:
+                perfil = Usuario.objects.filter(id = usuario.id).update(
+                    fecha_nacimiento = form_fecha_nacimiento,
+                    lugar = form_lugar, nacionalidad = form_nacionalidad,
+                    genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+            
+            print("ANTES")
+            print(perfil.idiomas)
+
+            perfil.idiomas.set(form_idiomas)
+            print("DESPUES")
+            print(perfil.idiomas)
+            perfil.tags.set(form_tags)
+            perfil.aficiones.set(form_aficiones)
+
+            try:
+                if form_zona_piso != None:
+                    piso_usuario.save()
+                perfil.save()
+                print("Creado el usuario")
+            except:
+                print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
+
+            return redirect('profile/', {'user': perfil.usuario, 'usuario': perfil})
+    return render(request, 'edit_profile.html', {'form': form})

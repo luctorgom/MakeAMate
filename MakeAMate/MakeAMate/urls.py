@@ -28,5 +28,7 @@ urlpatterns = [
     path("mates/",views.estadisticas_mates,name="mates"),
     path("register/",views.registro,name="register"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
+    path("profile/",views.profile_view,name="profile"),
+    path("profile/edit/", views.edit_profile_view,name="edit_profile"),
     path('', views.homepage,name="home")
 ]
