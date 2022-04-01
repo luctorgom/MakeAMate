@@ -1,4 +1,4 @@
-
+{% extends "base.html" %}
 {% block extrahead %}
 
     <!-- Add meta tags for mobile and IE -->
@@ -30,6 +30,7 @@
 	 	var suscripcionId = '{{suscripcion.id}}'
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
+            env :'sandbox',
 
             // Set up the transaction
             createOrder: function(data, actions) {
@@ -56,7 +57,7 @@
                         method: 'post',
                         headers: {
                             'content-type': 'application/json',
-                            'X-CSRFToken': csrftoken,
+                            'X-CSRFToken':csrftoken,
                         },
                         body: JSON.stringify({
                             orderID: data.orderID,
@@ -65,6 +66,8 @@
                     });
                 });
                 alert('Transaction completed');
+                var redirected= "{% url 'home' %}"
+                window.location.href = redirected;
             }
 
 

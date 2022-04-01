@@ -1,29 +1,35 @@
 from datetime import date, datetime
 import imp
 from multiprocessing import context
-from django.shortcuts import redirect, render
+import re
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
-from principal.views import login_view
-
+from principal.views import homepage, login_view
+from django.views.decorators.csrf import csrf_protect
 from principal.models import Usuario
 
 from .models import Suscripcion
 import json
 
-
+@csrf_protect
 def paypal(request,pk):
     if not request.user.is_authenticated:
         return redirect(login_view)
+    loggeado=get_object_or_404(Usuario, usuario=request.user)
+    if loggeado.is_premium():
+        return redirect(homepage)
     template_name='pagos/pagos.html'
     suscripcion= Suscripcion.objects.get(id=pk)
     context={'suscripcion': suscripcion}
     return render(request, template_name, context)
 
-
+@csrf_protect
 def paymentComplete(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
-    
+    loggeado=get_object_or_404(Usuario, usuario=request.user)  
+    if loggeado.is_premium():
+        return redirect(homepage)
     body = json.loads(request.body)
     print('BODY:', body)
     now = datetime.now()

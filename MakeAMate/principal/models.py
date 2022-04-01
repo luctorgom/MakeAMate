@@ -59,14 +59,13 @@ class Usuario(models.Model):
     def tiene_piso(cls):
         return True if cls.piso != None else False
 
-    @classmethod
     def es_premium(cls):
         if cls.fecha_premium==None:
             return False
-        today = datetime.time
+        today = datetime.today()
         fecha_premium_fin = cls.fecha_premium + relativedelta(months=1)
 
-        return True if fecha_premium_fin > today else False
+        return True if today < fecha_premium_fin else False
 
     def __str__(self):
         return str(self.usuario)
