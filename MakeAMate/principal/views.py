@@ -309,37 +309,61 @@ def edit_profile_view(request):
             form_zona_piso = form.cleaned_data['zona_piso']
             form_telefono_usuario = form.cleaned_data['telefono_usuario']
 
-            print(form_idiomas)
+
             print("Cogemos los datos")
 
             userActual = request.user
             usuario = Usuario.objects.get(usuario = userActual)
+            print("PRINTEAMOS EL PISO DEL USUARIO")
+            print(usuario.piso)
 
             if form_zona_piso != None:
-                piso_usuario = Piso.objects.filter(id = usuario.piso.id).update(zona = form_zona_piso)
-                print("Creado el piso")
-
-            print("Creado el user")
+                ### El usuario puede no tener piso !!!!!!!!!
+                if usuario.piso != None:
+                    print("EL USUARIO TIENE PISO OJOOOO")
+                    piso_usuario = Piso.objects.filter(id = usuario.piso.id).update(zona = form_zona_piso)
+                    print("SE HA ACTUALIZADO EL PISO DEL USUARIO")
+                    print(piso_usuario)
+                else:
+                    print("NO TIENE PISO")
+                    piso_usuario = Piso.objects.create(zona = form_zona_piso)
+                    piso_usuario.save()
+                    print("SE HA GUARDADO EL PISO DEL USUARIO")
+                    print(piso_usuario)
 
             if form_zona_piso != None:
-                perfil = Usuario.objects.filter(id = usuario.id).update(piso = piso_usuario,
-                    fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, 
-                    nacionalidad = form_nacionalidad,
-                    genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+                print("LLEGAMOSSSSSSSSSSSSSS")
+                print(usuario.piso)
+                ### Si el usuario no tiene piso, se ha creado antes y ahora lo asigno. Si tiene piso se actualiza en la referencia de arriba
+                if usuario.piso == None:
+                    print("LLEGAMOS AQUI")
+                    perfil = Usuario.objects.filter(id = usuario.id).update(piso = piso_usuario,
+                        fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, 
+                        nacionalidad = form_nacionalidad,
+                        genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+                    perfil.idiomas.clear()
+                    perfil.tags.clear()
+                    perfil.aficiones.clear()
+                    perfil.idiomas.set(form_idiomas)
+                    perfil.tags.set(form_tags)
+                    perfil.aficiones.set(form_aficiones)
             else:
+                print("LLEGAMOS AQUI 2")
                 perfil = Usuario.objects.filter(id = usuario.id).update(
                     fecha_nacimiento = form_fecha_nacimiento,
                     lugar = form_lugar, nacionalidad = form_nacionalidad,
                     genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
-            
-            print("ANTES")
-            print(perfil.idiomas)
-
-            perfil.idiomas.set(form_idiomas)
-            print("DESPUES")
-            print(perfil.idiomas)
-            perfil.tags.set(form_tags)
-            perfil.aficiones.set(form_aficiones)
+                perfil.idiomas.clear()
+                perfil.tags.clear()
+                perfil.aficiones.clear()
+                perfil.idiomas.set(form_idiomas)
+                perfil.tags.set(form_tags)
+                perfil.aficiones.set(form_aficiones)
+        
+           # perfil.save()
+            #print(perfil.idiomas)
+            # print(perfil.tags)
+            # print(perfil.aficiones)
 
             try:
                 if form_zona_piso != None:
