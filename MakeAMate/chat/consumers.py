@@ -2,12 +2,10 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from chat.models import Chat,ChatRoom
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
-from chat.views import index
-
+from cryptography.fernet import Fernet
 
 class ChatConsumer(WebsocketConsumer):
+
     def connect(self):
         
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -41,7 +39,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
+    
         self.store_message(message)
 
         # Send message to room group
@@ -67,10 +65,13 @@ class ChatConsumer(WebsocketConsumer):
 
     
     def store_message(self,text):
+        room = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
+        f = Fernet(room.publicKey.encode())
+        token = f.encrypt(bytes(text, encoding='utf-8'))
         Chat.objects.create(
-            content = text,
+            content = token.decode(),
             user = self.scope['user'],
-            room = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
+            room = room
         )
 
     #El chatroom se guarda una vez que se envía el primer mensaje, lo suyo sería que cuando se creen grupos se guarde al inicio
@@ -84,10 +85,11 @@ class ChatConsumer(WebsocketConsumer):
     def get_all_messages(self):
         chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
         mess = Chat.objects.filter(room = chatroom).order_by('timestamp')
-        for  m in mess:
+        for m in mess:
+            mensaje = Fernet(chatroom.publicKey.encode()).decrypt(bytes(m.content,'utf-8'))
             data = {
                 "type": "chat_message",
                 'name': m.user.username,
-                'message': m.content
+                'message': mensaje.decode()
             }
             self.send(text_data=json.dumps(data))
