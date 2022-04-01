@@ -7,7 +7,6 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
-
 # Create your models here.
 class Aficiones(models.Model):
     opcionAficiones=models.CharField(max_length=50)
@@ -15,10 +14,8 @@ class Aficiones(models.Model):
     def __str__(self):
         return str(self.opcionAficiones)
 
-
 class Tag(models.Model):
     etiqueta=models.CharField(max_length=40)
-
 
     def __str__(self):
         return str(self.etiqueta)
@@ -94,7 +91,6 @@ class Mate(models.Model):
     class Meta:
         unique_together = ('userEntrada', 'userSalida',)
 
-
 class Oferta(models.Model):
     precio=models.DecimalField(max_digits=6, decimal_places=2)
     descuento=models.FloatField(default=0)
@@ -102,4 +98,3 @@ class Oferta(models.Model):
 
     def __str__(self):
         return str("Precio = " + str(self.precio) + ", descuento = " + str(self.descuento) + ", duración = " + str(self.duracion_meses))
-
