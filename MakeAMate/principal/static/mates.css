@@ -248,21 +248,3 @@ h1, h2, h3, h4, h5, h6 {
 .btn-light, .btn-light:active {
     background-color: rgba(153,153,204,1) !important;
 }
-
-/*animacion*/
-
-
-.animacion {  
-    display: none;
-    height: 500px;
-    width: 500px;
-    border-radius: 50%;
-    margin:auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1
-
-}
