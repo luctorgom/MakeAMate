@@ -11,7 +11,6 @@ def index(request):
     crear_grupo_form(request, form)
 
     lista_mates = notificaciones_mates(request)
-    print(lista_mates)
     if len(lista_mates)>0:
         lista_chat = []
         chats = ChatRoom.objects.all()
@@ -57,7 +56,7 @@ def room(request, room_name):
 
     # Comprobación si el usuario pertenece a los participantes de ese grupo
     if request.user.username in lista_participantes :
-        return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'users':notificaciones_mates(request)})
+        return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form})
     else:
         return redirect('/chat')
 
@@ -66,6 +65,7 @@ def crear_grupo_form(request, form):
     if request.method=='POST':
         form = CrearGrupo(notificaciones_mates(request), request.POST)
         if form.is_valid():
+            if len(form.cleaned_data['Personas'])>1:
                 lista = form.cleaned_data['Personas']
                 nombre = form.cleaned_data['Nombre']
                 lista.append(request.user.id)
@@ -94,7 +94,7 @@ def notificaciones_mates(request):
             mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
             lista_mates.append(mate1.userSalida)
         except Mates.DoesNotExist:
-            print("NO EXISTE MATE CON "+ str(i))
+            pass
     return lista_mates
 
 
