@@ -1,12 +1,11 @@
 from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
-from fernet_fields import EncryptedTextField
 import base64, os
 
 
 class Chat(models.Model):
-    content = EncryptedTextField(max_length=2000)
+    content = models.TextField(max_length=2000)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey('ChatRoom', on_delete=models.CASCADE)
