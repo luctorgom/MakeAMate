@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Crear Grupo</title>
+</head>
+<body>
+    Who would you like to start chatting with?<br>
+    <select name="Participantes" id="participants-input" class="form-control" id="Participantes" multiple required>
+        {% for u in users %}      
+            <option value="{{ u }}">{{ u }}</option>
+        {% endfor %}
+      </select>
+<script>
+    document.querySelector('#participants-input').focus();
+</script>
+
+
+</body>
