@@ -126,3 +126,9 @@ def notificaciones_mates(request):
                 lista_notificaciones.append((mR,"Premium"))
     lista_notificaciones.sort(key=lambda mates: mates[0].fecha_mate, reverse=True)
     return lista_notificaciones
+
+def notifications_list(request):
+    template='notifications.html'
+    notis=notificaciones_mates(request)
+    response={'notificaciones':notis}
+    return render(request,template,response)
