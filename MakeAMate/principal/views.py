@@ -105,7 +105,7 @@ def notificaciones_mates(request):
     lista_notificaciones=[]
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
-    es_premium= perfil.es_premium
+    es_premium= perfil.es_premium()
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
 
