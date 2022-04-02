@@ -1,10 +1,8 @@
 from django.conf import settings
 from django.db import models
 from django.forms import NullBooleanField
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import User
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import date
+from django.utils import timezone
 
 
 # Create your models here.
@@ -50,23 +48,19 @@ class Usuario(models.Model):
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
     foto=models.ImageField(upload_to="principal/static/images/users")
 
-    @classmethod
-    def get_edad(cls):
+    def get_edad(self):
         today = date.today()
-        return today.year - cls.fecha_nacimiento.year - ((today.month, today.day) < (cls.fecha_nacimiento.month, cls.fecha_nacimiento.day))
+        return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
 
-    @classmethod
-    def tiene_piso(cls):
-        return True if cls.piso != None else False
+    def tiene_piso(self):
+        return self.piso != None
 
-    @classmethod
-    def es_premium(cls):
-        if cls.fecha_premium==None:
+    def es_premium(self):
+        if self.fecha_premium==None:
             return False
-        today = datetime.time
-        fecha_premium_fin = cls.fecha_premium + relativedelta(months=+1)
-
-        return True if fecha_premium_fin > today else False
+        today = timezone.now()
+        
+        return self.fecha_premium > today
 
     def __str__(self):
         return str(self.usuario)
