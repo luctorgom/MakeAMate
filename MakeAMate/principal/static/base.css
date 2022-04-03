@@ -10,7 +10,7 @@
 
 
 .menuprincipal{
-    width: 100%;
+    width: 80%;
     max-width: 100%;
     background:rgb(240, 211, 252);
     /*margin-top: 80px;*/
@@ -25,20 +25,22 @@
 }
 
 #check:checked ~ .menu{
-    width: 14%;
+    width: 18%;
 }
 
 #a {
     text-decoration: none;
 }
-
+.menu ul {
+  padding-left: 0rem;
+}
 .menu{
     
     position: absolute;
     top: 60px; /*si se cambia esto, también se cambia en el menú*/
     width: 0px;
     height: 100vh;
-    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    background: linear-gradient(180deg, rgb(166, 164, 250) 0%, rgb(188, 174, 245) 50%, rgb(197, 160, 240) 100%);
     transition: all 500ms cubic-bezier(1,0,0,1);
     transition-timing-function: cubic-bezier(1,0,0,1);
     overflow: hidden;

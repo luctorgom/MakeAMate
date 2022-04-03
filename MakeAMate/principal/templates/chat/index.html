@@ -2,7 +2,7 @@
 {% block extrahead %}
     
     {%load static %}
-    <link href="/static/css/styleChat.css" rel="stylesheet">
+    <link href="/static/css/indexChat.css" rel="stylesheet">
     <link href="/static/css/formChat.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
@@ -15,19 +15,18 @@
             <div class="col-lg-12">
                 <div class="card chat-app">
                     <div id="plist" class="people-list">
-                        <ul class="list-unstyled chat-list mt-2 mb-0" id="people-chat-list">
+                        <h1 class="informacion">Seleccione a la persona con la que desee hablar: </h1>
+                        <ul class="list-unstyled chat-list2 mt-2 mb-0" id="people-chat-list2">
                             {% for c in chats %}
-                                <a href="/chat/{{c.name}}">
-                                <li class="clearfix">
+                                <a class="posiblesChats" href="/chat/{{c.name}}">
+                                <li class="clearfix2">
                                 {% if c.group is not True %}
                                     {% for p in c.participants.all %}
                                         {% if request.user != p%}
                                             {% for n in nombrechats%}
                                                 {% if p.username == n.usuario.username %}
                                                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                                                <div class="about">
-                                                    <div class="name"> {{n.usuario}} </div>
-                                                </div>
+                                                <div class="name"> {{n.usuario}} </div>
                                                 {%endif%}
                                             {% endfor %}
                                         {% endif %}
@@ -42,15 +41,16 @@
                                 </a>
 
                             {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="chat">
-                        <div class="chat-header clearfix">
-
+                        </ul> 
+                        <br><br><br><button class="myBtn" id="myBtn">No aparecen chats, ¿a qué se debe?</button>
+                        <div id="myModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <img class="logoCentrado" src="/static/logotipo.png">
+                            <p>Los chats se crean cuando haces Mate a una persona y esa misma persona te lo hace a tí, por lo que si todavía no tienes chats ¡tranquilo!</p>
                         </div>
 
-
-
+                        </div>                                 
                     </div>
                     <button class="open-button" onclick="openForm()">Crear un grupo</button>
                     <div class="form-popup" id="myForm">
@@ -74,6 +74,21 @@
         }
         function closeForm() {
             document.getElementById("myForm").style.display = "none";
+        }
+    
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+        modal.style.display = "block";
+        }
+        span.onclick = function() {
+        modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
         }
     </script>
 

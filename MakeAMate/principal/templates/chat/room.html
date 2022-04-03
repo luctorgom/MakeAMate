@@ -10,12 +10,12 @@
 
 {% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="containerchat">
         <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card chat-app">
                     <div id="plist" class="people-list">
-                        <ul class="list-unstyled chat-list mt-2 mb-0" id="people-chat-list">
+                        <ul class="personasChats chat-list mt-2 mb-0" id="people-chat-list">
                             {% for c in chats %}
                                 <a href="/chat/{{c.name}}">
                                 <li class="clearfix">
@@ -43,9 +43,18 @@
 
                             {% endfor %}
                         </ul>
+                        <button class="open-button" onclick="openForm()">Crear un grupo</button>
+                        <div class="form-popup" id="myForm">
+                            <h3>Seleccione las personas con las que desee crear el grupo:</h3>
+                            <form id="form-control" method="POST" action='' class="form-container">{% csrf_token %}
+                                {{form.as_p}}
+                                <input class="btn btn-primary btn-xl" type='submit' value='Crear grupo'/>
+                                <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
+                            </form>
+                        </div>  
                     </div>
                     <div class="chat">
-                        <div class="chat-header clearfix">
+                        <div class="chat-header clearfix3">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
@@ -58,19 +67,13 @@
                                 </div>  
                             </div>
                         </div>
-                        <div class="chat-history" id="chat-history">
+                        <div id="mensajes" class="divDeLosMensajes">
                             <ul class="m-b-0">
-                                <li>
-                                    <div class="message-data text-right float-right">
-                                        <div class="message-data">
-                                            <!--<textarea id="chat-log" cols="70" rows="9" ></textarea> <br>  -->                              
-                                        </div>
-                                    </div>
-                                </li>
+                                <div class="chat-history" id="chat-history"></div>
                             </ul>
                         </div>
 
-                        <div class="chat-message clearfix">
+                        <div class="BotonesEnviarChat">
                             <div class="input-group mb-0">
                                 <input  class="chat-message-input" id="chat-message-input" type="text">
                                 <input class="chat-message-submit" id="chat-message-submit" type="button" value="Enviar">                                
@@ -78,15 +81,7 @@
                         </div>
 
                     </div>
-                    <button class="open-button" onclick="openForm()">Crear un grupo</button>
-                    <div class="form-popup" id="myForm">
-                        <h3>Seleccione las personas con las que desee crear el grupo:</h3>
-                        <form id="form-control" method="POST" action='' class="form-container">{% csrf_token %}
-                            {{form.as_p}}
-                            <input class="btn btn-primary btn-xl" type='submit' value='Crear grupo'/>
-                            <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
-                        </form>
-                    </div>  
+                    
                 </div>
             </div>
         </div>
@@ -116,9 +111,9 @@
 
 
             if(usuarioProv == data.name)
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
             else
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ":"+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message my-message">'+data.name + ": "+data.message+'</div></li>';
             
             micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
         
