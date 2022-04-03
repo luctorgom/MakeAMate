@@ -30,6 +30,14 @@ def grupos(request):
 
 
 def room(request, room_name):
+
+    #Comprobación para que no se fuerce la URL
+    try:
+        chatroom = ChatRoom.objects.filter(name = room_name)[0]
+        lista_participantes = []
+    except IndexError:
+        return redirect('/chat')
+
     #form
     form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
     crear_grupo_form(request, form)
@@ -45,18 +53,21 @@ def room(request, room_name):
     usuarios = Usuario.objects.filter(~Q(id=request.user.id))
     for u in usuarios:
         lista_usuarios.append(u)
-    try:
-        chatroom = ChatRoom.objects.filter(name = room_name)[0]
-        lista_participantes = []
-    except IndexError:
-        return redirect('/chat')
-    
+
     for p in chatroom.participants.all():
         lista_participantes.append(p.username)
 
+    nombre_sala = ""
+    es_grupo = False
+    if chatroom.group():
+        nombre_sala = chatroom.room_name
+        es_grupo = True
+    else:
+        nombre_sala = chatroom.participants.all().filter(~Q(id=request.user.id))[0].username
+
     # Comprobación si el usuario pertenece a los participantes de ese grupo
     if request.user.username in lista_participantes :
-        return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form})
+        return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
     else:
         return redirect('/chat')
 

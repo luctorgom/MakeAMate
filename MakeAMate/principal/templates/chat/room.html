@@ -61,7 +61,7 @@
                                         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        <div class="name" id="nombresala">Aqui habria que poner el nombre :D</div> 
+                                        <div class="name" id="nombresala">{{nombre_sala}}</div> 
                                         <!--<div id="ocultisimo">{{chatUser}}</div>-->
                                     </div>
                                 </div>  
@@ -86,6 +86,7 @@
             </div>
         </div>
         <div class="name" id="usuarioProv" hidden>{{request.user.username}}</div> 
+        <div class="name" id="es_grupo" hidden>{{es_grupo}}</div> 
     </div>
 
 </body>
@@ -113,8 +114,10 @@
             if(usuarioProv == data.name)
                 micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
             else
+                if (document.getElementById('es_grupo').textContent=="True")
                 micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message my-message">'+data.name + ": "+data.message+'</div></li>';
-            
+                else
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message my-message">'+data.message+'</div></li>';
             micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
         
         };
