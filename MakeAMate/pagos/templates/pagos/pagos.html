@@ -65,12 +65,16 @@
                         })
                     });
                 });
-                alert('Transaction completed');
-              
-            }
-
-
+                    alert("Transaction completed");
+                    window.location.href = '';
+                
+               
+            
+            },
+            
+        
         }).render('#paypal-button-container');
+
     </script>
 {% endblock %}
 
@@ -82,7 +86,7 @@
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
 
-    
+
   
     
 {% endblock %}

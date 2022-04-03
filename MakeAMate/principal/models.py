@@ -83,7 +83,7 @@ class Usuario(models.Model):
 
     def __str__(self):
         return str(self.usuario)        
-     
+    
 
 class Mate(models.Model):
     mate=models.BooleanField(default=NullBooleanField)

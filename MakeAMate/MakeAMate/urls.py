@@ -26,7 +26,7 @@ urlpatterns = [
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path("payments/",views.payments,name="payments"),
     path('paypal/<int:pk>/', include('pagos.urls')),
-    path('', include('pagos.urls')),
+    path('pagos/', include('pagos.urls')),
     path("mates/",views.estadisticas_mates,name="mates"),
     path("register/",views.registro,name="register"),
     path("register/terminos/",views.terminos,name="terminos"),

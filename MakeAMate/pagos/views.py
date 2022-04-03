@@ -30,6 +30,7 @@ def paymentComplete(request):
         return redirect(login_view)
     loggeado=get_object_or_404(Usuario, usuario=request.user)  
     premium=loggeado.es_premium()
+    
     if premium:
         return redirect(homepage)
     body = json.loads(request.body)
@@ -37,8 +38,5 @@ def paymentComplete(request):
     date_time = fecha_premium.strftime("%m/%d/%Y, %H:%M:%S")
     Usuario.objects.update_or_create(usuario=request.user, 
     defaults={'fecha_premium': fecha_premium})
-    
+    print("Entra")
     return redirect(homepage)
-
-
-   

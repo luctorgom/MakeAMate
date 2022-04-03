@@ -194,10 +194,7 @@ def estadisticas_mates(request):
                 listTop.append(tm['etiqueta'])
     dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
 
-    #COMPARATIVA NO PREMIUM VS PREMIUM
     fechaPremium=perfil.fecha_premium
-    #mRNoPremium=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaPremium).count
-    #mRPremium=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaPremium).count
 
     params={"lista":listmates, "topTags":dicTags}
     return render(request,'homepage.html',params)
@@ -220,26 +217,20 @@ def registro(request):
             form_lugar = form.cleaned_data['lugar']
             form_nacionalidad = form.cleaned_data['nacionalidad']
             form_genero = form.cleaned_data['genero']
-           # form_idiomas = form.cleaned_data['idiomas']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
             form_telefono_usuario = form.cleaned_data['telefono_usuario']
             
-            print("Cogemos los datos")
         
-            #form_universidad = form.cleaned_data['universidad']
-            #form_estudios = form.cleaned_data['estudios']
 
             if form_zona_piso != None:
                 piso_usuario = Piso.objects.create(zona = form_zona_piso)
-                print("Creado el piso")
 
             user = User.objects.create(username=form_usuario,first_name=form_nombre,
             last_name=form_apellidos, email=form_correo)
             user.set_password(form_password)
 
-            print("Creado el user")
 
             if form_zona_piso != None:
                 perfil = Usuario.objects.create(usuario = user, piso = piso_usuario,
@@ -260,13 +251,9 @@ def registro(request):
                     piso_usuario.save()
                 user.save()
                 perfil.save()
-                print("Creado el usuario")
             except:
                 print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
-
-            #return redirect(login_view)
             return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
-            #return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register2.html', {'form': form})
 
@@ -291,8 +278,6 @@ def twilio(request, user_id):
 
     form = SmsForm()
     if request.method == 'POST':
-        # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
-        # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
         form = SmsForm(request.POST)
         if form.is_valid():
 
@@ -308,10 +293,7 @@ def twilio(request, user_id):
                     if usuario.piso != None: piso.save() 
                     user.save()
                     usuario.save()
-                    # TODO: hay que redigirir a la vista del perfil cuando esté creada
                 elif verification_check.status=="pending":
-                    print("No se ha verificado correctamente")
-                    #TODO: hay que redireccionar a la vista del formulario del sms de nuevo
                     return twilio(request, user_id)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
