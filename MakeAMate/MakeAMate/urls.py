@@ -27,4 +27,5 @@ urlpatterns = [
     path("payments/",views.payments,name="payments"),
     path("notifications/",views.notifications_list,name="notifications"),
     path('', views.homepage,name="home"),
+    path("profile/",views.profile,name="profile"),
 ]

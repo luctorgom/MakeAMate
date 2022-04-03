@@ -70,7 +70,7 @@ if(n==="0") {
       <nav class="menu">
         <ul>  
           <br>
-          <li class="mover"><div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}</div></li>
+          <a  id="a" href="{% url 'profile' %}"><li class="mover"><div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}</div></li></a>
           <br><br>
           <li><label for="check" class="icon-bubble2"></label>   Chat</li>
           <li><label for="check" class="icon-stats-dots"></label>   Statistics</li>

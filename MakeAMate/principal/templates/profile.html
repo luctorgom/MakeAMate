@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link rel="stylesheet" href="/static/css/profile.css">
+{% endblock %}
+{% block content %}
+<div class="contenedorPerfil">
+    <form class="formularioPerfil">{% csrf_token %}
+        <div class="Titulo">
+            <h1>Mi perfil</h1><br>
+            <div class="editarFoto">         
+                <h4 class="">Foto de perfil</h4> <br> 
+                <div class="fotoPerfil"> <img class="fotoPerfil" src="https://i.imgur.com/uIgDDDd.jpg" alt="img"></div>
+                <div class="form-control">{{  form.foto_usuario  }}</div>
+
+                <label class="form-label nombreUsuario">{{request.user.username}}</label>
+                 
+            </div>  
+        </div>           
+           
+            <div class="editarPerfil">         
+                <h4 class="">Información general</h4><br>
+                <label class="form-label">Nombre</label>
+                <div class="form-control">{{  form.nombre  }}</div>
+            
+                <label class="form-label">Apellidos</label>
+                <div class="form-control">{{  form.apellidos  }}</div>
+            
+                <label class="form-label">Teléfono</label>
+                <div class="form-control">{{  form.telefono_usuario  }}</div>
+            
+                <label class="form-label">Correo Electrónico</label>
+                <div class="form-control">{{  form.correo  }}</div>
+            </div>
+ 
+                <div class="editarContraseña">
+                    <h4 class="">Cambiar contraseña</h4><br>
+                        <label class="form-label">Nueva contraseña *</label>
+                        <div class="form-control">{{  form.password  }}</div>
+                        
+                        <label class="form-label">Confirmar contraseña *</label>
+                        <div class="form-control">{{  form.password2  }}</div>
+                    </div>
+            </div> 
+        <div class="botones"> 
+            <button type="button" class="ActualizarPerfilFalse">Cancelar</button>
+            <button type="button" class="ActualizarPerfilTrue">Actualizar Perfil</button>
+        </div> 
+        </form> 
+    </div>
+</div>
+{% endblock %}

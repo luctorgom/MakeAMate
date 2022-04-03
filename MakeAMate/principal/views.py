@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .recommendations import rs_score
+from principal.forms import UsuarioForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -132,3 +133,8 @@ def notifications_list(request):
     notis=notificaciones_mates(request)
     response={'notificaciones':notis}
     return render(request,template,response)
+
+def profile(request):
+    template='profile.html'
+    params = {'form': UsuarioForm()}
+    return render(request,template,params)

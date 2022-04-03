@@ -1,0 +1,86 @@
+body{
+    margin:0;
+
+}
+.contenedorPerfil{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.formularioPerfil{
+    border-radius: 40px;
+    height:70vh;
+    width: 80vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around ; 
+    
+}
+.Titulo{
+    width:15vw;
+    text-align: center;
+
+}
+.editarFoto{
+    border-radius: 20px;
+    
+    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+}
+
+.editarPerfil{
+border-radius: 20px;
+width:30rem;
+background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+
+
+
+
+}
+
+.editarContraseña{
+    border-radius: 20px;
+    width:30rem;
+    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    
+}
+
+.fotoPerfil {
+    border-radius: 100%;
+    width: 5rem;
+    height:5rem;
+    margin:auto;
+
+
+  }
+
+.nombreUsuario{
+    font-weight: bolder;
+
+}
+
+.form-label{
+    padding: 10px;
+
+}
+.form-control{
+    padding: 10px;
+
+}
+.botones{
+    display: flex;
+    justify-content: center;
+}
+.ActualizarPerfilFalse{
+    padding: 10px;
+}
+.ActualizarPerfilTrue{
+    padding: 10px;
+    margin-left: 10px;
+}
+
+#id_correo, #id_password, #id_password2, #id_nombre, #id_apellidos, #id_telefono_usuario, #id_lugar, #id_nacionalidad, #id_genero, #id_tags, #id_idiomas, #id_aficiones,#id_fecha_nacimiento{
+    width: 100%;
+    height: 100%;
+    border-color:transparent;
+}
