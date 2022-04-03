@@ -1,16 +1,18 @@
+from datetime import datetime,timedelta
 from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
-from .models import Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 from .recommendations import rs_score
+from .forms import RegistroForm
+from .models import Usuario,Mate
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -122,20 +124,16 @@ def estadisticas_mates(request):
     #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
     mesActual=datetime.now().month
     listmates=[]
-    matesRecibidos=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
-    #print(matesRecibidos)
+    matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
     for mR in matesRecibidos:
         listmates.append(mR.userEntrada)
-    #print(listmates)
-    matesDados=Mates.objects.filter(userEntrada=loggeado)
-    #print(matesDados)
+    matesDados=Mate.objects.filter(userEntrada=loggeado)
     eliminados=0
     for mD in matesDados:
         #print(mD.userSalida)
         if(mD.userSalida in listmates):
             eliminados+=1
             listmates.remove(mD.userSalida)
-            #print(listmates)
 
     #LIKES POR DÍA PARA LA GRÁFICA
     matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')-eliminados).order_by()
@@ -156,11 +154,19 @@ def estadisticas_mates(request):
     dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
 
     #COMPARATIVA NO PREMIUM VS PREMIUM
-    fechaPremium=perfil.fecha_premium
-    #mRNoPremium=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaPremium).count
-    #mRPremium=Mates.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaPremium).count
+    fechaInicioPremium=perfil.fecha_premium + timedelta(days=30)
+    mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
+    mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
 
-    params={"lista":listmates, "topTags":dicTags}
+    #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
+    listScore=[]
+    for i in listmates:
+        perfilU=Usuario.objects.get(usuario=i)
+        score = rs_score(perfil,perfilU)
+        listScore.append(score)
+    dictScore=dict(zip(listmates,listScore))
+    params={"lista":listmates, "topTags":dicTags, "matesGrafica":matesporFecha, "matesNPremium":mRNoPremium,
+            "matesPremium":mRPremium, "scoreLikes":dictScore}
     return render(request,'homepage.html',params)
 
 def registro(request):
