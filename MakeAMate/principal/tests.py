@@ -1,14 +1,18 @@
-from datetime import date
+from datetime import date, timedelta, datetime
 import json
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
 from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto
 from django.contrib.auth.models import User
+<<<<<<< HEAD
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
+=======
+from django.utils import timezone
+>>>>>>> origin/F-013
 
 # Test mates
 # class MateTestCase(TestCase):
@@ -284,6 +288,7 @@ def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_for
 
 class EdicionTest(TestCase):
     def setUp(self):
+<<<<<<< HEAD
         user_pepe= User(username="pepe")
         user_pepe.set_password("asdfg")
         user_pepe.save()
@@ -327,6 +332,41 @@ class EdicionTest(TestCase):
 
     def test_positive_edition(self):
         print(self.data)
+=======
+        user = User(username='usuario')
+        user.set_password('qwery')
+        user.save()
+
+        user2 = User(username='usuario2')
+        user2.set_password('qwery')
+        user2.save()
+
+        user3 = User(username='usuario3')
+        user3.set_password('qwery')
+        user3.save()
+
+        piso_pepe = Piso.objects.create(zona="Calle Marqués Luca de Tena 1", descripcion="Descripción de prueba 1")   
+        piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
+        
+        fecha_premium=timezone.now() + timedelta(days=120)
+        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", fecha_premium=fecha_premium)
+        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
+        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
+
+        #MATE ENTRE user y user2
+        mate12 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user2)
+        mate21 = Mate.objects.create(mate=True,userEntrada=user2, userSalida=user)
+
+        #EL user3 LE DA LIKE al user1 y al user 2
+        like31 = Mate.objects.create(mate=True,userEntrada=user3, userSalida=user)
+        like32= Mate.objects.create(mate=True,userEntrada=user3, userSalida=user2)
+        super().setUp()
+
+
+    #El usuario "user" tiene un mate y como es premium tb tiene un like, la lista será de tamaño 2
+    def test_notificaciones_premium(self):
+>>>>>>> origin/F-013
         c = Client()
         response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
         print(response1)
@@ -337,4 +377,25 @@ class EdicionTest(TestCase):
         self.assertTrue(response.status_code == 200)
 
 
+<<<<<<< HEAD
 
+=======
+        self.assertTrue(len(lista_mates) == 2)
+        
+    #El usuario "user2" tiene un mate y un like, la lista será de tamaño 1 porque al no ser premium el like
+    #no se le notifica
+    def test_notificaciones_no_premium(self):
+        c = Client()
+        response = c.post('/login/', {'username': 'usuario2', 'pass': 'qwery'})
+        response2 = c.get('/')
+        lista_mates = response2.context['notificaciones']
+        self.assertTrue(len(lista_mates) == 1)
+    
+    #El usuario "user3" no tiene ningún mate ni like, por lo que su lista de mates será de tamaño 0
+    def test_notificaciones_false(self):
+        c = Client()
+        response = c.post('/login/', {'username': 'usuario3', 'pass': 'qwery'})
+        response2 = c.get('/')
+        lista_mates = response2.context['notificaciones']
+        self.assertTrue(len(lista_mates) == 0)
+>>>>>>> origin/F-013

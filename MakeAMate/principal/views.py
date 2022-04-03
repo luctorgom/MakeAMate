@@ -18,6 +18,7 @@ import os
 from twilio.rest import Client
 import json
 from django.views.decorators.cache import never_cache
+from .recommendations import rs_score
 
 @never_cache
 def login_view(request):
@@ -60,7 +61,10 @@ def homepage(request):
 
         lista_mates=notificaciones_mates(request)
         tags_authenticated = registrado.tags.all()
-        tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us}
+        us_sorted = sorted(us, key=lambda u: rs_score(registrado, u), reverse=True)
+
+        tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
+        
         params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
         return render(request,template,params)
 
@@ -113,18 +117,31 @@ def payments(request):
     return render(request,template)
 
 def notificaciones_mates(request):
+    lista_notificaciones=[]
     loggeado= request.user
+    perfil=Usuario.objects.get(usuario=loggeado)
+    es_premium= perfil.es_premium()
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
+
     for i in lista_usuarios:
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
 
             lista_mates.append(mate1.userSalida)
+            lista_notificaciones.append((mate1,"Mates"))
         except Mate.DoesNotExist:
             pass
-    return lista_mates
+
+        
+    if(es_premium):
+        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado)
+        for mR in matesRecibidos:
+            if(mR.userEntrada not in lista_mates):
+                lista_notificaciones.append((mR,"Premium"))
+    lista_notificaciones.sort(key=lambda mates: mates[0].fecha_mate, reverse=True)
+    return lista_notificaciones
 
 def estadisticas_mates(request):
     loggeado= request.user
@@ -285,12 +302,72 @@ def twilio(request, user_id):
     return render(request, 'loggeos/registerSMS.html', {'form': form})
 
 def profile_view(request):
-    if request.user.is_authenticated:
-        userActual = request.user
-        usuario = Usuario.objects.get(usuario = userActual)
-        return render(request, 'profile.html', {'user': userActual.id, 'usuario': usuario})
-    else:
+    if not request.user.is_authenticated:
         return redirect(homepage)
+
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+
+    initial_dict = {
+        'foto_usuario': usuario.foto,
+        'lugar': usuario.lugar,
+        'genero': usuario.genero,
+        'zona_piso': usuario.piso.zona,
+        'descripcion': usuario.descripcion,
+        'piso_encontrado': usuario.piso_encontrado,
+        'idiomas': usuario.idiomas.all(),
+        'tags': usuario.tags.all(), 
+        'aficiones': usuario.aficiones.all()
+    }
+    
+    form = UsuarioFormEdit(initial = initial_dict)
+    if request.method == 'POST':
+        form = UsuarioFormEdit(request.POST, request.FILES)
+        if form.is_valid():
+            form_foto = form.cleaned_data['foto_usuario']
+            form_lugar = form.cleaned_data['lugar']
+            form_genero = form.cleaned_data['genero']
+            form_zona_piso = form.cleaned_data['zona_piso']
+            form_descripcion = form.cleaned_data['descripcion']
+            form_piso_encontrado = form.cleaned_data['piso_encontrado']
+
+            form_idiomas = form.cleaned_data['idiomas']
+            form_tags = form.cleaned_data['tags']
+            form_aficiones = form.cleaned_data['aficiones']
+
+            user_actual = request.user
+            perfil = Usuario.objects.get(usuario = user_actual)
+            print("USUARIO ACTUAL: " + str(user_actual.first_name))
+            print("PERFIL ACTUAL: " + str(perfil.usuario.first_name))
+
+            print("Zona piso: " + "'" + str(form_zona_piso) + "'")
+            print("boolean " + str(form_zona_piso != None or form_zona_piso != ""))
+            print("boolean " + str(form_zona_piso != ""))
+            if form_zona_piso != "":
+                piso_usuario, no_existe = Piso.objects.get_or_create(zona = form_zona_piso)
+                print(no_existe)
+                if no_existe:
+                    piso_usuario.save()
+                    print("CREADO EL PISO")
+                perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
+                genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado,
+                piso = piso_usuario)
+            else:
+                perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
+                    genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado)
+
+            perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
+            print("PERFIL UPDATED: " + str(perfil_updated))
+            print("PERFIL UPDATED 2:" +str(perfil_updated_2))
+            print("Idiomas: " + str(form_idiomas))
+            perfil_updated_2.idiomas.set(form_idiomas)
+            perfil_updated_2.tags.set(form_tags)
+            perfil_updated_2.aficiones.set(form_aficiones)
+            perfil_updated_2.save()
+            print("UPDATEADO EL PERFIL")
+
+            return render(request, 'profile.html', {'form': form, 'usuario': perfil_updated_2})
+    return render(request, 'profile.html', {'form': form})
 
 #Edicion del perfil
 def edit_profile_view(request):
@@ -360,3 +437,11 @@ def edit_profile_view(request):
 
             return render(request, 'profile.html', {'user': perfil_updated_2.id, 'usuario': perfil_updated_2})
     return render(request, 'edit_profile.html', {'form': form})
+
+
+def notifications_list(request):
+    template='notifications.html'
+    notis=notificaciones_mates(request)
+    response={'notificaciones':notis}
+    return render(request,template,response)
+

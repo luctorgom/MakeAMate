@@ -17,10 +17,6 @@
     position: relative;
 }
 
-.pepito {
-  position: fixed;
-  z-index: -1;
-}
 
 
 #check{
@@ -253,3 +249,5 @@
     color: #aaa;
     font-size: 12px
   }
+
+

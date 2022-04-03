@@ -63,7 +63,6 @@ class UsuarioForm(forms.Form):
         regex = re.compile("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
         if not re.fullmatch(regex, password):
             raise forms.ValidationError('La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número')
-        
         return password
 
     def clean_password2(self):
@@ -77,7 +76,7 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError('Las contraseñas no coinciden')
 
         return password2
-    
+
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
         if len(nombre) < 1:
@@ -85,7 +84,6 @@ class UsuarioForm(forms.Form):
 
         if len(nombre) > 150:
             raise forms.ValidationError('El nombre debe tener menos de 150 caracteres')
-        
         return nombre
 
     def clean_apellidos(self):
@@ -111,7 +109,6 @@ class UsuarioForm(forms.Form):
 
         return correo
 
-    
     # def clean_piso(self):
     #     piso = self.cleaned_data.get('piso')
     #     print(piso)
@@ -119,7 +116,7 @@ class UsuarioForm(forms.Form):
     #         raise forms.ValidationError('Indica si tienes piso')
 
     #     return piso
-    
+
    # def clean_foto_usuario(self):
 
     def clean_fecha_nacimiento(self):
@@ -197,8 +194,7 @@ class UsuarioForm(forms.Form):
         caracteres = len(piso)
 
         if caracteres > 100:
-            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
-        
+            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")       
         return piso
 
 #Formulario para editar perfil
@@ -273,7 +269,4 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('El valor debe ser Sí o No')
 
         return piso_encontrado
-    
-
-    
     

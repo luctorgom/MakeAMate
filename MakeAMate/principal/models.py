@@ -4,6 +4,7 @@ from django.forms import NullBooleanField
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from datetime import date, datetime
+from django.utils import timezone
 
 
 # Create your models here.
@@ -60,20 +61,20 @@ class Usuario(models.Model):
     telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
     telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
     passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
-    
-    @classmethod
-    def get_edad(cls):
+
+    def get_edad(self):
         today = date.today()
-        return today.year - cls.fecha_nacimiento.year - ((today.month, today.day) < (cls.fecha_nacimiento.month, cls.fecha_nacimiento.day))
+        return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
 
-    @classmethod
-    def tiene_piso(cls):
-        return cls.piso != None
+    def tiene_piso(self):
+        return self.piso != None
 
-    @classmethod
-    def es_premium(cls):
-        today = datetime.time
-        return cls.fecha_premium > today or cls.fecha_premium!=None
+    def es_premium(self):
+        if self.fecha_premium==None:
+            return False
+        today = timezone.now()
+        
+        return self.fecha_premium > today
 
     def __str__(self):
         return str(self.usuario)        
