@@ -33,10 +33,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install codacy-coverage
-    - name: Drop database
-      run: |
-        psql -U postgres -c 'drop database mates'
-        psql -U postgres -c 'create database mates with owner "mate"'
     - name: Run migrations
       run: python MakeAMate/manage.py makemigrations principal;python MakeAMate/manage.py migrate;
     - name: Run tests with coverage   
