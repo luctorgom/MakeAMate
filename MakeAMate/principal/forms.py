@@ -227,3 +227,49 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('El teléfono ya está en uso')
 
         return telefono_usuario
+
+    def clean_zona_piso(self):
+        piso = self.cleaned_data.get('zona_piso')
+        caracteres = len(piso)
+
+        if caracteres > 100:
+            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
+        
+        return piso
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        if tags.count() < 3:
+            raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
+
+        return tags
+
+    def clean_aficiones(self):
+        aficiones = self.cleaned_data.get('aficiones')
+        if aficiones.count() < 3:
+            raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+
+        return aficiones
+
+    def clean_idiomas(self):
+        idiomas = self.cleaned_data.get('idiomas')
+        if idiomas.count() < 1:
+            raise forms.ValidationError('Por favor, elige al menos un idioma')
+
+    def clean_genero(self):
+        genero = self.cleaned_data.get('genero')
+        generos = ['M', 'F', 'O']
+        if genero not in generos:
+            raise forms.ValidationError('El género debe ser Masculino, Femenino u Otro')
+
+        return genero
+
+    def clean_descripcion(self):
+        descripcion = self.cleaned_data.get('descripcion')
+        if len(descripcion) > 1000:
+            raise forms.ValidationError('La descripción debe contener menos de 1000 caracteres')
+
+        return descripcion
+
+    
+    

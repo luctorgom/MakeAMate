@@ -17,7 +17,9 @@ from .forms import UsuarioForm, SmsForm, UsuarioFormEdit
 import os
 from twilio.rest import Client
 import json
+from django.views.decorators.cache import never_cache
 
+@never_cache
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(homepage)
