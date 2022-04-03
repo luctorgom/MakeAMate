@@ -85,7 +85,7 @@ body{
   }
 .chat .chat-header {
     padding: 15px 20px;
-    border: 7px solid rgb(166, 164, 250) ;
+    border: 4px solid rgb(166, 164, 250) ;
     position: sticky;
 }
 
@@ -299,7 +299,15 @@ body{
     /*bottom:0;*/
 
 }
-
+.clearfix2:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;}
+    
+    /*bottom:0;*/
 /*Estilo del formulario de grupos:*/
 * {box-sizing: border-box;}*
 
