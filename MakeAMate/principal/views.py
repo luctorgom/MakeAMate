@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+from django.http import HttpResponseForbidden
 
 
 from pagos.models import Suscripcion
@@ -121,7 +122,8 @@ def reject_mate(request):
 
 def payments(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
+        #return redirect(login_view)
+        return HttpResponseForbidden()
     suscripcion=Suscripcion.objects.all()[0]
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     template='payments.html'

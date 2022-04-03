@@ -27,7 +27,6 @@
 		var csrftoken = getCookie('csrftoken');
         
         var total = '{{suscripcion.price}}'
-	 	var suscripcionId = '{{suscripcion.id}}'
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
             env :'sandbox',
@@ -63,16 +62,13 @@
                             orderID: data.orderID,
                             authorizationID: authorizationID
                         })
-                    });
-                });
-                    alert("Transaction completed");
-                    window.location.href = '';
-                
-               
-            
+                    }).then(response => window.location.href="home");
+                });      
             },
-            
         
+                alert('Se ha completado el pago correctamente.');
+            }
+
         }).render('#paypal-button-container');
 
     </script>
@@ -81,13 +77,10 @@
 {% block content %}
     <h1>¡Solo un paso más!</h1>
     <h3>Usa paypal o tu tarjeta de crédito para finalizar el pago</h3>
- 
+
     <div= id="#paypal-button-container"></div>
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
 
-
-  
-    
 {% endblock %}
 
