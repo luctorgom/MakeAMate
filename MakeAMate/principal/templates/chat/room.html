@@ -15,7 +15,7 @@
             <div class="col-lg-12">
                 <div class="card chat-app">
                     <div id="plist" class="people-list">
-                        <ul class="list-unstyled chat-list mt-2 mb-0" id="people-chat-list">
+                        <ul class="personasChats chat-list mt-2 mb-0" id="people-chat-list">
                             {% for c in chats %}
                                 <a href="/chat/{{c.name}}">
                                 <li class="clearfix">
@@ -54,7 +54,7 @@
                         </div>  
                     </div>
                     <div class="chat">
-                        <div class="chat-header clearfix">
+                        <div class="chat-header clearfix3">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
@@ -111,9 +111,9 @@
 
 
             if(usuarioProv == data.name)
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
             else
-                micapa.innerHTML += '<li class="clearfix" style="list-style:none"><div class="message my-message">'+data.name + ": "+data.message+'</div></li>';
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message my-message">'+data.name + ": "+data.message+'</div></li>';
             
             micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
         
