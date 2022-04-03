@@ -1,12 +1,84 @@
-from datetime import date
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 import json
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
-from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto
+from django.utils import timezone
+from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto, Tag, Aficiones
 from django.contrib.auth.models import User
+from .recommendations import rs_score, BONUS_PREMIUM
 
-# Test mates
+# Tests Sistema de Recomendación
+class RecommendationTestCase(TestCase):
+    def setUp(self):
+        self.user1 = User(id=0,username="us1")
+        self.user1.set_password('123')
+        self.user2 = User(id=1,username="us2")
+        self.user2.set_password('123')
+        self.user3 = User(id=2,username="us3")
+        self.user3.set_password('123')
+
+        premium_fin = timezone.now()+ relativedelta(months=1)
+        self.perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática",fecha_premium=premium_fin)
+        self.perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+        self.perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+        
+        tag1 = Tag(etiqueta="No fumador")
+        tag2 = Tag(etiqueta="Mascotas")
+
+        af1 = Aficiones(opcionAficiones="Futbol")
+        af2 = Aficiones(opcionAficiones="Lolango")
+
+        tag1.save()
+        tag2.save()
+        af1.save()
+        af2.save()
+        self.user1.save()
+        self.user2.save()
+        self.user3.save()
+        self.perfil1.save()
+        self.perfil2.save()
+        self.perfil3.save()
+
+        self.perfil1.tags.add(tag1)
+        self.perfil1.aficiones.add(af1)  
+        self.perfil2.tags.add(tag1)
+        self.perfil2.aficiones.add(af1)
+        self.perfil3.tags.add(tag2)
+        self.perfil3.aficiones.add(af2)
+
+        self.perfil1.save()
+        self.perfil2.save()
+        self.perfil3.save()
+
+    def test_perfect_score(self):
+        score = rs_score(self.perfil1,self.perfil2)
+
+        self.assertEqual(score,1.0)
+
+    def test_perfect_score_premium(self):
+        score = rs_score(self.perfil2,self.perfil1)
+
+        self.assertEqual(score,1.0*BONUS_PREMIUM)
+
+    def test_no_score(self):
+        score = rs_score(self.perfil3,self.perfil1)
+
+        self.assertEqual(score,0.0)
+
+    def test_recommendation(self):
+        self.client.login(username='us1', password='123')
+
+        response=self.client.get('/')
+
+        self.assertEqual(list(response.context['usuarios'])[0], self.perfil2)
+        self.assertEqual(response.status_code, 200)
+
+# Tests mates
 class MateTestCase(TestCase):
     def setUp(self):
 
@@ -17,11 +89,11 @@ class MateTestCase(TestCase):
         self.user3 = User(id=2,username="us3")
         self.user3.set_password('123')
 
-        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
-        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
-        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
         
         mate = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
