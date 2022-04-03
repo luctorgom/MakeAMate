@@ -4,13 +4,13 @@ from multiprocessing import context
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
 from principal.views import login_view
-
+from django.views.decorators.csrf import csrf_protect
 from principal.models import Usuario
 
 from .models import Suscripcion
 import json
 
-
+@csrf_protect
 def paypal(request,pk):
     if not request.user.is_authenticated:
         return redirect(login_view)
@@ -19,7 +19,7 @@ def paypal(request,pk):
     context={'suscripcion': suscripcion}
     return render(request, template_name, context)
 
-
+@csrf_protect
 def paymentComplete(request):
     if not request.user.is_authenticated:
         return redirect(login_view)

@@ -130,7 +130,6 @@ def payments(request):
     params={'suscripcion':suscripcion, 'premium':premium}
     return render(request,template,params) 
 
-    return render(request,template)
 
 def terminos(request):
     template='loggeos/terminos_1.html'
