@@ -10,6 +10,7 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from .recommendations import rs_score
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -45,7 +46,10 @@ def homepage(request):
 
         lista_mates=notificaciones_mates(request)
         tags_authenticated = registrado.tags.all()
-        tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us}
+        us_sorted = sorted(us, key=lambda u: rs_score(registrado, u), reverse=True)
+
+        tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
+        
         params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
         return render(request,template,params)
 
