@@ -6,6 +6,7 @@ body{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    font-size: 25px;
 }
 
 .formularioPerfil{
@@ -24,7 +25,8 @@ body{
 }
 .editarFoto{
     border-radius: 20px;
-    
+
+
     background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
 }
 
@@ -51,7 +53,6 @@ background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 5
     height:5rem;
     margin:auto;
 
-
   }
 
 .nombreUsuario{
@@ -70,16 +71,29 @@ background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 5
 .botones{
     display: flex;
     justify-content: center;
+    border-radius: 30%;
+
 }
-.ActualizarPerfilFalse{
+
+.ActualizarPerfilFalse, .ActualizarContraseña, .ActualizarFoto{
     padding: 10px;
+    font-size: 15px;
+
+}
+.ActualizarFoto{
+margin-bottom:10px;
+font-size: 15px;
+
 }
 .ActualizarPerfilTrue{
     padding: 10px;
     margin-left: 10px;
+    font-size: 15px;
+
 }
 
-#id_correo, #id_password, #id_password2, #id_nombre, #id_apellidos, #id_telefono_usuario, #id_lugar, #id_nacionalidad, #id_genero, #id_tags, #id_idiomas, #id_aficiones,#id_fecha_nacimiento{
+#id_correo, #id_password, #id_password2, #id_nombre, #id_apellidos, #id_telefono_usuario, #id_lugar, #id_nacionalidad, #id_genero, #id_tags, #id_idiomas, #id_aficiones,#id_fecha_nacimiento,#id_zona_piso{
+    font-size: 25px;
     width: 100%;
     height: 100%;
     border-color:transparent;

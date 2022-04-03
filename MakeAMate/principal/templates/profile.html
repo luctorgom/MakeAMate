@@ -4,48 +4,71 @@
 {% endblock %}
 {% block content %}
 <div class="contenedorPerfil">
-    <form class="formularioPerfil">{% csrf_token %}
+    <form class="formularioPerfil" enctype="multipart/form-data">{% csrf_token %}
         <div class="Titulo">
             <h1>Mi perfil</h1><br>
             <div class="editarFoto">         
-                <h4 class="">Foto de perfil</h4> <br> 
+                <h2 class="nombreUsuario">{{request.user.username}}</h2> <br> 
                 <div class="fotoPerfil"> <img class="fotoPerfil" src="https://i.imgur.com/uIgDDDd.jpg" alt="img"></div>
                 <div class="form-control">{{  form.foto_usuario  }}</div>
-
-                <label class="form-label nombreUsuario">{{request.user.username}}</label>
+                <div class="botones"> 
+                    <button type="button" class="ActualizarFoto">Actualizar Foto</button>
+                </div>
                  
             </div>  
-        </div>           
-           
-            <div class="editarPerfil">         
-                <h4 class="">Información general</h4><br>
-                <label class="form-label">Nombre</label>
-                <div class="form-control">{{  form.nombre  }}</div>
-            
-                <label class="form-label">Apellidos</label>
-                <div class="form-control">{{  form.apellidos  }}</div>
-            
-                <label class="form-label">Teléfono</label>
-                <div class="form-control">{{  form.telefono_usuario  }}</div>
-            
-                <label class="form-label">Correo Electrónico</label>
-                <div class="form-control">{{  form.correo  }}</div>
-            </div>
- 
-                <div class="editarContraseña">
-                    <h4 class="">Cambiar contraseña</h4><br>
-                        <label class="form-label">Nueva contraseña *</label>
-                        <div class="form-control">{{  form.password  }}</div>
-                        
-                        <label class="form-label">Confirmar contraseña *</label>
-                        <div class="form-control">{{  form.password2  }}</div>
-                    </div>
+        </div>   
+    </form>        
+    <form class="formularioPerfil" enctype="multipart/form-data">{% csrf_token %}
+
+        <div class="editarPerfil">         
+            <h4 class="">Información general</h4><br>
+            <label class="form-label">Zona Piso</label>
+            <div class="form-control">{{  form.zona_piso  }}</div>
+        
+            <label class="form-label">Lugar</label>
+            <div class="form-control">{{  form.lugar  }}</div>
+        
+            <label class="form-label">Género</label>
+            <div class="form-control">{{  form.genero  }}</div>
+
+            <label class="form-label">Idiomas</label>
+            <div class="form-control">{{  form.idiomas  }}</div>
+
+            <label class="form-label">Piso Encontrado</label>
+            <div class="form-control">{{  form.piso_encontrado  }}</div>
+
+            <label class="form-label">Etiquetas</label>
+            <div class="form-control">{{  form.tags  }}</div>
+
+            <label class="form-label">Aficiones</label>
+            <div class="form-control">{{  form.aficiones  }}</div>
+
+            <label class="form-label">Descripción</label>
+            <div class="form-control">{{  form.descripcion  }}</div>
+
+            <div class="botones"> 
+                <button type="button" class="ActualizarPerfilFalse">Cancelar</button>
+                <button type="button" class="ActualizarPerfilTrue">Actualizar Perfil</button>
             </div> 
-        <div class="botones"> 
-            <button type="button" class="ActualizarPerfilFalse">Cancelar</button>
-            <button type="button" class="ActualizarPerfilTrue">Actualizar Perfil</button>
-        </div> 
-        </form> 
+        </div>
+        
+    </form> 
+    <form class="formularioPerfil" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="editarContraseña">
+                <h4 class="">Cambiar contraseña</h4><br>
+                    <label class="form-label">Nueva contraseña *</label>
+                    <div class="form-control">{{  form.password  }}</div>
+                    
+                    <label class="form-label">Confirmar contraseña *</label>
+                    <div class="form-control">{{  form.password2  }}</div>
+                    <div class="botones"> 
+                        <button type="button" class="ActualizarContraseña">Cambiar contraseña</button>
+                    </div> 
+                </div>
+
+    </form> 
+
     </div>
 </div>
 {% endblock %}
