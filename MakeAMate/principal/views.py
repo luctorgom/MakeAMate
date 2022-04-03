@@ -44,9 +44,21 @@ def homepage(request):
         else:
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad)
 
+        usuarios_mate=Mate.objects.filter(userEntrada=request.user)
+        set_mates={mate.userSalida.id for mate in usuarios_mate}
+       
+        usuarios_rejected=Mate.objects.filter(userSalida=request.user, mate=False)
+        set_rejected={mate.userEntrada.id for mate in usuarios_rejected}
+        
+
+
+
         lista_mates=notificaciones_mates(request)
+
         tags_authenticated = registrado.tags.all()
-        us_sorted = sorted(us, key=lambda u: rs_score(registrado, u), reverse=True)
+        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected)]
+       
+        us_sorted = sorted(us_filtered, key=lambda u: rs_score(registrado, u), reverse=True)
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
         
