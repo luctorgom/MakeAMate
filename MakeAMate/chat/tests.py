@@ -1,5 +1,3 @@
-
-from tabnanny import verbose
 from django.test import TestCase, Client
 from .models import ChatRoom
 from principal.models import Usuario, Mates
@@ -7,9 +5,6 @@ from django.contrib.auth.models import User
 from channels.testing import WebsocketCommunicator
 from chat.consumers import WebsocketConsumer
 from channels.testing import WebsocketCommunicator
-
-import pytest
-
 # Create your tests here.
 
 class ChatTest(TestCase):
@@ -109,7 +104,6 @@ class ChatTest(TestCase):
         self.assertEqual(len(response.context['nombrechats']),5)
 
 
-    @pytest.mark.asyncio
     async def test_consumer(self):
         application = WebsocketConsumer.as_asgi()
         communicator = WebsocketCommunicator(application, path="/chat/1/")
