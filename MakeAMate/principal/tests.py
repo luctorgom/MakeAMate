@@ -1,5 +1,5 @@
-from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from datetime import date, timedelta, datetime
 import json
 from django.test import Client, TestCase
 from django.conf import settings
@@ -291,31 +291,42 @@ class NotificacionesTest(TestCase):
         piso_pepe = Piso.objects.create(zona="Calle Marqués Luca de Tena 1", descripcion="Descripción de prueba 1")   
         piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
-
-        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
+        
+        fecha_premium=timezone.now() + timedelta(days=120)
+        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", fecha_premium=fecha_premium)
         maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
         sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
 
         #MATE ENTRE user y user2
-        mate1 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user2)
-        mate2 = Mate.objects.create(mate=True,userEntrada=user2, userSalida=user)
+        mate12 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user2)
+        mate21 = Mate.objects.create(mate=True,userEntrada=user2, userSalida=user)
 
-        #EL user LE DA MATE AL user3, PERO EL user3 NO LE DA MATE A ÉL
-        mate3 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user3)
+        #EL user3 LE DA LIKE al user1 y al user 2
+        like31 = Mate.objects.create(mate=True,userEntrada=user3, userSalida=user)
+        like32= Mate.objects.create(mate=True,userEntrada=user3, userSalida=user2)
         super().setUp()
 
 
-    #El usuario "user" tiene un mate, por lo que su lista de mates será de tamaño 1
-    def test_notificaciones(self):
+    #El usuario "user" tiene un mate y como es premium tb tiene un like, la lista será de tamaño 2
+    def test_notificaciones_premium(self):
         c = Client()
         response_user = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
         response2 = c.get('/')
         lista_mates = response2.context['notificaciones']
 
+        self.assertTrue(len(lista_mates) == 2)
+        
+    #El usuario "user2" tiene un mate y un like, la lista será de tamaño 1 porque al no ser premium el like
+    #no se le notifica
+    def test_notificaciones_no_premium(self):
+        c = Client()
+        response = c.post('/login/', {'username': 'usuario2', 'pass': 'qwery'})
+        response2 = c.get('/')
+        lista_mates = response2.context['notificaciones']
         self.assertTrue(len(lista_mates) == 1)
-
-    #El usuario "user3" no tiene ningún mate, por lo que su lista de mates será de tamaño 0
-    def test_notificaciones_2(self):
+    
+    #El usuario "user3" no tiene ningún mate ni like, por lo que su lista de mates será de tamaño 0
+    def test_notificaciones_false(self):
         c = Client()
         response = c.post('/login/', {'username': 'usuario3', 'pass': 'qwery'})
         response2 = c.get('/')

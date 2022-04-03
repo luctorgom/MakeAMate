@@ -28,7 +28,36 @@
     
     })     
 </script>
+{% comment %} <script type="text/javascript">
+    //CONTADOR PARA ACTUALIZAR NOTIFICACIONES
+    var n = 0;  
+    var l = document.getElementById("number");
+    window.setInterval(function(){
+        l.innerHTML = n;
+        n++;
+    },1000);
 
+    if(document.getElementById("number").equals("60000")){
+        document.getElementById("number")="0";
+    }
+
+
+</script>{% endcomment %}
+
+<script>
+window.onload = numeronotificaciones;
+function numeronotificaciones(){
+let n=document.getElementById("notis").textContent;
+let im1="../static/images/icons/bell-off.png";
+let im2="../static/images/icons/bell-on2.png"
+
+if(n==="0") {
+    document.getElementById("notibell").src=im1;
+} else {
+    document.getElementById("notibell").src=im2;
+}
+}
+</script>
 {% block extrahead %}
 
     
@@ -55,19 +84,26 @@
   <div class="container-notificaciones" id="Notificaciones">
     <div class="logo-notificaciones"></div>
     <a href="{% url 'home' %}"><img class ="logo" src="/static/logotipo.png"></a>
-    <div class="icon-notificaciones" id="bell"> <img src="https://i.imgur.com/AC7dgLA.png" alt="img"> </div>
+    <div class="icon-notificaciones" id="bell"> <img id="notibell" src="..\static\images\icons\bell-on2.png" alt="img"> </div>
     <div class="notifications" id="box">
-        <h2 class="notificacion-text">Notifications - <span> {{notificaciones|length}} </span></h2>
+        <h2 class="notificacion-text"><a href="{% url 'notifications' %}">Notificaciones</a> - <span id="notis">{{notificaciones|length}}</span></h2>
         {%for i in notificaciones %}
+        {%if forloop.counter0 < 7 %}
         <div class="notifications-item"> <img src=".\..\static\images\icons\Choca_esos_5.png" alt="img">
-            <div class="text-notificaciones">
+            {%if i.1 == "Mates" %}<div class="text-notificaciones">
                 <h4>Nuevo Mate!
                 </h4>
-                <p>Has hecho mate con {{i}}.</p>
-            </div>
+                <p>Has hecho mate con {{i.0.userSalida}}.</p>
+            </div>{% endif %}
+            {%if i.1 == "Premium" %}<div class="text-notificaciones">
+                <h4>Nuevo like!👑
+                </h4>
+                <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
+            </div>{% endif %}
         </div>
-
+        {% endif %}
         {% endfor %}
+        <a href="{% url 'notifications' %}">Ver todas las notificaciones.</a>
     </div>
 </div>
   
