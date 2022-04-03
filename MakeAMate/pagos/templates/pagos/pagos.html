@@ -62,13 +62,10 @@
                             orderID: data.orderID,
                             authorizationID: authorizationID
                         })
-                    });
+                    }).then(response => window.location.href="home");
                 });
-                alert('Transaction completed');
-              
+                alert('Se ha completado el pago correctamente.');
             }
-
-
         }).render('#paypal-button-container');
     </script>
 {% endblock %}
@@ -76,13 +73,9 @@
 {% block content %}
     <h1>¡Solo un paso más!</h1>
     <h3>Usa paypal o tu tarjeta de crédito para finalizar el pago</h3>
- 
+
     <div= id="#paypal-button-container"></div>
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
-
-    
-  
-    
 {% endblock %}
 

@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     path('',views.paypal ,name='paypal' ),
     path('complete/', views.paymentComplete, name="complete"),
+    path('home/',views.homepageRedirect,name="home")
 
 ]

@@ -31,16 +31,16 @@ def paypal(request,pk):
 def paymentComplete(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
-    loggeado=get_object_or_404(Usuario, usuario=request.user)  
+    loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium=loggeado.es_premium()
     if premium:
         return redirect(homepage)
     fecha_premium = timezone.now() + relativedelta(months=1)
-    # Usuario.objects.update(usuario=request.user, 
+    # Usuario.objects.update(usuario=request.user,
     # defaults={'fecha_premium': fecha_premium})
     loggeado.fecha_premium=fecha_premium
     loggeado.save()
     return redirect(homepage)
 
-
-   
+def homepageRedirect(request,pk):
+    return redirect(homepage)
