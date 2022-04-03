@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from principal import views
-from django.conf.urls import handler404
+from django.conf.urls import handler404,handler403,handler500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +29,6 @@ urlpatterns = [
     path('', views.homepage,name="home"),
 ]
 
+handler403 = "principal.views.error_403"
 handler404 = "principal.views.error_404"
+handler500 = "principal.views.error_500"
