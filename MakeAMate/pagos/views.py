@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from principal.views import homepage, login_view
 from django.views.decorators.csrf import csrf_protect
 from principal.models import Usuario
-
+from dateutil.relativedelta import relativedelta
 from .models import Suscripcion
 import json
 
@@ -16,7 +16,8 @@ def paypal(request,pk):
     if not request.user.is_authenticated:
         return redirect(login_view)
     loggeado=get_object_or_404(Usuario, usuario=request.user)
-    if loggeado.is_premium():
+    premium=loggeado.es_premium()
+    if premium:
         return redirect(homepage)
     template_name='pagos/pagos.html'
     suscripcion= Suscripcion.objects.get(id=pk)
@@ -28,16 +29,18 @@ def paymentComplete(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
     loggeado=get_object_or_404(Usuario, usuario=request.user)  
-    if loggeado.is_premium():
+    premium=loggeado.es_premium()
+    if premium:
         return redirect(homepage)
     body = json.loads(request.body)
     print('BODY:', body)
-    now = datetime.now()
-    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    fecha_premium = datetime.now() + relativedelta(months=1)
+    print(fecha_premium)
+    date_time = fecha_premium.strftime("%m/%d/%Y, %H:%M:%S")
     Usuario.objects.update_or_create(usuario=request.user, 
-    defaults={'fecha_premium': now})
+    defaults={'fecha_premium': fecha_premium})
     
-    return JsonResponse('Payment completed!', safe=False)
+    return redirect(homepage)
 
 
    

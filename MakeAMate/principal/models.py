@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 
 # Create your models here.
@@ -59,13 +60,12 @@ class Usuario(models.Model):
     def tiene_piso(cls):
         return True if cls.piso != None else False
 
-    def es_premium(cls):
-        if cls.fecha_premium==None:
+    def es_premium(self):
+        if self.fecha_premium==None:
             return False
-        today = datetime.today()
-        fecha_premium_fin = cls.fecha_premium + relativedelta(months=1)
+        today = timezone.now()
 
-        return True if today < fecha_premium_fin else False
+        return self.fecha_premium > today
 
     def __str__(self):
         return str(self.usuario)
