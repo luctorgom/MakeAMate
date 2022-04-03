@@ -203,30 +203,16 @@ class UsuarioForm(forms.Form):
 
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
-    zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
-    foto_usuario = forms.ImageField(label="Fotos")
-    lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
-    genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
-    piso_encontrado = forms.ChoiceField(choices=(('False', 'False'),('True','True')))
+    zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
+    foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
+    lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
+    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=(('False', 'False'),('True','True')))
     descripcion = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
 
-    idiomas = forms.ModelMultipleChoiceField(queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
-    tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
-    aficiones = forms.ModelMultipleChoiceField(label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
-
-    def clean_telefono_usuario(self):
-        telefono_usuario = self.cleaned_data.get('telefono_usuario')
-        regex = re.compile(r"^\+\d{1,3}\d{9}$")
-
-        if not re.fullmatch(regex, telefono_usuario):
-            raise forms.ValidationError('Inserte un teléfono válido')
-
-        existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
-
-        if existe_telefono:
-            raise forms.ValidationError('El teléfono ya está en uso')
-
-        return telefono_usuario
+    idiomas = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
+    tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
+    aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
 
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')
@@ -256,6 +242,8 @@ class UsuarioFormEdit(forms.Form):
         if idiomas.count() < 1:
             raise forms.ValidationError('Por favor, elige al menos un idioma')
 
+        return idiomas
+
     def clean_genero(self):
         genero = self.cleaned_data.get('genero')
         generos = ['M', 'F', 'O']
@@ -270,6 +258,22 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('La descripción debe contener menos de 1000 caracteres')
 
         return descripcion
+
+    def clean_lugar(self):
+        lugar = self.cleaned_data.get('lugar')
+        if len(lugar) > 40:
+            raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
+        return lugar
+
+
+    def clean_piso_encontrado(self):
+        piso_encontrado = self.cleaned_data.get('piso_encontrado')
+        valores = ['True', 'False']
+        if piso_encontrado not in valores:
+            raise forms.ValidationError('El valor debe ser Sí o No')
+
+        return piso_encontrado
+    
 
     
     

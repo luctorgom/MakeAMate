@@ -296,7 +296,23 @@ def profile_view(request):
 def edit_profile_view(request):
     if not request.user.is_authenticated:
         return redirect(homepage)
-    form = UsuarioFormEdit()
+
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+
+    initial_dict = {
+        'foto_usuario': usuario.foto,
+        'lugar': usuario.lugar,
+        'genero': usuario.genero,
+        'zona_piso': usuario.piso.zona,
+        'descripcion': usuario.descripcion,
+        'piso_encontrado': usuario.piso_encontrado,
+        'idiomas': usuario.idiomas.all(),
+        'tags': usuario.tags.all(), 
+        'aficiones': usuario.aficiones.all()
+    }
+    
+    form = UsuarioFormEdit(initial = initial_dict)
     if request.method == 'POST':
         form = UsuarioFormEdit(request.POST, request.FILES)
         if form.is_valid():

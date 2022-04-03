@@ -1,58 +1,12 @@
-
-<h2>Welcome {{ usuario.usuario.first_name }} {{usuario.usuario.last_name}}</h2>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ form.as_p }}
+    </table>
+    <input type="submit" value="Submit" />
+</form>
+<!-- 
+<a href="editarContraseña">Editar contraseña</a>
 <br/>
-<br/>
-<label> Foto: </label>
-<input value= "{{ usuario.foto }}"/>
-<br/>
-<br/>
-<label> Fecha Nacimiento: </label>
-<input value= "{{ usuario.fecha_nacimiento }}"/> 
-<br/>
-<br/>
-<label> Fecha Premium: </label>
-<input value= "{{ usuario.fecha_premium }}"/>
-<br/>
-<br/>
-<label> Teléfono: </label>
-<input value= "{{ usuario.telefono }}"/> 
-<br/>
-<br/>
-<label> Lugar: </label>
-<input value= "{{ usuario.lugar }}"/> 
-<br/>
-<br/>
-<label> Nacionalidad: </label>
-<input value= "{{ usuario.nacionalidad }}"/> 
-<br/>
-<br/>
-<label> Género: </label>
-<input value= "{{ usuario.genero }}"/> 
-<br/>
-<br/>
-<label> Estudios: </label>
-<input value= "{{ usuario.estudios }}"/> 
-<br/>
-<br/>
-<label> Idiomas: </label>
-<input value= "{{ usuario.idiomas }}"/>
-<br/>
-<br/>
-<label> Tags: </label>
-<input value= "{{ usuario.tags }}"/>
-<br/>
-<br/>
-<label> Aficiones: </label>
-<input value= "{{ usuario.aficiones }}"/>
-<br/>
-<br/>
-<p> Propiedades del piso: </p>
-<label> ¿Piso encontrado? </label>
-<input value= "{{ usuario.piso_encontrado }}"/> 
-<br/>
-<br/>
-<label> Descripción: </label>
-<input value= "{{ usuario.descripcion }}"/>
-<br/>
-<br/>
-<a href="edit"> Ir a editar</a>
+<a href="editarFoto">Editar foto</a>
+-->
