@@ -125,8 +125,7 @@ def payments(request):
     suscripcion=Suscripcion.objects.all()[0]
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     template='payments.html'
-
-    premium= loggeado.es_premium
+    premium= loggeado.es_premium()
     params={'suscripcion':suscripcion, 'premium':premium}
     return render(request,template,params) 
 

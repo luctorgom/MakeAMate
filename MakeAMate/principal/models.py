@@ -3,7 +3,8 @@ from django.db import models
 from django.forms import NullBooleanField
 from django.core.validators import MaxValueValidator, MinValueValidator,RegexValidator
 from django.contrib.auth.models import User
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 
@@ -73,7 +74,6 @@ class Usuario(models.Model):
     def tiene_piso(cls):
         return cls.piso != None
 
-    
     def es_premium(self):
         if self.fecha_premium==None:
             return False
