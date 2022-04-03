@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from principal.models import Usuario
 from pagos.models import Suscripcion
 from django.utils.timezone import make_aware
+from django.urls import reverse, resolve
 
 class PaymentsTest(TestCase):
     
@@ -41,28 +42,38 @@ class PaymentsTest(TestCase):
     #     response=c.get("/payments/")
     #     self.assertRedirects(response, "/login/")
 
-    # def testPaypal(self):
-    #     c= Client()
-    #     c.login(username='Pepe', password= 'asdfg')
-    #     response=c.get("paypal/", pk=self.plan_premium.id)
-    #     self.assertEqual(response.status_code, 200)
-
-    def testPaymentCompleteUserNotLogin(self):
-        c= Client()
-        response=c.get("/pagos/complete/")
-        self.assertRedirects(response, "/login/")
-    
-    def testPaymentCompleteUserAlreadyPremium(self):
-        c= Client()
-        c.login(username='Maria', password= 'asdfg')
-        response=c.get("/pagos/complete/")
-        self.assertRedirects(response, "/")
-
-    def testPaymentComplete(self):
+    def testPaypal(self):
         c= Client()
         c.login(username='Pepe', password= 'asdfg')
-        response=c.get("/pagos/complete/")
-        print(self.Pepe.fecha_premium)
+        id=self.plan_premium.id
+        print(id)
+        url= reverse('paypal', args=id)
+        response=c.get(resolve(url))
+        self.assertEqual(response.status_code, 200)
+
+        # expected_url_pattern = r'/paypal/\d+/'
+        # the_url_being_tested = '/paypal/1/'
+        # self.assertTrue(re.match(expected_url_pattern, the_url_being_tested))
+   
+    # def testPaymentCompleteUserNotLogin(self):
+    #     c= Client()
+    #     response=c.get("/pagos/complete/")
+    #     self.assertRedirects(response, "/login/")
+    
+    # def testPaymentCompleteUserAlreadyPremium(self):
+    #     c= Client()
+    #     c.login(username='Maria', password= 'asdfg')
+    #     response=c.get("/pagos/complete/")
+    #     self.assertRedirects(response, "/")
+
+    #Comprobamos que el usuario Pepe sin fecha premium al hacer la compra del plan premium tiene una fecha final de
+    #su plan premium
+    # def testPaymentComplete(self):
+    #     c= Client()
+    #     c.login(username='Pepe', password= 'asdfg')
+    #     response=c.get("/pagos/complete/")
+    #     self.assertFalse(self.Pepe.fecha_premium, None)
+    #     self.assertEqual(response.status_code, 302)
        
 
 
