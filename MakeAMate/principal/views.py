@@ -132,3 +132,6 @@ def notifications_list(request):
     notis=notificaciones_mates(request)
     response={'notificaciones':notis}
     return render(request,template,response)
+
+def info(request):
+    return render(request,'info.html')

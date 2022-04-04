@@ -1,0 +1,78 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:700,400,300);
+
+::-moz-selection { background: rgba(0,0,0,0.2); }
+::selection { background: rgba(0,0,0,0.2); }
+
+/* Skip to line 40 for the hover code */
+
+.centrar {
+    margin:300;
+    position: fixed;
+    width: 100%;
+    }
+h1 {
+  max-width: 49rem;
+  font-size: 3.5em;
+  line-height: 1em;
+  font-weight: 700;
+  margin: 0.25em auto;
+}
+h2 {
+  max-width: 49rem;
+  margin: 1.4em auto;
+}
+p {
+  line-height: 1.5em;
+  margin: 1.4em auto;
+  max-width: 49rem;
+  font-size: 1em;
+  font-weight: 300;
+}
+a.dfn-hover {
+	color: #333;
+	text-decoration: none;
+}
+
+/** Code for hover info **/
+
+dfn {
+  background: #e9e9e9;
+  border-bottom: dashed 1px rgba(0,0,0,0.8);
+  padding: 0 0.4em;
+  cursor: help;
+  font-style: normal;
+  position: relative;
+  
+}
+dfn::after {
+  content: attr(data-info);
+  display: inline;
+  position: absolute;
+  top: 22px; left: 0;
+  opacity: 0;
+  width: 230px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5em;
+  padding: 0.5em 0.8em;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  pointer-events: none; /* This prevents the box from apearing when hovered. */
+  transition: opacity 250ms, top 250ms;
+}
+dfn::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 12px; left: 20px;
+  opacity: 0;
+  width: 0; height: 0;
+  border: solid transparent 5px;
+  border-bottom-color: rgba(0,0,0,0.8);
+  transition: opacity 250ms, top 250ms;
+}
+dfn:hover {z-index: 2;} /* Keeps the info boxes on top of other elements */
+dfn:hover::after,
+dfn:hover::before {opacity: 1;}
+dfn:hover::after {top: 30px;}
+dfn:hover::before {top: 20px;}
