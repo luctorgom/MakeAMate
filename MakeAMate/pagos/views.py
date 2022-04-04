@@ -22,7 +22,7 @@ def paypal(request,pk):
     premium=loggeado.es_premium()
     if premium:
         return redirect(homepage)
-    template_name='pagos/pagos.html'
+    template_name='pagos.html'
     suscripcion= Suscripcion.objects.get(id=pk)
     context={'suscripcion': suscripcion}
     return render(request, template_name, context)
