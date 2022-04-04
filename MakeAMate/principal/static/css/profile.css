@@ -2,22 +2,36 @@ body{
     margin:0;
 
 }
+
 .contenedorPerfil{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    font-size: 25px;
+    
 }
 
 .formularioPerfil{
-    border-radius: 40px;
+    border-radius: 35px;
     height:70vh;
     width: 80vw;
     display: flex;
     flex-direction: row;
     justify-content: space-around ; 
+    overflow: visible;
     
 }
+
+.formularioPerfil ul{
+    overflow-wrap: break-word;
+    list-style:none;
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+}
+
 .Titulo{
     width:15vw;
     text-align: center;
@@ -25,26 +39,27 @@ body{
 }
 .editarFoto{
     border-radius: 20px;
-
-
+    height:fit-content;
+    width:fit-content;
+    padding: 2rem;
     background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
 }
 
 .editarPerfil{
-border-radius: 20px;
-width:30rem;
-background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-
-
-
-
+    border-radius: 20px;
+    width:35rem;
+    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    height:fit-content;
+    padding: 2rem;
+    
 }
 
 .editarContraseña{
     border-radius: 20px;
     width:30rem;
     background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-    
+    height:fit-content;
+    padding: 2rem;
 }
 
 .fotoPerfil {
@@ -62,6 +77,7 @@ background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 5
 
 .form-label{
     padding: 10px;
+    font-weight: bolder;
 
 }
 .form-control{
@@ -75,26 +91,73 @@ background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 5
 
 }
 
-.ActualizarPerfilFalse, .ActualizarContraseña, .ActualizarFoto{
+.ActualizarPerfilFalse, .ActualizarContraseña, .ActualizarFoto,.ActualizarPerfilTrue{
     padding: 10px;
-    font-size: 15px;
+    border-radius: 15px;
+    background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+    border:2px solid rgb(255,255,255)
 
 }
-.ActualizarFoto{
-margin-bottom:10px;
-font-size: 15px;
 
-}
 .ActualizarPerfilTrue{
-    padding: 10px;
-    margin-left: 10px;
-    font-size: 15px;
-
+    margin-left: 1rem;
 }
-
+.ActualizarPerfilFalse:active, .ActualizarContraseña:active, .ActualizarFoto:active,.ActualizarPerfilTrue:active{
+    background: rgba(255, 255, 255, 0.4);
+}
 #id_correo, #id_password, #id_password2, #id_nombre, #id_apellidos, #id_telefono_usuario, #id_lugar, #id_nacionalidad, #id_genero, #id_tags, #id_idiomas, #id_aficiones,#id_fecha_nacimiento,#id_zona_piso{
-    font-size: 25px;
     width: 100%;
     height: 100%;
     border-color:transparent;
 }
+
+@media screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .contenedorPerfil{
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .formularioPerfil{
+        border-radius: 35px;
+        width: 100%;
+        height: fit-content;
+        display: inline-block;
+        overflow: visible;
+        vertical-align:top;
+        margin-bottom: 2rem;
+
+    }
+    .editarFoto{
+        width:100vw;
+        padding: 2rem;
+        background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    }
+    
+    .editarPerfil{
+        border-radius: 20px;
+        width:100%;
+        background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+        height:fit-content;
+        padding: 2rem;
+        
+    }
+    
+    .editarContraseña{
+        border-radius: 20px;
+        width:100%;
+        background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+        height:fit-content;
+        padding: 2rem;
+    }
+    .Titulo {
+        width: 100vw;
+        text-align: center;
+    }
+    .formularioPerfil ul{
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+        column-count: 2;
+    }
+  }
