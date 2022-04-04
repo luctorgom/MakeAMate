@@ -115,6 +115,9 @@ body{
     height: 100%;
     border-color:transparent;
 }
+#id_descripcion { 
+    width: 100%; 
+}
 
 @media screen and (max-width: 768px) {
     /* For mobile phones: */
