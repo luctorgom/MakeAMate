@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
 from django.db.models import Q
-from .forms import UsuarioForm, SmsForm, UsuarioFormEdit
+from .forms import ChangePasswordForm, ChangePhotoForm, UsuarioForm, SmsForm, UsuarioFormEdit
 import os
 from twilio.rest import Client
 import json
@@ -437,6 +437,35 @@ def edit_profile_view(request):
 
             return render(request, 'profile.html', {'user': perfil_updated_2.id, 'usuario': perfil_updated_2})
     return render(request, 'edit_profile.html', {'form': form})
+
+def edit_password_view(request):
+    if not request.user.is_authenticated:
+        return redirect(homepage)
+    form_change_password = ChangePasswordForm()
+    if request.method == 'POST':
+        form_change_password = ChangePasswordForm(request.POST)
+        if form_change_password.is_valid():
+            form_password = form_change_password.cleaned_data['password']
+            usuario = request.user
+            usuario.set_password(form_password)
+            usuario.save()
+        return render(request, 'profile.html')
+    return render(request, 'profile.html', {'form_change_password': form_change_password})
+
+def edit_photo_view(request):
+    if not request.user.is_authenticated:
+        return redirect(homepage)
+    form_change_photo = ChangePhotoForm()
+    if request.method == 'POST':
+        form_change_photo = ChangePhotoForm(request.POST, request.FILES)
+        if form_change_photo.is_valid():
+            form_photo = form_change_photo.cleaned_data['foto_usuario']
+            user = request.user
+            print(user.id)
+            print(form_photo)
+            Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
+        return render(request, 'profile.html')
+    return render(request, 'profile.html', {'form_change_photo': form_change_photo})
 
 
 def notifications_list(request):

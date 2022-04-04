@@ -269,4 +269,30 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('El valor debe ser Sí o No')
 
         return piso_encontrado
+
+class ChangePasswordForm(forms.Form):
+    password = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},widget=forms.PasswordInput(attrs={'placeholder': 'Nueva contraseña'}))
+    password2 = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar nueva contraseña'}))
     
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        regex = re.compile("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
+        if not re.fullmatch(regex, password):
+            raise forms.ValidationError('La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número')
+        return password
+
+    def clean_password2(self):
+
+        password = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+
+        if not password2:
+            raise forms.ValidationError('Por favor, confirma tu contraseña')
+        if password != password2:
+            raise forms.ValidationError('Las contraseñas no coinciden')
+
+        return password2
+
+
+class ChangePhotoForm(forms.Form):
+    foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
