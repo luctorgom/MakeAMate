@@ -328,8 +328,6 @@ def profile_view(request):
         form = UsuarioFormEdit(request.POST, request.FILES)
         form_change_photo = ChangePhotoForm(request.POST, request.FILES)
         if form.is_valid():
-            print("AQUI")
-            form_foto = form.cleaned_data['foto_usuario']
             form_lugar = form.cleaned_data['lugar']
             form_genero = form.cleaned_data['genero']
             form_zona_piso = form.cleaned_data['zona_piso']
@@ -344,21 +342,20 @@ def profile_view(request):
             perfil = Usuario.objects.get(usuario = user_actual)
             if form_zona_piso != "":
                 piso_usuario, no_existe = Piso.objects.get_or_create(zona = form_zona_piso)
-                print(no_existe)
                 if no_existe:
                     piso_usuario.save()
                 Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado,
+                genero = form_genero, piso_encontrado = form_piso_encontrado,
                 piso = piso_usuario)
             else:
                 Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado)
+                    genero = form_genero, piso_encontrado = form_piso_encontrado)
 
             perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
             perfil_updated_2.idiomas.set(form_idiomas)
             perfil_updated_2.tags.set(form_tags)
             perfil_updated_2.aficiones.set(form_aficiones)
-            perfil_updated_2.save() 
+            perfil_updated_2.save()  
 
             return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
                 'form_change_photo': form_change_photo, 'usuario': perfil_updated_2})
