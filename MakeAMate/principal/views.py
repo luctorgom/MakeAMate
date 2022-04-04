@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
 from django.db.models import Q
+
 from .forms import UsuarioForm, SmsForm
 import os
 import secrets
@@ -22,6 +23,7 @@ from twilio.base.exceptions import TwilioRestException
 import json
 from django.contrib import messages
 import ctypes
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -117,6 +119,15 @@ def payments(request):
     template='payments.html'
     return render(request,template)
 
+def terminos(request):
+    template='loggeos/terminos_1.html'
+    return render(request,template) 
+
+def prueba(request):
+    form = SmsForm()
+    template='loggeos/registerSMS.html'
+    return render(request,template,{'form': form}) 
+
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
@@ -125,7 +136,6 @@ def notificaciones_mates(request):
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-
             lista_mates.append(mate1.userSalida)
         except Mate.DoesNotExist:
             pass
@@ -197,7 +207,7 @@ def registro(request):
             form_lugar = form.cleaned_data['lugar']
             form_nacionalidad = form.cleaned_data['nacionalidad']
             form_genero = form.cleaned_data['genero']
-            form_idiomas = form.cleaned_data['idiomas']
+           # form_idiomas = form.cleaned_data['idiomas']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
@@ -212,18 +222,20 @@ def registro(request):
                 piso = Piso.objects.create(zona = form_zona_piso)
                 perfil = Usuario.objects.create(usuario = user, piso = piso,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
-                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+                genero = form_genero,foto = form_foto,telefono=form_telefono_usuario)
             else:
                 perfil = Usuario.objects.create(usuario = user, 
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
-                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
+                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario) 
 
-            perfil.idiomas.set(form_idiomas)
+           # perfil.idiomas.set(form_idiomas)
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
             return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
+            #return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
-    return render(request, 'loggeos/register.html', {'form': form})
+    return render(request, 'loggeos/register2.html', {'form': form})
+
 
 def twilio(request, user_id):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -255,7 +267,7 @@ def twilio(request, user_id):
                                     .verification_checks \
                                     .create(to=telefono, code=codigo)
                 if verification_check.status=="approved":                 
-                    perfil.sms_validado.set=True
+                    perfil.sms_validado = True
                     messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
                 else:
                     messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
