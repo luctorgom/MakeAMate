@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from principal.forms import UsuarioForm, SmsForm
-from .models import Idioma, Piso, Tag, Usuario,Mate
+from .models import Aficiones, Idioma, Piso, Tag, Usuario,Mate, Foto
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -21,6 +21,7 @@ from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 import json
 from django.contrib import messages
+import ctypes
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -200,151 +201,88 @@ def registro(request):
             form_zona_piso = form.cleaned_data['zona_piso']
             form_telefono_usuario = form.cleaned_data['telefono_usuario']
             
-            print("Cogemos los datos")
-        
-            #form_universidad = form.cleaned_data['universidad']
-            #form_estudios = form.cleaned_data['estudios']
-
+            # Inicializamos las variables globales
+            global piso, user, perfil, telefono, aficiones, tags, idiomas
+            
             if form_zona_piso != None:
-                piso_usuario = Piso.objects.create(zona = form_zona_piso)
-                print("Creado el piso")
+                piso = Piso(zona = form_zona_piso)
 
-            user = User.objects.create(username=form_usuario,first_name=form_nombre,
+            user = User(username=form_usuario,first_name=form_nombre,
             last_name=form_apellidos, email=form_correo)
             user.set_password(form_password)
 
-            print("Creado el user")
 
             if form_zona_piso != None:
-                perfil = Usuario.objects.create(usuario = user, piso = piso_usuario,
+                perfil = Usuario(usuario = user, piso = piso,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
             else:
-                perfil = Usuario.objects.create(usuario = user, 
+                perfil = Usuario(usuario = user, 
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
-
-            perfil.idiomas.set(form_idiomas)
-            perfil.tags.set(form_tags)
-            perfil.aficiones.set(form_aficiones)
-
-            try:
-                if form_zona_piso != None:
-                    piso_usuario.save()
-                user.save()
-                perfil.save()
-                print("Creado el usuario")
-            except:
-                print("NO SE HA PODIDO CREAR NADA DEL REGISTRO")
-
-            return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
+            
+            telefono = form_telefono_usuario
+            idiomas = form_idiomas
+            tags = form_tags
+            aficiones = form_aficiones
+            return redirect('registerSMS/')
 
     return render(request, 'loggeos/register.html', {'form': form})
 
-
-def twilio(request, user_id):
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    auth_token = os.environ['TWILIO_AUTH_TOKEN']
-    client = Client(account_sid, auth_token)
-    service_sid = "VAcc9402703856690898876df078a910fa"
-    print(request)
-
-    user = User.objects.get(id = user_id)
-    usuario = Usuario.objects.get(usuario = user)
-    piso = usuario.piso
-    telefono_validar = usuario.telefono
-
-    verification = client.verify \
-                     .services(service_sid) \
-                     .verifications \
-                     .create(to=telefono_validar, channel='sms')
-
-    form = SmsForm()
-    if request.method == 'POST':
-        # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
-        # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
-        form = SmsForm(request.POST, request.FILES)
-        if form.is_valid():
-
-            form_codigo = form.cleaned_data["codigo"]
-
-            if verification.status=="pending":
-                verification_check = client.verify \
-                                    .services(service_sid) \
-                                    .verification_checks \
-                                    .create(to=telefono_validar, code=form_codigo)
-
-                if verification_check.status=="approved":
-                    if usuario.piso != None: piso.save() 
-                    user.save()
-                    usuario.save()
-                    # TODO: hay que redigirir a la vista del perfil cuando esté creada
-                elif verification_check.status=="pending":
-                    print("No se ha verificado correctamente")
-                    #TODO: hay que redireccionar a la vista del formulario del sms de nuevo
-                    return twilio(request, user_id)
-
-    return render(request, 'loggeos/registerSMS.html', {'form': form})
-
-# Esta funcion es un intento de hacer menos llamadas a la api, debido a que se bloquea y lanza error 20429
-def twilio2(request, user_id):
+def twilio(request):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
     servicio = "VAfd6998ee6818ae4ec6d0344f5a25c96d"
-    codigo_generado='{:0>6}'.format(secrets.randbelow(10**6)) # 6 digitos
-
-    def start_verification(telefono_validar):
-        channel="sms"
+    
+    def start_verification(telefono):
         try:
             verification = client.verify \
                 .services(servicio) \
                 .verifications \
-                .create(to=telefono_validar, channel=channel, custom_code=str(codigo_generado))
+                .create(to=telefono, channel="sms")
             return verification
         except TwilioRestException as e:
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
         
 
-    def check_verification(telefono, codigo_generado, codigo, verification):
+    def check_verification(telefono, codigo, verification):
         try:
             if(verification.status=="pending"):
-                estado = "approved" if codigo==codigo_generado else "cancelled"
-                verification = client.verify \
+    
+                verification_check = client.verify \
                                     .services(servicio) \
-                                    .verifications(telefono) \
-                                    .update(status=estado)
-                if verification.check=="approved":
-                    if usuario.piso is not None: piso.save() 
+                                    .verification_checks \
+                                    .create(to=telefono, code=codigo)
+                if verification_check.status=="approved":
+                    if perfil.piso is not None: piso.save() 
                     user.save()
-                    usuario.save()
+                    # TODO: django da ValueError: I/O operation on closed file. probablemente sea por culpa de la foto.
+                    perfil.save()
+                    perfil.idiomas.set(idiomas)
+                    perfil.tags.set(tags)
+                    perfil.aficiones.set(aficiones)
                     messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
                     # TODO: hay que redigirir a la vista del perfil cuando esté creada
                     # return render(request,'homepage.html')
                 else:
                     messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
         except TwilioRestException as e:
+            # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
+            # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
-        # except Exception as e:
-        #     # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
-        #     # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
-        #     # Probar que con esto funciona
-        #     messages.error(request, message="Error validando el código: {}".format(e))
 
-        return render(request, 'loggeos/registerSMS.html', {'form': form})
-    user = User.objects.get(id = user_id)
-    usuario = Usuario.objects.get(usuario = user)
-    piso = usuario.piso
-    telefono_validar = usuario.telefono
-    
-    verification = start_verification(telefono_validar)
+        return render(request, 'homepage.html', {'form': form})
+
+    print("Telefono en twilio(): " + telefono)
+    verification = start_verification(telefono)
     print(verification)
     form = SmsForm()
     if request.method == 'POST':
         form = SmsForm(request.POST, request.FILES)
         if form.is_valid():
-            codigo = form.cleaned_data("codigo")
+            codigo = form.cleaned_data["codigo"]
             print("form valido")
-            return check_verification(telefono_validar, codigo_generado, codigo, verification)
+            return check_verification(telefono, codigo, verification)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
