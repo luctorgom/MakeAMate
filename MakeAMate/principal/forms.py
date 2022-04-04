@@ -200,7 +200,7 @@ class UsuarioForm(forms.Form):
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
     zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
-    foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
+    #foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
     lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
     piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=(('False', 'False'),('True','True')))

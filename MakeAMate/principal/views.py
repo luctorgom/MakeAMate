@@ -391,9 +391,9 @@ def edit_profile_view(request):
     
     form = UsuarioFormEdit(initial = initial_dict)
     if request.method == 'POST':
-        form = UsuarioFormEdit(request.POST, request.FILES)
+        form = UsuarioFormEdit(request.POST)
         if form.is_valid():
-            form_foto = form.cleaned_data['foto_usuario']
+            #form_foto = form.cleaned_data['foto_usuario']
             form_lugar = form.cleaned_data['lugar']
             form_genero = form.cleaned_data['genero']
             form_zona_piso = form.cleaned_data['zona_piso']
@@ -419,11 +419,11 @@ def edit_profile_view(request):
                     piso_usuario.save()
                     print("CREADO EL PISO")
                 perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado,
+                genero = form_genero, piso_encontrado = form_piso_encontrado,
                 piso = piso_usuario)
             else:
                 perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado)
+                    genero = form_genero, piso_encontrado = form_piso_encontrado)
 
             perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
             print("PERFIL UPDATED: " + str(perfil_updated))
