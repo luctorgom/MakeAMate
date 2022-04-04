@@ -115,7 +115,15 @@ def notificaciones_mates(request):
             print("Mate 1: " + str(mate1))
             print("Mate 2: " + str(mate2))
             lista_mates.append(mate1.userSalida)
-        except Mates.DoesNotExist:
-            print("NO EXISTE MATE CON "+ str(i))
-    print("lista_mates: " + str(lista_mates))
+        except Mate.DoesNotExist:
+            pass
     return lista_mates
+
+def error_403(request,*args, **argv):
+    return render(request,'error403.html',status=403)
+
+def error_404(request,exception):
+    return render(request,'error404.html')
+
+def error_500(request,*args, **argv):
+    return render(request,'error500.html',status=500)

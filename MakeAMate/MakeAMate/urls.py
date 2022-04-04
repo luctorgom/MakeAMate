@@ -17,6 +17,7 @@ from turtle import home
 from django.contrib import admin
 from django.urls import path,include
 from principal import views
+from django.conf.urls import handler404,handler403,handler500
 
 urlpatterns = [
 
@@ -30,3 +31,7 @@ urlpatterns = [
     path('', views.homepage,name="home"),
 
 ]
+
+handler403 = "principal.views.error_403"
+handler404 = "principal.views.error_404"
+handler500 = "principal.views.error_500"

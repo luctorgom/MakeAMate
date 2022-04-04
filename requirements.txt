@@ -13,3 +13,7 @@ social-auth-app-django==3.1.0
 django-heroku
 gunicorn
 channels
+Pillow==9.0.1
+python-dateutil==2.8.2
+dj-static==0.0.6
+
