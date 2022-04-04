@@ -5,14 +5,11 @@ from django.conf import settings
 from django.contrib import auth
 from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto
 from django.contrib.auth.models import User
-<<<<<<< HEAD
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
-=======
 from django.utils import timezone
->>>>>>> origin/F-013
 
 # Test mates
 # class MateTestCase(TestCase):
@@ -318,7 +315,6 @@ class EdicionTest(TestCase):
 
         self.data = {
             'zona_piso':'Ejemplo de zona',
-            'foto_usuario': avatar_file,
             'lugar':'Ejemplo de lugar',
             'genero':'M',
             'piso_encontrado': True,
