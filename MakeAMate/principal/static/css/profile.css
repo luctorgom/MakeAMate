@@ -43,6 +43,8 @@ body{
     width:fit-content;
     padding: 2rem;
     background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    min-width: 15vw;
+
 }
 
 .editarPerfil{
@@ -54,6 +56,9 @@ body{
     
 }
 
+.form-control  .descripcion{
+    width: 100%;
+}
 .editarContraseña{
     border-radius: 20px;
     width:30rem;

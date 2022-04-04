@@ -11,7 +11,7 @@
             <div class="editarFoto">         
                 <h2 class="nombreUsuario">{{request.user.username}}</h2> <br> 
                 <div class="fotoPerfil"> <img class="fotoPerfil" src="https://i.imgur.com/uIgDDDd.jpg" alt="img"></div>
-                <div class="form-control">{{  form.foto_usuario  }}</div>
+                <div class="form-control">{{  form_change_photo.foto_usuario  }}</div>
                 <div class="botones"> 
                     <button type="button" class="ActualizarFoto">Actualizar Foto</button>
                 </div>
@@ -45,7 +45,7 @@
             <div class="form-control">{{  form.aficiones  }}</div>
 
             <label class="form-label">Descripción</label>
-            <div class="form-control">{{  form.descripcion  }}</div>
+            <div class="form-control descripcion">{{  form.descripcion  }}</div>
 
             <div class="botones"> 
                 <button type="button" class="ActualizarPerfilFalse">Cancelar</button>
@@ -59,10 +59,10 @@
             <div class="editarContraseña">
                 <h4 class="">Cambiar contraseña</h4><br>
                     <label class="form-label">Nueva contraseña *</label>
-                    <div class="form-control">{{  form.password  }}</div>
+                    <div class="form-control">{{  form_change_password.password  }}</div>
                     
                     <label class="form-label">Confirmar contraseña *</label>
-                    <div class="form-control">{{  form.password2  }}</div>
+                    <div class="form-control">{{  form_change_password.password2  }}</div>
                     <div class="botones"> 
                         <button type="button" class="ActualizarContraseña">Cambiar contraseña</button>
                     </div> 
