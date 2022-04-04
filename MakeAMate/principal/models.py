@@ -59,7 +59,7 @@ class Usuario(models.Model):
 
     telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
     telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
-    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
+    sms_validado=models.BooleanField(default=False)
     
     def get_edad(self):
         today = date.today()

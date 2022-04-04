@@ -52,6 +52,8 @@ def register_view(request):
 @login_required(login_url="/login")
 def homepage(request):
     if request.user.is_authenticated:
+        if Usuario.objects.get(usuario = request.user).sms_validado == False:
+            return render(request, 'loggeos/registerSMS.html', {'form': SmsForm})
         template = 'homepage.html'
 
         registrado= get_object_or_404(Usuario, usuario=request.user)
@@ -199,42 +201,40 @@ def registro(request):
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
-            form_telefono_usuario = form.cleaned_data['telefono_usuario']
+            form_telefono_usuario = form.cleaned_data['telefono_usuario']         
             
-            # Inicializamos las variables globales
-            global piso, user, perfil, telefono, aficiones, tags, idiomas
-            
-            if form_zona_piso != None:
-                piso = Piso(zona = form_zona_piso)
 
-            user = User(username=form_usuario,first_name=form_nombre,
+            user = User.objects.create(username=form_usuario,first_name=form_nombre,
             last_name=form_apellidos, email=form_correo)
             user.set_password(form_password)
 
-
             if form_zona_piso != None:
-                perfil = Usuario(usuario = user, piso = piso,
+                piso = Piso.objects.create(zona = form_zona_piso)
+                perfil = Usuario.objects.create(usuario = user, piso = piso,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
             else:
-                perfil = Usuario(usuario = user, 
+                perfil = Usuario.objects.create(usuario = user, 
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario)
-            
-            telefono = form_telefono_usuario
-            idiomas = form_idiomas
-            tags = form_tags
-            aficiones = form_aficiones
-            return redirect('registerSMS/')
+
+            perfil.idiomas.set(form_idiomas)
+            perfil.tags.set(form_tags)
+            perfil.aficiones.set(form_aficiones)
+            return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register.html', {'form': form})
 
-def twilio(request):
+def twilio(request, user_id):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
     servicio = "VAfd6998ee6818ae4ec6d0344f5a25c96d"
-    
+    user = User.objects.get(id = user_id)
+    perfil = Usuario.objects.get(usuario = user)
+    piso = perfil.piso
+    telefono = perfil.telefono
+
     def start_verification(telefono):
         try:
             verification = client.verify \
@@ -254,17 +254,9 @@ def twilio(request):
                                     .services(servicio) \
                                     .verification_checks \
                                     .create(to=telefono, code=codigo)
-                if verification_check.status=="approved":
-                    if perfil.piso is not None: piso.save() 
-                    user.save()
-                    # TODO: django da ValueError: I/O operation on closed file. probablemente sea por culpa de la foto.
-                    perfil.save()
-                    perfil.idiomas.set(idiomas)
-                    perfil.tags.set(tags)
-                    perfil.aficiones.set(aficiones)
+                if verification_check.status=="approved":                 
+                    perfil.sms_validado.set=True
                     messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
-                    # TODO: hay que redigirir a la vista del perfil cuando esté creada
-                    # return render(request,'homepage.html')
                 else:
                     messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
         except TwilioRestException as e:
@@ -274,15 +266,12 @@ def twilio(request):
 
         return render(request, 'homepage.html', {'form': form})
 
-    print("Telefono en twilio(): " + telefono)
     verification = start_verification(telefono)
-    print(verification)
     form = SmsForm()
     if request.method == 'POST':
         form = SmsForm(request.POST, request.FILES)
         if form.is_valid():
             codigo = form.cleaned_data["codigo"]
-            print("form valido")
             return check_verification(telefono, codigo, verification)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
