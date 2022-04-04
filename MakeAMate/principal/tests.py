@@ -122,13 +122,9 @@ class MateTestCase(TestCase):
 class FiltesTests(TestCase):
     
     def setUp(self):
-        super().setUp()
-    
-    @classmethod
-    def setUpTestData(cls):
-        userPepe= User(username="Pepe")
-        userPepe.set_password("asdfg")
-        userPepe.save()
+        self.userPepe= User(username="Pepe")
+        self.userPepe.set_password("asdfg")
+        self.userPepe.save()
 
         userMaria=User(username="Maria")
         userMaria.set_password("asdfg")
@@ -138,6 +134,14 @@ class FiltesTests(TestCase):
         userSara.set_password("asdfg")
         userSara.save()
 
+        self.userPepa=User(username="Pepa")
+        self.userPepa.set_password("asdfg")
+        self.userPepa.save()
+
+        self.userJuan=User(username="Juan")
+        self.userJuan.set_password("asdfg")
+        self.userJuan.save()
+
         etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
         idioma = Idioma.objects.create(idioma="Español")
@@ -145,20 +149,22 @@ class FiltesTests(TestCase):
         piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
 
-        Pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
+        Pepe= Usuario.objects.create(usuario=self.userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
         Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria)
         Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara)
+        Pepa=Usuario.objects.create(usuario=self.userPepa, fecha_nacimiento=date(2000,12,28), lugar="Sevilla")
+        Juan=Usuario.objects.create(usuario=self.userJuan, fecha_nacimiento=date(2000,12,27), lugar ="Sevilla")
     
     
 
    #Nos logeamos como Pepe usuario sin Piso en Sevilla y 
    # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
-    def test_filter_(self):
+    def test_filter_piso_y_ciudad(self):
         c= Client()
         login= c.login(username='Pepe', password= 'asdfg')
         response=c.get('/')
 
-        self.assertTrue( len(response.context['usuarios']) == 1)
+        self.assertTrue( len(response.context['usuarios']) == 3)
         self.assertEqual(response.status_code, 200)
        
 
@@ -168,8 +174,32 @@ class FiltesTests(TestCase):
         c= Client()
         c.login(username='Pepe', password= 'asdfg')
         response=c.get('/')
-        self.assertFalse( len(response.context['usuarios']) == 2)
+        self.assertFalse( len(response.context['usuarios']) == 4)
         self.assertEqual(response.status_code, 200)
+
+    def test_filter_rejected_mate(self):
+        c= Client()
+        c.login(username='Pepe', password= 'asdfg')
+        response=c.get('/')
+        #Comprombamos que antes de rechazar a un usuario nos salen 3 en total
+        self.assertTrue( len(response.context['usuarios']) == 3)
+        mate=Mate.objects.create(userEntrada=self.userPepe, userSalida=self.userPepa, mate=False)
+        response=c.get('/')
+        #Comprobamos que tras rechazar a un usuario ese ya no nos aparece como usuario recomendado
+        self.assertTrue( len(response.context['usuarios']) == 2)
+
+    def test_filter_accepted_mate(self):
+        c= Client()
+        c.login(username='Pepe', password= 'asdfg')
+        response=c.get('/')
+        #Comprombamos que antes de hacer mate con un usuario nos salen 3 en total
+        self.assertTrue( len(response.context['usuarios']) == 3)
+        mate=Mate.objects.create(userEntrada=self.userPepe, userSalida=self.userJuan, mate=True)
+        response=c.get('/')
+        #Comprobamos que tras hacer mate con un usuario ese ya no nos aparece como usuario recomendado
+        self.assertTrue( len(response.context['usuarios']) == 2)
+    
+
 
 #Test de login
 class LoginTest(TestCase):
