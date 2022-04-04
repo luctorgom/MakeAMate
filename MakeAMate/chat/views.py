@@ -4,7 +4,8 @@ from chat.models import ChatRoom
 from principal.models import Mates, Usuario
 from django.db.models import Q
 from chat.forms import CrearGrupo
-from django.http import HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -25,7 +26,7 @@ def index(request):
                 lista_usuarios.append(u)
             return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios,'form':form})
         else:
-            return redirect("/")
+            raise PermissionDenied
     else:
         return redirect("/login")
 def grupos(request):
@@ -40,7 +41,7 @@ def room(request, room_name):
             chatroom = ChatRoom.objects.filter(name = room_name)[0]
             lista_participantes = []
         except IndexError:
-            return redirect('/chat')
+            raise PermissionDenied
 
         #form
         form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
@@ -72,7 +73,7 @@ def room(request, room_name):
         if request.user.username in lista_participantes :
             return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
         else:
-            return redirect('/chat')
+            raise PermissionDenied
     else:
         return redirect("/login")
 
