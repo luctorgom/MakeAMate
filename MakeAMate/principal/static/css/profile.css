@@ -96,7 +96,7 @@ body{
 
 }
 
-.ActualizarPerfilFalse, .ActualizarContraseña, .ActualizarFoto,.ActualizarPerfilTrue{
+.ActualizarContraseña, .ActualizarFoto,.ActualizarPerfilTrue{
     padding: 10px;
     border-radius: 15px;
     background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
@@ -104,10 +104,7 @@ body{
 
 }
 
-.ActualizarPerfilTrue{
-    margin-left: 1rem;
-}
-.ActualizarPerfilFalse:active, .ActualizarContraseña:active, .ActualizarFoto:active,.ActualizarPerfilTrue:active{
+.ActualizarContraseña:active, .ActualizarFoto:active,.ActualizarPerfilTrue:active{
     background: rgba(255, 255, 255, 0.4);
 }
 #id_correo, #id_password, #id_password2, #id_nombre, #id_apellidos, #id_telefono_usuario, #id_lugar, #id_nacionalidad, #id_genero, #id_tags, #id_idiomas, #id_aficiones,#id_fecha_nacimiento,#id_zona_piso{
