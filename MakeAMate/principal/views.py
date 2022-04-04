@@ -115,7 +115,7 @@ def notificaciones_mates(request):
             print("Mate 1: " + str(mate1))
             print("Mate 2: " + str(mate2))
             lista_mates.append(mate1.userSalida)
-        except Mate.DoesNotExist:
+        except Mates.DoesNotExist:
             pass
     return lista_mates
 
