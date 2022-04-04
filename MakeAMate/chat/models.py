@@ -2,6 +2,7 @@ from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 import base64, os
+from datetime import datetime
 
 
 class Chat(models.Model):
@@ -18,9 +19,15 @@ class ChatRoom(models.Model):
     participants = models.ManyToManyField(User)
     publicKey = models.TextField(default=base64.urlsafe_b64encode(os.urandom(32)).decode())
     room_name = models.CharField(max_length=255, blank=True, default='')
+    last_message = models.DateTimeField(default=datetime.now())
 
     def group(self):
         if len(self.participants.all()) > 2:
             return True
         else:
             return False
+
+class LastConnection(models.Model):
+    name = models.ForeignKey('ChatRoom', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(default=datetime.now())

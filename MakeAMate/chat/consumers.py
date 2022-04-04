@@ -1,8 +1,10 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from chat.models import Chat,ChatRoom
+from psutil import users
+from chat.models import Chat,ChatRoom, LastConnection
 from cryptography.fernet import Fernet
+from datetime import datetime
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -29,6 +31,14 @@ class ChatConsumer(WebsocketConsumer):
             self.get_all_messages()
 
     def disconnect(self, close_code):
+        chat = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
+        last_connection = LastConnection.objects.get_or_create(name = chat, user = self.scope['user'])[0]
+        print(last_connection)
+        last_connection.timestamp = datetime.now().isoformat()
+        last_connection.save()
+        # chat.leidos[self.scope['user'].username]=datetime.now().isoformat()
+
+
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
@@ -70,11 +80,13 @@ class ChatConsumer(WebsocketConsumer):
         room = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
         f = Fernet(room.publicKey.encode())
         token = f.encrypt(bytes(text, encoding='utf-8'))
-        Chat.objects.create(
+        chat = Chat.objects.create(
             content = token.decode(),
             user = self.scope['user'],
             room = room
         )
+        room.last_message = chat.timestamp 
+        room.save()
 
     #El chatroom se guarda una vez que se envía el primer mensaje, lo suyo sería que cuando se creen grupos se guarde al inicio
     #Faltan añadir a los usuarios implicados
