@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Usuario, Tag, Aficiones, Mate, Idioma, Oferta, Foto, Piso
+
 # Register your models here.
 admin.site.register(Usuario)
 admin.site.register(Tag)

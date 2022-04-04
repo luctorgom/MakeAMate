@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.db import models
 from django.forms import NullBooleanField
-from datetime import date
+from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
+from datetime import date, datetime
 from django.utils import timezone
 
 
@@ -30,6 +32,14 @@ class Piso(models.Model):
 
     def __str__(self):
         return str(self.zona)
+        
+class Foto(models.Model):
+    titulo=models.CharField(max_length=30)
+    foto=models.ImageField(upload_to="principal/static/images/pisos")
+    piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.titulo)  
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -48,6 +58,10 @@ class Usuario(models.Model):
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
     foto=models.ImageField(upload_to="principal/static/images/users")
 
+    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
+    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
+    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
+
     def get_edad(self):
         today = date.today()
         return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
@@ -63,15 +77,8 @@ class Usuario(models.Model):
         return self.fecha_premium > today
 
     def __str__(self):
-        return str(self.usuario)
-
-class Foto(models.Model):
-    titulo=models.CharField(max_length=30)
-    foto=models.ImageField(upload_to="principal/static/images/pisos")
-    piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
-
-    def __str__(self):
-        return str(self.titulo)        
+        return str(self.usuario)        
+     
 
 class Mate(models.Model):
     mate=models.BooleanField(default=NullBooleanField)

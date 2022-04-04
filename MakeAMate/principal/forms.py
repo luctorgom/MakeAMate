@@ -19,10 +19,8 @@ class UsuarioForm(forms.Form):
     apellidos = forms.CharField(required=True, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
     correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
-
     zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
     telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
-    #VALIDAR TELEFONO, ZONA
 
     foto_usuario = forms.ImageField(label="Fotos")
     fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
@@ -65,7 +63,6 @@ class UsuarioForm(forms.Form):
         regex = re.compile("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
         if not re.fullmatch(regex, password):
             raise forms.ValidationError('La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número')
-
         return password
 
     def clean_password2(self):
@@ -87,7 +84,6 @@ class UsuarioForm(forms.Form):
 
         if len(nombre) > 150:
             raise forms.ValidationError('El nombre debe tener menos de 150 caracteres')
-
         return nombre
 
     def clean_apellidos(self):
@@ -112,7 +108,6 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError('La dirección de correo electrónico ya está en uso')
 
         return correo
-
 
     # def clean_piso(self):
     #     piso = self.cleaned_data.get('piso')
@@ -199,6 +194,105 @@ class UsuarioForm(forms.Form):
         caracteres = len(piso)
 
         if caracteres > 100:
-            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
-
+            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")       
         return piso
+
+#Formulario para editar perfil
+class UsuarioFormEdit(forms.Form):
+    zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
+    #foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
+    lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
+    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=(('False', 'False'),('True','True')))
+    descripcion = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
+
+    idiomas = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
+    tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
+    aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+    def clean_zona_piso(self):
+        piso = self.cleaned_data.get('zona_piso')
+        caracteres = len(piso)
+
+        if caracteres > 100:
+            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
+        
+        return piso
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        if tags.count() < 3:
+            raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
+
+        return tags
+
+    def clean_aficiones(self):
+        aficiones = self.cleaned_data.get('aficiones')
+        if aficiones.count() < 3:
+            raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+
+        return aficiones
+
+    def clean_idiomas(self):
+        idiomas = self.cleaned_data.get('idiomas')
+        if idiomas.count() < 1:
+            raise forms.ValidationError('Por favor, elige al menos un idioma')
+
+        return idiomas
+
+    def clean_genero(self):
+        genero = self.cleaned_data.get('genero')
+        generos = ['M', 'F', 'O']
+        if genero not in generos:
+            raise forms.ValidationError('El género debe ser Masculino, Femenino u Otro')
+
+        return genero
+
+    def clean_descripcion(self):
+        descripcion = self.cleaned_data.get('descripcion')
+        if len(descripcion) > 1000:
+            raise forms.ValidationError('La descripción debe contener menos de 1000 caracteres')
+
+        return descripcion
+
+    def clean_lugar(self):
+        lugar = self.cleaned_data.get('lugar')
+        if len(lugar) > 40:
+            raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
+        return lugar
+
+
+    def clean_piso_encontrado(self):
+        piso_encontrado = self.cleaned_data.get('piso_encontrado')
+        valores = ['True', 'False']
+        if piso_encontrado not in valores:
+            raise forms.ValidationError('El valor debe ser Sí o No')
+
+        return piso_encontrado
+
+class ChangePasswordForm(forms.Form):
+    password = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},widget=forms.PasswordInput(attrs={'placeholder': 'Nueva contraseña'}))
+    password2 = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar nueva contraseña'}))
+    
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        regex = re.compile("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
+        if not re.fullmatch(regex, password):
+            raise forms.ValidationError('La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número')
+        return password
+
+    def clean_password2(self):
+
+        password = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+
+        if not password2:
+            raise forms.ValidationError('Por favor, confirma tu contraseña')
+        if password != password2:
+            raise forms.ValidationError('Las contraseñas no coinciden')
+
+        return password2
+
+
+class ChangePhotoForm(forms.Form):
+    foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
