@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <div class="contenedorPerfil">
-    <form class="formularioPerfil" enctype="multipart/form-data">{% csrf_token %}
+    <form class="formularioPerfil" action="edit_photo/" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <div class="Titulo">
             <h1>Mi perfil</h1><br>
             <div class="editarFoto">         
@@ -13,13 +13,13 @@
                 <div class="fotoPerfil"> <img class="fotoPerfil" src="https://i.imgur.com/uIgDDDd.jpg" alt="img"></div>
                 <div class="form-control">{{  form_change_photo.foto_usuario  }}</div>
                 <div class="botones"> 
-                    <button type="button" class="ActualizarFoto">Actualizar Foto</button>
+                    <button type="submit" class="ActualizarFoto">Actualizar Foto</button>
                 </div>
                  
             </div>  
         </div>   
     </form>        
-    <form class="formularioPerfil" enctype="multipart/form-data">{% csrf_token %}
+    <form class="formularioPerfil" method="POST" enctype="multipart/form-data">{% csrf_token %}
 
         <div class="editarPerfil">         
             <h4 class="">Información general</h4><br>
@@ -54,7 +54,7 @@
         </div>
         
     </form> 
-    <form class="formularioPerfil" enctype="multipart/form-data">{% csrf_token %}
+    <form class="formularioPerfil" action="edit_password/" method="POST" enctype="multipart/form-data">{% csrf_token %}
 
             <div class="editarContraseña">
                 <h4 class="">Cambiar contraseña</h4><br>
@@ -64,7 +64,7 @@
                     <label class="form-label">Confirmar contraseña *</label>
                     <div class="form-control">{{  form_change_password.password2  }}</div>
                     <div class="botones"> 
-                        <button type="button" class="ActualizarContraseña">Cambiar contraseña</button>
+                        <button type="submit" class="ActualizarContraseña">Cambiar contraseña</button>
                     </div> 
                 </div>
 

@@ -319,11 +319,16 @@ def profile_view(request):
         'tags': usuario.tags.all(), 
         'aficiones': usuario.aficiones.all()
     }
-    
+
+    form_change_password = ChangePasswordForm()
+    form_change_photo = ChangePhotoForm()
     form = UsuarioFormEdit(initial = initial_dict)
     if request.method == 'POST':
+        form_change_password = ChangePasswordForm(request.POST)
         form = UsuarioFormEdit(request.POST, request.FILES)
+        form_change_photo = ChangePhotoForm(request.POST, request.FILES)
         if form.is_valid():
+            print("AQUI")
             form_foto = form.cleaned_data['foto_usuario']
             form_lugar = form.cleaned_data['lugar']
             form_genero = form.cleaned_data['genero']
@@ -337,136 +342,50 @@ def profile_view(request):
 
             user_actual = request.user
             perfil = Usuario.objects.get(usuario = user_actual)
-            print("USUARIO ACTUAL: " + str(user_actual.first_name))
-            print("PERFIL ACTUAL: " + str(perfil.usuario.first_name))
-
-            print("Zona piso: " + "'" + str(form_zona_piso) + "'")
-            print("boolean " + str(form_zona_piso != None or form_zona_piso != ""))
-            print("boolean " + str(form_zona_piso != ""))
             if form_zona_piso != "":
                 piso_usuario, no_existe = Piso.objects.get_or_create(zona = form_zona_piso)
                 print(no_existe)
                 if no_existe:
                     piso_usuario.save()
-                    print("CREADO EL PISO")
-                perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
+                Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
                 genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado,
                 piso = piso_usuario)
             else:
-                perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
+                Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
                     genero = form_genero, foto = form_foto, piso_encontrado = form_piso_encontrado)
 
             perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
-            print("PERFIL UPDATED: " + str(perfil_updated))
-            print("PERFIL UPDATED 2:" +str(perfil_updated_2))
-            print("Idiomas: " + str(form_idiomas))
             perfil_updated_2.idiomas.set(form_idiomas)
             perfil_updated_2.tags.set(form_tags)
             perfil_updated_2.aficiones.set(form_aficiones)
-            perfil_updated_2.save()
-            print("UPDATEADO EL PERFIL")
+            perfil_updated_2.save() 
 
-            return render(request, 'profile.html', {'form': form, 'usuario': perfil_updated_2})
-    return render(request, 'profile.html', {'form': form})
+            return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+                'form_change_photo': form_change_photo, 'usuario': perfil_updated_2})
 
-#Edicion del perfil
-def edit_profile_view(request):
-    if not request.user.is_authenticated:
-        return redirect(homepage)
-
-    user = request.user
-    usuario = Usuario.objects.get(usuario = user)
-
-    initial_dict = {
-        'foto_usuario': usuario.foto,
-        'lugar': usuario.lugar,
-        'genero': usuario.genero,
-        'zona_piso': usuario.piso.zona,
-        'descripcion': usuario.descripcion,
-        'piso_encontrado': usuario.piso_encontrado,
-        'idiomas': usuario.idiomas.all(),
-        'tags': usuario.tags.all(), 
-        'aficiones': usuario.aficiones.all()
-    }
-    
-    form = UsuarioFormEdit(initial = initial_dict)
-    if request.method == 'POST':
-        form = UsuarioFormEdit(request.POST)
-        if form.is_valid():
-            #form_foto = form.cleaned_data['foto_usuario']
-            form_lugar = form.cleaned_data['lugar']
-            form_genero = form.cleaned_data['genero']
-            form_zona_piso = form.cleaned_data['zona_piso']
-            form_descripcion = form.cleaned_data['descripcion']
-            form_piso_encontrado = form.cleaned_data['piso_encontrado']
-
-            form_idiomas = form.cleaned_data['idiomas']
-            form_tags = form.cleaned_data['tags']
-            form_aficiones = form.cleaned_data['aficiones']
-
-            user_actual = request.user
-            perfil = Usuario.objects.get(usuario = user_actual)
-            print("USUARIO ACTUAL: " + str(user_actual.first_name))
-            print("PERFIL ACTUAL: " + str(perfil.usuario.first_name))
-
-            print("Zona piso: " + "'" + str(form_zona_piso) + "'")
-            print("boolean " + str(form_zona_piso != None or form_zona_piso != ""))
-            print("boolean " + str(form_zona_piso != ""))
-            if form_zona_piso != "":
-                piso_usuario, no_existe = Piso.objects.get_or_create(zona = form_zona_piso)
-                print(no_existe)
-                if no_existe:
-                    piso_usuario.save()
-                    print("CREADO EL PISO")
-                perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                genero = form_genero, piso_encontrado = form_piso_encontrado,
-                piso = piso_usuario)
-            else:
-                perfil_updated = Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, piso_encontrado = form_piso_encontrado)
-
-            perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
-            print("PERFIL UPDATED: " + str(perfil_updated))
-            print("PERFIL UPDATED 2:" +str(perfil_updated_2))
-            print("Idiomas: " + str(form_idiomas))
-            perfil_updated_2.idiomas.set(form_idiomas)
-            perfil_updated_2.tags.set(form_tags)
-            perfil_updated_2.aficiones.set(form_aficiones)
-            perfil_updated_2.save()
-            print("UPDATEADO EL PERFIL")
-
-            return render(request, 'profile.html', {'user': perfil_updated_2.id, 'usuario': perfil_updated_2})
-    return render(request, 'edit_profile.html', {'form': form})
+    return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+            'form_change_photo': form_change_photo,})
 
 def edit_password_view(request):
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated: 
         return redirect(homepage)
-    form_change_password = ChangePasswordForm()
-    if request.method == 'POST':
-        form_change_password = ChangePasswordForm(request.POST)
-        if form_change_password.is_valid():
-            form_password = form_change_password.cleaned_data['password']
-            usuario = request.user
-            usuario.set_password(form_password)
-            usuario.save()
-        return render(request, 'profile.html')
-    return render(request, 'profile.html', {'form_change_password': form_change_password})
+    form_change_password = ChangePasswordForm(request.POST)
+    if form_change_password.is_valid():
+        form_password = form_change_password.cleaned_data['password']
+        usuario = request.user
+        usuario.set_password(form_password)
+        usuario.save()
+    return redirect("/profile") 
 
 def edit_photo_view(request):
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated: 
         return redirect(homepage)
-    form_change_photo = ChangePhotoForm()
-    if request.method == 'POST':
-        form_change_photo = ChangePhotoForm(request.POST, request.FILES)
-        if form_change_photo.is_valid():
-            form_photo = form_change_photo.cleaned_data['foto_usuario']
-            user = request.user
-            print(user.id)
-            print(form_photo)
-            Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
-        return render(request, 'profile.html')
-    return render(request, 'profile.html', {'form_change_photo': form_change_photo})
-
+    form_change_photo = ChangePhotoForm(request.POST, request.FILES)
+    if form_change_photo.is_valid(): 
+        form_photo = form_change_photo.cleaned_data['foto_usuario']
+        user = request.user
+        Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
+    return redirect("/profile")
 
 def notifications_list(request):
     template='notifications.html'
