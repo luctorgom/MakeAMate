@@ -101,8 +101,8 @@ def reject_mate(request):
 
 def payments(request):
     if not request.user.is_authenticated:
-        #return redirect(login_view)
-        return HttpResponseForbidden()
+        return redirect(login_view)
+        
     suscripcion=Suscripcion.objects.all()[0]
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     template='payments.html'
