@@ -9,16 +9,20 @@
     border-radius: 10px;
     text-align: center;
     position: relative;
-    transition: all .3s ease 0s
+    transition: all .3s ease 0s;
+    border-radius: 10px;
+
+
+}
+.title{
+    border-radius: 10px;
+
 }
 
 .pricingTable .title {
     padding: 40px 20px 170px;
     margin: 0 0 30px;
     background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
-    font-family: "Montserrat-Black";
-    font-size: 30px;
-    font-weight: 600;
     color: rgb(0, 0, 0);
     text-transform: uppercase;
     overflow: hidden;
@@ -47,6 +51,7 @@
     transform: rotate(-40deg)
 }
 
+
 .pricingTable .price-value {
     display: inline-block;
     width: 140px;
@@ -73,25 +78,21 @@
 
 .pricingTable .month {
     display: block;
-    font-family: "Montserrat-Black";
-    font-size: 16px;
-    font-weight: 400;
     line-height: 0
 }
 
 .pricingTable .pricing-content {
     list-style: none;
-    padding: 0;
-    margin-bottom: 20px;
-    text-align: left;
+    padding:0;
+    margin-top: 4vh;
+    margin-bottom: 2vh;
+    text-align: center;
     transition: all .3s ease 0s
+    
 }
 
 .pricingTable .pricing-content li {
     padding: 7px 0 7px 50px;
-    font-family: "Montserrat-Black";
-    font-size: 16px;
-    font-weight: 600;
     color: #000;
     letter-spacing: 1px;
     position: relative
@@ -99,8 +100,7 @@
 
 .pricingTable .pricing-content li:before {
     content: "\f00c";
-    font-family: "Montserrat-Black";
-    font-weight: 900;
+
     width: 24px;
     height: 24px;
     line-height: 20px;
@@ -127,9 +127,6 @@
     padding: 13px 45px;
     border-radius: 30px;
     background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
-    font-family: "Montserrat-Black";
-    font-size: 22px;
-    font-weight: 700;
     color: #404040;
     text-transform: uppercase;
     z-index: 1;
