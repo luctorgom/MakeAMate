@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from principal.models import Idioma, Aficiones, Tag, Usuario
+from principal.models import Aficiones, Tag, Usuario
 from django.contrib.auth.models import User
 import re
 from datetime import *

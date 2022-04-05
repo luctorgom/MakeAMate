@@ -19,13 +19,7 @@ class Tag(models.Model):
     etiqueta=models.CharField(max_length=40)
 
     def __str__(self):
-        return str(self.etiqueta)
-
-class Idioma(models.Model):
-    idioma=models.CharField(max_length=20)
-
-    def __str__(self):
-        return str(self.idioma)        
+        return str(self.etiqueta)     
 
 class Piso(models.Model):
     zona=models.CharField(max_length=100, default=None, blank=True, null=True)
@@ -50,7 +44,6 @@ class Usuario(models.Model):
     nacionalidad=models.CharField(max_length=20)
     genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))  
     estudios=models.CharField(max_length=40)
-    idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
     piso_encontrado=models.BooleanField(default=False)

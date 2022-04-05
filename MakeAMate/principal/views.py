@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from principal.forms import UsuarioForm, SmsForm
-from .models import Aficiones, Idioma, Piso, Tag, Usuario,Mate, Foto
+from .models import Aficiones, Piso, Tag, Usuario,Mate, Foto
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
