@@ -104,15 +104,20 @@ def payments(request):
     return render(request,template)
 
 def notificaciones_mates(request):
+    lista_notificaciones=[]
     loggeado= request.user
+    perfil=Usuario.objects.get(usuario=loggeado)
+    es_premium= perfil.es_premium()
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
+
     for i in lista_usuarios:
         try:
             mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
 
             lista_mates.append(mate1.userSalida)
+            lista_notificaciones.append((mate1,"Mates"))
         except Mate.DoesNotExist:
             pass
     return lista_mates
@@ -213,3 +218,17 @@ def registro(request):
             pronombres = form_pronombres, universidad = form_universidad, estudios = form_estudios, idiomas = form_idiomas, tags = form_tags, aficiones = form_aficiones)
             perfil.save()
     return render(request, 'registro.html', {'form': form})
+
+    if(es_premium):
+        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado)
+        for mR in matesRecibidos:
+            if(mR.userEntrada not in lista_mates):
+                lista_notificaciones.append((mR,"Premium"))
+    lista_notificaciones.sort(key=lambda mates: mates[0].fecha_mate, reverse=True)
+    return lista_notificaciones
+
+def notifications_list(request):
+    template='notifications.html'
+    notis=notificaciones_mates(request)
+    response={'notificaciones':notis}
+    return render(request,template,response)

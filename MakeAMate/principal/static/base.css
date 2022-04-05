@@ -18,8 +18,8 @@
 }
 
 .pepito {
-  position: fixed;
-  z-index: -1;
+  position: sticky;
+  z-index: 1;
 }
 
 
@@ -253,3 +253,5 @@
     color: #aaa;
     font-size: 12px
   }
+
+
