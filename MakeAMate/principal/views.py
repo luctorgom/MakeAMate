@@ -357,7 +357,6 @@ def profile_view(request):
                 perfil_updated_2.tags.set(form_tags)
                 perfil_updated_2.aficiones.set(form_aficiones)
                 perfil_updated_2.save() 
-                form.save() 
                 return redirect("/profile") 
 
         if "actualizarContraseña" in request.POST:
@@ -369,7 +368,6 @@ def profile_view(request):
                 usuario = request.user
                 usuario.set_password(form_password)
                 usuario.save()
-                form_change_password.save()
                 return redirect("/profile") 
             else:
                 initial_dict = {

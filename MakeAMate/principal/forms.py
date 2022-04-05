@@ -203,7 +203,7 @@ class UsuarioFormEdit(forms.Form):
     #foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
     lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
-    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=(('False', 'False'),('True','True')))
+    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False, 'False'),(True,'True')))
     descripcion = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
 
     idiomas = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
@@ -296,3 +296,10 @@ class ChangePasswordForm(forms.Form):
 
 class ChangePhotoForm(forms.Form):
     foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
+
+    def clean_foto_usuario(self):
+        foto_usuario = self.cleaned_data.get('foto_usuario')
+
+        if foto_usuario == None:
+            raise forms.ValidationError("Debe añadir una foto")
+        return foto_usuario

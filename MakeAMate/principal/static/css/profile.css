@@ -166,3 +166,9 @@ body{
         column-count: 2;
     }
   }
+.errorlist{
+    list-style-type:none;
+    color:rgb(153, 0, 255);
+    margin:0;
+    padding:0;
+}
