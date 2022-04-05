@@ -23,7 +23,7 @@ SECRET_KEY = 'django-insecure-%p)bjiwe#p6^ylzsqie+=!u@p1+%u(*pabb%b+v@9uc2+t@r+n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'principal'
+    'principal',
+    'channels',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'MakeAMate.wsgi.application'
+ASGI_APPLICATION = 'MakeAMate.asgi.application'
 
 
 # Database
@@ -80,6 +82,12 @@ DATABASES = {
         'PASSWORD': 'mate',
         'HOST': 'localhost',
         'PORT':5432,
+    }
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
 
@@ -121,6 +129,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+
+STATICFILES_FINDERS = (
+'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+'django.contrib.staticfiles.finders.FileSystemFinder',
+)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

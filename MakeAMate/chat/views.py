@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from chat.models import ChatRoom
-from principal.models import Mates, Usuario
+from principal.models import Mate, Usuario
 from django.db.models import Q
 from chat.forms import CrearGrupo
 from django.core.exceptions import PermissionDenied
@@ -103,10 +103,10 @@ def notificaciones_mates(request):
     lista_mates=[]
     for i in lista_usuarios:
         try:
-            mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
-            mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+            mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
+            mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
             lista_mates.append(mate1.userSalida)
-        except Mates.DoesNotExist:
+        except Mate.DoesNotExist:
             pass
     return lista_mates
 
