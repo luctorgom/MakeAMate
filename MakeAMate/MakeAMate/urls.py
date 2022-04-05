@@ -30,8 +30,8 @@ urlpatterns = [
     path("register/",views.registro,name="register"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
     path("profile/",views.profile_view,name="profile"),
-    path("profile/edit_password/", views.edit_password_view,name="edit_password"),
-    path("profile/edit_photo/", views.edit_photo_view,name="edit_photo"),
+    #path("profile/edit_password/", views.edit_password_view,name="edit_password"),
+    #path("profile/edit_photo/", views.edit_photo_view,name="edit_photo"),
     #path("profile/edit/", views.edit_profile_view,name="edit_profile"),
     path('', views.homepage,name="home")
 
