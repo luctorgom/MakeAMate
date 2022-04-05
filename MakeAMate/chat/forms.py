@@ -10,6 +10,14 @@ class CrearGrupo(forms.Form):
             choices=tuple([(name.id, name) for name in user_list]),
             )
         # self.fields['Nombre'].error_messages = {'required': ''}
+         
         # self.fields['Personas'].error_messages = {'required': ''}
     Nombre = forms.CharField(widget=forms.TextInput(attrs={'class': 'nombrePartitipante'}))
     Personas = forms.MultipleChoiceField()
+
+
+    def clean_Personas(self):
+        gente = self.cleaned_data.get('Personas')
+        if len(gente) < 2:
+            raise forms.ValidationError('Prueba')
+        return gente
