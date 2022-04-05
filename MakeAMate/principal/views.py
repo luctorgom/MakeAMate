@@ -180,21 +180,6 @@ def estadisticas_mates(request):
             listScore.append(round(score*100) if(score*100 < 100)  else 100)
         dictScore=dict(zip(listmates,listScore))
 
-        print(interacciones)
-        print("##############################################")
-        print(listperfiles)
-        print("##############################################")
-        print(sortedTags)
-        print("DICCIONARIO##############################################")
-        print(dictGrafica)
-        print("##############################################")
-        print(mRNoPremium)
-        print("##############################################")
-        print(mRPremium)
-        print("##############################################")
-        print(dictScore)
-
-
         params={"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
                 "matesPremium":mRPremium, "scoreLikes":dictScore}
         return render(request,'estadisticas.html',params)
