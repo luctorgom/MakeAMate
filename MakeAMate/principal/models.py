@@ -26,15 +26,15 @@ class Idioma(models.Model):
         return str(self.idioma)        
 
 class Piso(models.Model):
-    zona=models.CharField(max_length=100)
+    zona=models.CharField(max_length=100, blank=True, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
 
     def __str__(self):
         return str(self.zona)
         
 class Foto(models.Model):
-    titulo=models.CharField(max_length=30)
-    foto=models.ImageField(upload_to="principal/static/images/pisos")
+    titulo=models.CharField(max_length=30, blank=True, null=True)
+    foto=models.ImageField(upload_to="principal/static/images/pisos", blank=True, null=True)
     piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
 
     def __str__(self):
@@ -43,24 +43,21 @@ class Foto(models.Model):
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
-    fecha_nacimiento=models.DateField()
-    lugar=models.CharField(max_length=40)
-    nacionalidad=models.CharField(max_length=20)
+    fecha_nacimiento=models.DateField(blank=True, null=True)
+    lugar=models.CharField(max_length=40, blank=True, null=True)
+    nacionalidad=models.CharField(max_length=20, blank=True, null=True)
     genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))  
-    estudios=models.CharField(max_length=40)
+    estudios=models.CharField(max_length=40, blank=True, null=True)
     idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
-    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
-    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
-    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
-    foto=models.ImageField(upload_to="principal/static/images/users")
+    foto=models.ImageField(upload_to="principal/static/images/users", blank=True, null=True)
 
     telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
-    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
+    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True, blank=True, null=True)
     passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
     
     @classmethod

@@ -13,26 +13,25 @@ class SmsForm(forms.Form):
 
 
 class UsuarioForm(forms.Form):
-    username = forms.CharField(max_length=100,
-                               required=True,
+    username = forms.CharField(required=False, max_length=100,
                                widget=forms.TextInput(attrs={'placeholder': 'Usuario'}))
-    password = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña'}))
-    password2 = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'placeholder': 'Confirma la contraseña'}))
-    nombre = forms.CharField(required=True,min_length = 1, max_length = 150, widget=forms.TextInput(attrs={'placeholder': 'Nombre'}))
-    apellidos = forms.CharField(required=True, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
-    correo = forms.EmailField(required=True,widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
+    password = forms.CharField(required=False, widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña'}))
+    password2 = forms.CharField(required=False, widget=forms.PasswordInput(attrs={'placeholder': 'Confirma la contraseña'}))
+    nombre = forms.CharField(required=False, min_length = 1, max_length = 150, widget=forms.TextInput(attrs={'placeholder': 'Nombre'}))
+    apellidos = forms.CharField(required=False, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
+    correo = forms.EmailField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}))
 
 
-    zona_piso = forms.CharField(required = False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class'}))
-    telefono_usuario = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    zona_piso = forms.CharField(required=False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class'}))
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
 
-    foto_usuario = forms.ImageField(label="Inserta una foto")
-    fecha_nacimiento = forms.DateField(required=True,widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
-    lugar = forms.CharField(required=True,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
-    nacionalidad = forms.CharField(required=True,max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
-    genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),required=True)
-    tags = forms.ModelMultipleChoiceField(label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
-    aficiones = forms.ModelMultipleChoiceField(label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
+    foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
+    fecha_nacimiento = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS)
+    lugar = forms.CharField(required=False, max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    nacionalidad = forms.CharField(required=False, max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
+    genero = forms.ChoiceField(required=False, choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))
+    tags = forms.ModelMultipleChoiceField(required=False, label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
+    aficiones = forms.ModelMultipleChoiceField(required=False, label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
 
 
     # Validación del formulario
@@ -108,11 +107,13 @@ class UsuarioForm(forms.Form):
 
         return correo
 
-    
-   
     def clean_fecha_nacimiento(self):
         hoy = datetime.now().date()
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+
+        if fecha_nacimiento == None:
+            raise forms.ValidationError('La fecha de nacimiento no debe estar vacía')
+
         if fecha_nacimiento > hoy:
             raise forms.ValidationError('La fecha de nacimiento no puede ser posterior a la fecha actual')
 
@@ -125,6 +126,9 @@ class UsuarioForm(forms.Form):
 
     def clean_lugar(self):
         lugar = self.cleaned_data.get('lugar')
+
+        if len(lugar) == 0:
+            raise forms.ValidationError('El lugar no debe estar vacío')
         if len(lugar) > 40:
             raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
 
@@ -132,6 +136,9 @@ class UsuarioForm(forms.Form):
 
     def clean_nacionalidad(self):
         nacionalidad = self.cleaned_data.get('nacionalidad')
+
+        if len(nacionalidad) == 0:
+            raise forms.ValidationError('La nacionalidad no debe estar vacía')
         if len(nacionalidad) > 20:
             raise forms.ValidationError('La nacionalidad debe contener menos de 20 caracteres')
 
@@ -145,17 +152,12 @@ class UsuarioForm(forms.Form):
 
         return genero
 
-    # def clean_idiomas(self):
-    #     idiomas = self.cleaned_data.get('idiomas')
-    #     if idiomas.count() == 0:
-    #         raise forms.ValidationError('Por favor, elige al menos un idioma')
-
-    #     return idiomas
-
     def clean_tags(self):
         tags = self.cleaned_data.get('tags')
         if tags.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
+        if tags.count() > 5:
+            raise forms.ValidationError('Por favor, elige menos de cinco etiquetas que te definan')
 
         return tags
 
