@@ -1,7 +1,6 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from psutil import users
 from chat.models import Chat,ChatRoom, LastConnection
 from cryptography.fernet import Fernet
 from datetime import datetime
