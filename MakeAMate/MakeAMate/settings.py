@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'MakeAMate.wsgi.application'
+ASGI_APPLICATION = 'MakeAMate.asgi.application'
 
 
 # Database

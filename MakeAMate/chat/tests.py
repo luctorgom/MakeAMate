@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from .models import ChatRoom
-from principal.models import Usuario, Mates
+from principal.models import Usuario, Mate
 from django.contrib.auth.models import User
 from channels.testing import WebsocketCommunicator
 from chat.consumers import WebsocketConsumer
@@ -33,11 +33,11 @@ class ChatTest(TestCase):
                             genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
 
 
-        mate12 = Mates(userEntrada= user1, userSalida= user2, mate=True)
-        mate21 = Mates(userEntrada= user2, userSalida= user1, mate=True)
-        mate13 = Mates(userEntrada= user1, userSalida= user3, mate=True)
-        mate31 = Mates(userEntrada= user3, userSalida= user1, mate=True)
-        # mate41 = Mates(userEntrada= user4, userSalida= user1, mate=True)
+        mate12 = Mate(userEntrada= user1, userSalida= user2, mate=True)
+        mate21 = Mate(userEntrada= user2, userSalida= user1, mate=True)
+        mate13 = Mate(userEntrada= user1, userSalida= user3, mate=True)
+        mate31 = Mate(userEntrada= user3, userSalida= user1, mate=True)
+        # mate41 = Mate(userEntrada= user4, userSalida= user1, mate=True)
 
         set_participants = { user1,  user2}
 
