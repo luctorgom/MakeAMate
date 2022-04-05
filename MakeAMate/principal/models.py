@@ -1,7 +1,12 @@
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.db import models
 from django.forms import NullBooleanField
-from datetime import date
+from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator,RegexValidator
+from django.contrib.auth.models import User
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 
@@ -16,20 +21,22 @@ class Tag(models.Model):
     etiqueta=models.CharField(max_length=40)
 
     def __str__(self):
-        return str(self.etiqueta)
-
-class Idioma(models.Model):
-    idioma=models.CharField(max_length=20)
-
-    def __str__(self):
-        return str(self.idioma)        
+        return str(self.etiqueta)     
 
 class Piso(models.Model):
-    zona=models.CharField(max_length=100)
+    zona=models.CharField(max_length=100, default=None, blank=True, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
 
     def __str__(self):
         return str(self.zona)
+        
+class Foto(models.Model):
+    titulo=models.CharField(max_length=30)
+    foto=models.ImageField(upload_to="principal/static/images/pisos")
+    piso=models.ForeignKey(Piso, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.titulo)  
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -39,15 +46,17 @@ class Usuario(models.Model):
     nacionalidad=models.CharField(max_length=20)
     genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))  
     estudios=models.CharField(max_length=40)
-    idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
-
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
-    descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
+    descripcion=models.CharField(max_length=1000, default=None, null=True, blank=True)
     foto=models.ImageField(upload_to="principal/static/images/users")
+    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
+    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
+    sms_validado=models.BooleanField(default=False)
 
+    
     def get_edad(self):
         today = date.today()
         return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
@@ -63,15 +72,8 @@ class Usuario(models.Model):
         return self.fecha_premium > today
 
     def __str__(self):
-        return str(self.usuario)
-
-class Foto(models.Model):
-    titulo=models.CharField(max_length=30)
-    foto=models.ImageField(upload_to="principal/static/images/pisos")
-    piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
-
-    def __str__(self):
-        return str(self.titulo)        
+        return str(self.usuario)         
+    
 
 class Mate(models.Model):
     mate=models.BooleanField(default=NullBooleanField)

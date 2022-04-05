@@ -1,13 +1,23 @@
 from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta, datetime
 import json
+from tempfile import NamedTemporaryFile
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
 from django.utils import timezone
-from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto, Tag, Aficiones
 from django.contrib.auth.models import User
 from .recommendations import rs_score, BONUS_PREMIUM
+from .models import Aficiones, Mate, Tag, Usuario, Piso, Foto
+from django.contrib.auth.models import User
+from PIL import Image
+from io import StringIO
+from django.core.files import File
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+
 
 # Tests Sistema de Recomendación
 class RecommendationTestCase(TestCase):
@@ -89,13 +99,18 @@ class MateTestCase(TestCase):
         self.user3 = User(id=2,username="us3")
         self.user3.set_password('123')
 
-        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
-                            genero='F',estudios="Informática")
-        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
-                            genero='F',estudios="Informática")
-        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
-                            genero='F',estudios="Informática")
-        
+
+        tfn1 = "+34666777111"
+        tfn2 = "+34666777222"
+        tfn3 = "+34666777333"
+        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+                            genero='F',estudios="Informática", telefono = tfn1, sms_validado=True)
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+                            genero='F',estudios="Informática", telefono = tfn2, sms_validado=True)
+        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+                            genero='F',estudios="Informática", telefono = tfn3, sms_validado=True)
+
+    
         mate = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
 
         self.user1.save()
@@ -118,7 +133,7 @@ class MateTestCase(TestCase):
         self.assertTrue(json_resp['success'])
         self.assertFalse(json_resp['mate_achieved'])
 
-    
+
     def test_reject_mate(self):
         self.client.login(username='us1', password='123')
 
@@ -175,25 +190,25 @@ class MateTestCase(TestCase):
         response = self.client.post('/reject-mate/', data, format='json')
 
         self.assertEquals(response.status_code,404)
-    
+
     def test_accept_mate_not_logged(self):
         data = {'id_us': 0}
         response = self.client.post('/accept-mate/', data, format='json')
-        
+    
         self.assertEquals(response.status_code,302)
         self.assertRedirects(response,"/login/", target_status_code=200)
 
     def test_reject_mate_not_logged(self):
         data = {'id_us': 0}
         response = self.client.post('/reject-mate/', data, format='json')
-        
+    
         self.assertEquals(response.status_code,302)
         self.assertRedirects(response,"/login/", target_status_code=200)
-
+  
 class FiltesTests(TestCase):
     
     def setUp(self):
-        super().setUp()
+         super().setUp()
     
     @classmethod
     def setUpTestData(cls):
@@ -209,21 +224,29 @@ class FiltesTests(TestCase):
         userSara.set_password("asdfg")
         userSara.save()
 
+
+        tfn1 = "+34666777111"
+        tfn2 = "+34666777222"
+        tfn3 = "+34666777333"
+
         etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
-        idioma = Idioma.objects.create(idioma="Español")
-        
+    
         piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
 
-        Pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
-        Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria)
-        Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara)
-    
-    
 
-   #Nos logeamos como Pepe usuario sin Piso en Sevilla y 
-   # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
+        Pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, sms_validado=True)
+        Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria, telefono=tfn2, sms_validado=True)
+        Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara, telefono=tfn3, sms_validado=True)
+
+        
+
+
+
+
+    # Nos logeamos como Pepe usuario sin Piso en Sevilla y 
+    # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
     def test_filter_(self):
         c= Client()
         login= c.login(username='Pepe', password= 'asdfg')
@@ -231,7 +254,7 @@ class FiltesTests(TestCase):
 
         self.assertTrue( len(response.context['usuarios']) == 1)
         self.assertEqual(response.status_code, 200)
-       
+    
 
     #Nos logeamos como Pepe usuario sin Piso en Sevilla y 
     #comprobamos que efectivamente no salen 2 usuarios ya que uno de ellos no vive en la misma ciudad
@@ -247,9 +270,10 @@ class LoginTest(TestCase):
     def setUp(self):
         user = User(username='usuario')
         user.set_password('qwery')
+        tfn = "+34666777444"
         piso = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         perfil = Usuario(usuario=user,piso=piso,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
-                genero='F',estudios="Informática")
+                genero='F',estudios="Informática", telefono=tfn, sms_validado=True)
         user.save()
         perfil.save()
         super().setUp()
@@ -272,9 +296,8 @@ class LoginTest(TestCase):
         user = auth.get_user(c)
         self.assertFalse(user.is_authenticated)
 
-
 class NotificacionesTest(TestCase):
-    
+
     def setUp(self):
         user = User(username='usuario')
         user.set_password('qwery')
@@ -288,14 +311,17 @@ class NotificacionesTest(TestCase):
         user3.set_password('qwery')
         user3.save()
 
+        tfn1 = "+34666777666"
+        tfn2 = "+34666777777"
+        tfn3 = "+34666777888"
         piso_pepe = Piso.objects.create(zona="Calle Marqués Luca de Tena 1", descripcion="Descripción de prueba 1")   
         piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
         
         fecha_premium=timezone.now() + timedelta(days=120)
-        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", fecha_premium=fecha_premium)
-        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla")
-        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz")
+        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, sms_validado=True,fecha_premium=fecha_premium)
+        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", telefono=tfn2, sms_validado=True)
+        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz",telefono=tfn3, sms_validado=True)
 
         #MATE ENTRE user y user2
         mate12 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user2)
@@ -332,3 +358,143 @@ class NotificacionesTest(TestCase):
         response2 = c.get('/')
         lista_mates = response2.context['notificaciones']
         self.assertTrue(len(lista_mates) == 0)
+
+
+def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+
+        data = BytesIO()
+        Image.new(image_mode, size).save(data, image_format)
+        data.seek(0)
+        if not storage:
+            return data
+        image_file = ContentFile(data.read())
+        return storage.save(filename, image_file)
+    
+
+class RegistroTest(TestCase):
+
+    def setUp(self):
+        
+
+        Tag.objects.create(etiqueta='etiqueta1')
+        Tag.objects.create(etiqueta='etiqueta2')
+        Tag.objects.create(etiqueta='etiqueta3')
+
+
+        Aficiones.objects.create(opcionAficiones='Aficion1')
+        Aficiones.objects.create(opcionAficiones='Aficion2')
+        Aficiones.objects.create(opcionAficiones='Aficion3')
+
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+
+
+        self.data = {
+            'username':'usuariotest',
+            'password':'passwordtest1',
+            'password2': 'passwordtest1',
+            'nombre': 'nombreprueba',
+            'apellidos':'apellidosprueba',
+            'correo':'prueba@gmail.com',
+            'piso_encontrado': True,
+            'zona_piso':'Ejemplo de zona',
+            'telefono_usuario':'+34666777888',
+            'foto_usuario': avatar_file,
+            'fecha_nacimiento':'01-01-2000',
+            'lugar':'Ejemplo de lugar',
+            'nacionalidad':'Ejemplo',
+            'genero':'M',
+            'tags': [t.id for t in Tag.objects.all()],
+            'aficiones': [a.id for a in Aficiones.objects.all()],
+            'terminos': True
+        }
+
+        super().setUp()
+
+    def test_register_positive(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        existe_usuario = Usuario.objects.filter(telefono=self.data['telefono_usuario']).exists()
+        self.assertTrue(response.status_code == 302)
+        self.assertTrue(existe_usuario)
+        Usuario.objects.all().delete()
+        User.objects.all().delete() 
+
+    def test_username_already_exists(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        self.data['correo'] = "correonuevo@gmail.com"
+        self.data['telefono_usuario'] = "+34666777333"
+        response2 = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        self.assertTrue(num_usuarios == 1)
+        Usuario.objects.all().delete()
+        User.objects.all().delete() 
+
+    def test_different_passwords(self):
+        c = Client()
+        self.data['password'] = "password01"
+        self.data['password2'] = "password02"
+        response = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        self.assertTrue(num_usuarios == 0)
+        error = response.context['form'].errors['password2'][0]
+        self.assertTrue(error == "Las contraseñas no coinciden")
+        Usuario.objects.all().delete()
+        User.objects.all().delete() 
+
+    def test_email_already_exists(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        self.data['username'] = "NewUsername"
+        self.data['telefono_usuario'] = "+34666111222"
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+        self.data['foto_usuario'] = avatar_file
+        response2 = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        self.assertTrue(num_usuarios == 1)
+        error = response2.context['form'].errors['correo'][0]
+        self.assertTrue(error == "La dirección de correo electrónico ya está en uso")
+        Usuario.objects.all().delete()
+        User.objects.all().delete()
+
+    def test_phone_number_already_exists(self):
+        c = Client()
+        response = c.post('/register/', self.data)
+        self.data['username'] = "NewUsername"
+        self.data['correo'] = "newEmail@gmail.com"
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+        self.data['foto_usuario'] = avatar_file
+        response2 = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        self.assertTrue(num_usuarios == 1)
+        error = response2.context['form'].errors['telefono_usuario'][0]
+        self.assertTrue(error == "El teléfono ya está en uso")    
+        Usuario.objects.all().delete()
+        User.objects.all().delete()
+
+    def test_select_at_least_three_tags(self):
+        c = Client()
+        tags = self.data['tags'][0:2]
+        self.data['tags'] = tags
+        response = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        error = response.context['form'].errors['tags'][0]
+        self.assertTrue(num_usuarios == 0)
+        self.assertTrue(error == "Por favor, elige al menos tres etiquetas que te definan")
+
+    def test_select_at_least_three_aficiones(self):
+        c = Client()
+        aficiones = self.data['aficiones'][0:2]
+        self.data['aficiones'] = aficiones
+        response = c.post('/register/', self.data)
+        num_usuarios = Usuario.objects.all().count()
+        error = response.context['form'].errors['aficiones'][0]
+        self.assertTrue(num_usuarios == 0)
+        self.assertTrue(error == "Por favor, elige al menos tres aficiones que te gusten")
+
+
+
+
