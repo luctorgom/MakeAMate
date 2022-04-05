@@ -22,8 +22,8 @@ def paypal(request,pk):
     premium=loggeado.es_premium()
     if premium:
         return redirect(homepage)
-    template_name='pagos.html'
-    suscripcion= Suscripcion.objects.get(id=pk)
+    template_name='pagos/pagos.html'
+    suscripcion= get_object_or_404(Suscripcion, id=pk)
     context={'suscripcion': suscripcion}
     return render(request, template_name, context)
 
@@ -36,8 +36,6 @@ def paymentComplete(request):
     if premium:
         return redirect(homepage)
     fecha_premium = timezone.now() + relativedelta(months=1)
-    # Usuario.objects.update(usuario=request.user,
-    # defaults={'fecha_premium': fecha_premium})
     loggeado.fecha_premium=fecha_premium
     loggeado.save()
     return redirect(homepage)
