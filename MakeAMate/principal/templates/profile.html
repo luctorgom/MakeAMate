@@ -4,16 +4,20 @@
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 
 <script>
-    $(document).ready(function(){
+
+window.onload = esconder;
+
+function esconder() {
     $('#id_piso_encontrado').on('change', function() {
-            if($(this).val() === 'False') {
-                $('.zona_piso').hide();
-            } else {
-                $('.zona_piso').show();
-            }
-     });
-    });
+        if($(this).val() === 'False') {
+            $('.zona_piso').hide();
+        } else {
+            $('.zona_piso').show();
+        }
+ }); }
+
 </script>
+
 {% endblock %}
 {% block content %}
 
@@ -45,8 +49,8 @@
             <label class="form-label">Género</label><span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>  
             <div class="form-control">{{  form.genero  }}</div>
 
-            <label class="form-label">Idiomas</label><span class = "errorlist"> {{  form.idiomas.errors | striptags  }} </span>  
-            <div class="form-control">{{  form.idiomas  }}</div>
+            {% comment %} <label class="form-label">Idiomas</label><span class = "errorlist"> {{  form.idiomas.errors | striptags  }} </span>  
+            <div class="form-control">{{  form.idiomas  }}</div> {% endcomment %}
 
             <label class="form-label">Etiquetas</label><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span>            
             <div class="form-control">{{  form.tags  }}</div>
