@@ -21,16 +21,10 @@ class Tag(models.Model):
     etiqueta=models.CharField(max_length=40)
 
     def __str__(self):
-        return str(self.etiqueta)
-
-class Idioma(models.Model):
-    idioma=models.CharField(max_length=20)
-
-    def __str__(self):
-        return str(self.idioma)        
+        return str(self.etiqueta)     
 
 class Piso(models.Model):
-    zona=models.CharField(max_length=100, blank=True, null=True)
+    zona=models.CharField(max_length=100, default=None, blank=True, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
 
     def __str__(self):
@@ -46,13 +40,12 @@ class Foto(models.Model):
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None)
+    piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
     fecha_nacimiento=models.DateField()
     lugar=models.CharField(max_length=40)
     nacionalidad=models.CharField(max_length=20)
     genero= models.CharField(max_length=1,choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))  
     estudios=models.CharField(max_length=40)
-    idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
     piso_encontrado=models.BooleanField(default=False)

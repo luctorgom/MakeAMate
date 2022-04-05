@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 from django.test import Client, TestCase
 from django.conf import settings
 from django.contrib import auth
-from .models import Aficiones, Mate, Tag, Usuario, Idioma, Piso, Foto
+from .models import Aficiones, Mate, Tag, Usuario, Piso, Foto
 from django.contrib.auth.models import User
 from PIL import Image
 from io import StringIO
@@ -158,7 +158,6 @@ class FiltesTests(TestCase):
 
         etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
-        idioma = Idioma.objects.create(idioma="Español")
     
         piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")

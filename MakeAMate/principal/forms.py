@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from principal.models import Idioma, Aficiones, Tag, Usuario
+from principal.models import Aficiones, Tag, Usuario
 from django.contrib.auth.models import User
 import re
 from datetime import *
@@ -102,6 +102,9 @@ class UsuarioForm(forms.Form):
     def clean_correo(self):
         regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
         correo = self.cleaned_data.get('correo')
+        if len(correo) < 1:
+            raise forms.ValidationError('El correo no debe ser nulo')
+    
         if not re.fullmatch(regex, correo):
             raise forms.ValidationError('Inserte un correo electrónico válido')
 
