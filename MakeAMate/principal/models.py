@@ -30,7 +30,7 @@ class Idioma(models.Model):
         return str(self.idioma)        
 
 class Piso(models.Model):
-    zona=models.CharField(max_length=100)
+    zona=models.CharField(max_length=100, blank=True, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
 
     def __str__(self):
@@ -39,14 +39,14 @@ class Piso(models.Model):
 class Foto(models.Model):
     titulo=models.CharField(max_length=30)
     foto=models.ImageField(upload_to="principal/static/images/pisos")
-    piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    piso=models.ForeignKey(Piso, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.titulo)  
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None)
     fecha_nacimiento=models.DateField()
     lugar=models.CharField(max_length=40)
     nacionalidad=models.CharField(max_length=20)
@@ -55,17 +55,15 @@ class Usuario(models.Model):
     idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
-    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
-    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
-    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
-    descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
+    descripcion=models.CharField(max_length=1000, default=None)
     foto=models.ImageField(upload_to="principal/static/images/users")
 
     telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
     telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
     sms_validado=models.BooleanField(default=False)
+
     
     def get_edad(self):
         today = date.today()

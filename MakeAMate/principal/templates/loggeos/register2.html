@@ -246,13 +246,20 @@ p {
 
 {% block content %}
 <body  id = "all" oncontextmenu='return false' class='snippet-body'>
+    <div>
+        {% for key, value in form.errors.items %}
+            <span class="fieldWrapper">
+                {{ key }}:{{ value }}
+            </span>
+        {% endfor %}
+    </div>
 <div  class="container-fluid">
     <div  class="row justify-content-center">
         <div  class="col-11 col-sm-9 col-md-7 col-lg-6ii col-xl-5 text-center p-0 mt-3 mb-2">
             <div  class="card px-5 pt-4 pb-0 mt-3 mb-3">
 
                 <h2 id="heading">Registrate para ser usuario de MakeAMate</h2>
-                <form id="msform"  method="POST" enctype="multipart/form-data">
+                <form id="msform"  method="POST" onsubmit="return validateForm();" enctype="multipart/form-data">
 
                     {% csrf_token %}
                     <ul id="progressbar">
@@ -312,7 +319,8 @@ p {
                             </div> <label class="fieldlabels">Nacionalidad </label>   {{  form.nacionalidad  }}     
                             <label class="fieldlabels">¿Tienes piso?</label>   {{  form.piso_encontrado  }} 
                             <div class = "zona_piso">
-                            <label class="fieldlabels">Zona: </label>   {{  form.zona_piso  }} 
+                            <label class="fieldlabels">Zona: </label>   {{  form.zona_piso  }}
+                            
                         </div>
                             <br>
                             <label class="fieldlabels">Adjunta foto de ti</label>  {{  form.foto_usuario  }}  
@@ -333,7 +341,7 @@ p {
                                 <label for="id_checkbox"> Acepto <a href="terminos" target="_blank" class="text">los terminos y condiciones de este sitio. <input type="checkbox" name="checkbox" id="id_checkbox"></a> </label>
                             </div>                            
                         </div>
-                        <br> <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button>
+                        <br> <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
 
                     </fieldset>
                 </form>
@@ -426,6 +434,73 @@ p {
 
     });
     
+</script>
+<script>
+    function validateForm()
+    {
+        // Validate Title
+        var alerta = ""
+        var correo = $("#id_correo").val();
+        if (correo==="" || correo===null) {
+            //alert("El correo no puede estar vacío");
+            //return false;
+            alerta += "El correo no puede estar vacío \n"
+        }
+        var username = $("#id_username").val();
+        if (username==="" || username===null) {
+            //alert("El usuario no puede estar vacío");
+            //return false;
+            alerta += "El usuario no puede estar vacío \n"
+        }
+        /*var password = $("#id_password").val();
+        if (password==="" || password===null) {
+            alert("La contraseña no puede estar vacía");
+            return false;
+        }
+        var password2 = $("#id_password2").val();
+        if (password2==="" || password2===null) {
+            alert("La confirmación de la contraseña no puede estar vacía");
+            return false;
+        }else if(!(password2 === password)){
+            alert("La contraseña no coincide con la confimación");
+            return false;
+        }
+        var telefono = $("#id_telefono_usuario").val();
+        if (telefono==="" || telefono===null) {
+            alert("El teléfono no puede estar vacío");
+            return false;
+        }
+        var nombre = $("#id_apellidos").val();
+        if (nombre==="" || nombre===null) {
+            alert("El nombre no puede estar vacío");
+            return false;
+        }
+        var apellidos = $("#id_apellidos").val();
+        if (apellidos==="" || apellidos===null) {
+            alert("Los apellidos no puede estar vacíos");
+            return false;
+        }
+        var tags = $("#id_tags").val();
+        if (tags===[] || tags===null) {
+            alert("Debes elegir al menos 3 tags");
+            return false;
+        }
+        var aficiones = $("#id_aficiones").val();
+        if (aficiones===[] || aficiones===null) {
+            alert("Debes elegir al menos 3 aficiones");
+            return false;
+        }
+        var correo = $("#id_correo").val();
+        if (correo==="" || correo===null) {
+            alert("El correo no puede estar vacío");
+            return false;
+        }*/
+        if(!(alerta === "")){
+            alert(alerta)
+            return false;
+        }
+      return true;
+    }
 </script>
 <script>
 $('#id_piso_encontrado').on('change', function() {

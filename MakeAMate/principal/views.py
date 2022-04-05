@@ -1,3 +1,4 @@
+from hashlib import new
 from tabnanny import check
 from urllib import request
 from django.shortcuts import render, redirect
@@ -6,9 +7,8 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.http import HttpResponseForbidden
 from pagos.models import Suscripcion
-from .models import Usuario,Mate
-from principal.forms import UsuarioForm
-from .models import Idioma, Piso, Tag, Usuario,Mate
+from principal.forms import UsuarioForm, SmsForm
+from .models import Aficiones, Idioma, Piso, Tag, Usuario, Mate, Foto
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -16,11 +16,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from datetime import datetime
-from django.db.models import Q
-
-
 from principal import models
-
 from .forms import UsuarioForm, SmsForm
 import os
 import secrets
@@ -29,7 +25,6 @@ from twilio.base.exceptions import TwilioRestException
 import json
 from django.contrib import messages
 import ctypes
-
 
 
 def login_view(request):
@@ -134,9 +129,10 @@ def payments(request):
     return render(request,template,params) 
 
 
-def terminos(request):
-    template='loggeos/terminos_1.html'
-    return render(request,template) 
+def prueba(request):
+    form = SmsForm()
+    template='loggeos/registerSMS.html'
+    return render(request,template,{'form': form}) 
 
 
 def prueba(request):
@@ -221,7 +217,6 @@ def registro(request):
             form_lugar = form.cleaned_data['lugar']
             form_nacionalidad = form.cleaned_data['nacionalidad']
             form_genero = form.cleaned_data['genero']
-           # form_idiomas = form.cleaned_data['idiomas']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
@@ -231,8 +226,10 @@ def registro(request):
             user = User.objects.create(username=form_usuario,first_name=form_nombre,
             last_name=form_apellidos, email=form_correo)
             user.set_password(form_password)
+            user.save()
 
-            if form_zona_piso != None:
+
+            if form_zona_piso != "":
                 piso = Piso.objects.create(zona = form_zona_piso)
                 perfil = Usuario.objects.create(usuario = user, piso = piso,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
@@ -242,13 +239,13 @@ def registro(request):
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario) 
 
-           # perfil.idiomas.set(form_idiomas)
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
+            perfil.save()
             return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
-            #return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register2.html', {'form': form})
+
 
 def twilio(request, user_id):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -281,6 +278,8 @@ def twilio(request, user_id):
                                     .create(to=telefono, code=codigo)
                 if verification_check.status=="approved":                 
                     perfil.sms_validado = True
+                    perfil.save()
+
                     messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
                 else:
                     messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
@@ -288,8 +287,8 @@ def twilio(request, user_id):
             # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
             # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
-
         return render(request, 'homepage.html', {'form': form})
+
 
     verification = start_verification(telefono)
     form = SmsForm()
