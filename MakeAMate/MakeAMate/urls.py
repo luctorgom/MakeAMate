@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from principal import views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 from django.conf.urls import handler404,handler403,handler500
 
 
@@ -28,7 +30,9 @@ urlpatterns = [
     path("reject-mate/", views.reject_mate, name= "reject-mate"),
     path("payments/",views.payments,name="payments"),
     path("notifications/",views.notifications_list,name="notifications"),
+    path("info/",views.info,name="info"),
     path('', views.homepage,name="home"),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/favicon.ico'))),
     path('chat/',include('chat.urls')),
 ]
 

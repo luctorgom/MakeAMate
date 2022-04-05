@@ -137,6 +137,9 @@ def notifications_list(request):
     response={'notificaciones':notis}
     return render(request,template,response)
 
+def info(request):
+    return render(request,'info.html')
+
 def notificaciones_chat(request):
     user = request.user
     notificaciones_chat=[]
@@ -167,3 +170,4 @@ def error_404(request,exception):
 
 def error_500(request,*args, **argv):
     return render(request,'error500.html',status=500)
+
