@@ -1,3 +1,4 @@
+from hashlib import new
 from tabnanny import check
 from urllib import request
 from django.shortcuts import render, redirect
@@ -217,6 +218,7 @@ def registro(request):
             user = User.objects.create(username=form_usuario,first_name=form_nombre,
             last_name=form_apellidos, email=form_correo)
             user.set_password(form_password)
+            user.save()
 
             if form_zona_piso != None:
                 piso = Piso.objects.create(zona = form_zona_piso)
@@ -246,7 +248,7 @@ def twilio(request, user_id):
     perfil = Usuario.objects.get(usuario = user)
     piso = perfil.piso
     telefono = perfil.telefono
-
+    
     def start_verification(telefono):
         try:
             verification = client.verify \
@@ -268,6 +270,7 @@ def twilio(request, user_id):
                                     .create(to=telefono, code=codigo)
                 if verification_check.status=="approved":                 
                     perfil.sms_validado = True
+                    perfil.save()
                     messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
                 else:
                     messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
@@ -276,7 +279,7 @@ def twilio(request, user_id):
             # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
 
-        return render(request, 'homepage.html', {'form': form})
+        return render(request, 'loggeos/index.html', {'form': form})
 
     verification = start_verification(telefono)
     form = SmsForm()

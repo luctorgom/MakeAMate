@@ -28,7 +28,7 @@ class Idioma(models.Model):
         return str(self.idioma)        
 
 class Piso(models.Model):
-    zona=models.CharField(max_length=100)
+    zona=models.CharField(max_length=100, default=None, blank=True, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
 
     def __str__(self):
@@ -53,9 +53,6 @@ class Usuario(models.Model):
     idiomas=models.ManyToManyField(Idioma)
     tags=models.ManyToManyField(Tag)
     aficiones=models.ManyToManyField(Aficiones)
-    telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
-    telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
-    passcode=models.CharField(max_length=128, default=None, blank=True, null=True)
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
     descripcion=models.CharField(max_length=1000, default=None, blank=True, null=True)
