@@ -52,15 +52,6 @@
 
                         </div>                                 
                     </div>
-                    <button class="open-button" onclick="openForm()">Crear un grupo</button>
-                    <div class="form-popup" id="myForm">
-                        <h3>Seleccione las personas con las que desee crear el grupo:</h3>
-                        <form id="form-control" method="POST" action='' class="form-container">{% csrf_token %}
-                            {{form.as_p}}
-                            <input class="btn btn-primary btn-xl" type='submit' value='Crear grupo'/>
-                            <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
-                        </form>
-                    </div>  
                 </div>
             </div>
         </div>
@@ -69,13 +60,7 @@
 
     <script>
 
-        function openForm() {
-            document.getElementById("myForm").style.display = "block";
-        }
-        function closeForm() {
-            document.getElementById("myForm").style.display = "none";
-        }
-    
+        
         var modal = document.getElementById("myModal");
         var btn = document.getElementById("myBtn");
         var span = document.getElementsByClassName("close")[0];
