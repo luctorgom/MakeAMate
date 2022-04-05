@@ -59,7 +59,6 @@ class Usuario(models.Model):
     telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
     sms_validado=models.BooleanField(default=False)
 
-    
     def get_edad(self):
         today = date.today()
         return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))

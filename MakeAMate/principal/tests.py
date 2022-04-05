@@ -18,7 +18,6 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
-
 # Tests Sistema de Recomendación
 class RecommendationTestCase(TestCase):
     def setUp(self):
@@ -116,8 +115,16 @@ class MateTestCase(TestCase):
                             genero='F',estudios="Informática", telefono = tfn2, sms_validado=True)
         perfil3 = Usuario(usuario=self.user3,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática", telefono = tfn3, sms_validado=True)
-        
+
     
+
+        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+                            genero='F',estudios="Informática")
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+                            genero='F',estudios="Informática")
+        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+                            genero='F',estudios="Informática")
+
         mate = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
         mate1 = Mate(userEntrada=self.user2, userSalida=self.user1, mate=True)
 
@@ -131,8 +138,6 @@ class MateTestCase(TestCase):
         perfil1.save()
         perfil2.save()
         perfil3.save()
-        perfil4.save()
-        perfil5.save()
         mate1.save()
         mate2.save()
 
@@ -316,13 +321,6 @@ class FiltesTests(TestCase):
         tfn1 = "+34666777111"
         tfn2 = "+34666777222"
         tfn3 = "+34666777333"
-        self.userPepa=User(username="Pepa")
-        self.userPepa.set_password("asdfg")
-        self.userPepa.save()
-
-        self.userJuan=User(username="Juan")
-        self.userJuan.set_password("asdfg")
-        self.userJuan.save()
 
         etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
@@ -344,8 +342,6 @@ class FiltesTests(TestCase):
     # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
     def test_filter_(self):
         Pepe= Usuario.objects.create(usuario=self.userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
-        Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria)
-        Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara)
         Pepa=Usuario.objects.create(usuario=self.userPepa, fecha_nacimiento=date(2000,12,28), lugar="Sevilla")
         Juan=Usuario.objects.create(usuario=self.userJuan, fecha_nacimiento=date(2000,12,27), lugar ="Sevilla")
     
@@ -490,7 +486,7 @@ class NotificacionesTest(TestCase):
         self.assertTrue(len(lista_mates) == 0)
 
 
-def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+    def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
 
         data = BytesIO()
         Image.new(image_mode, size).save(data, image_format)
