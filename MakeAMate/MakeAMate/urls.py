@@ -34,7 +34,6 @@ urlpatterns = [
     path('chat/',include('chat.urls')),
     path('paypal/<int:pk>/', include('pagos.urls')),
     path('pagos/', include('pagos.urls')),
-    path("mates/",views.estadisticas_mates,name="mates"),
     path("register/",views.registro,name="register"),
     path("register/terminos/",views.terminos,name="terminos"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
