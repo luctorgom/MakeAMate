@@ -29,9 +29,8 @@ urlpatterns = [
     path('pagos/', include('pagos.urls')),
     path("mates/",views.estadisticas_mates,name="mates"),
     path("register/",views.registro,name="register"),
-    #path("register/terminos/",views.terminos,name="terminos"),
+    path("register/terminos/",views.terminos,name="terminos"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
-    path("register/prueba/",views.prueba,name="prueba"),
     path('', views.homepage,name="home")
 
 ]

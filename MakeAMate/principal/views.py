@@ -128,18 +128,10 @@ def payments(request):
     params={'suscripcion':suscripcion, 'premium':premium}
     return render(request,template,params) 
 
-
-def prueba(request):
-    form = SmsForm()
-    template='loggeos/registerSMS.html'
-    return render(request,template,{'form': form}) 
-
-
-def prueba(request):
-    form = SmsForm()
-    template='loggeos/registerSMS.html'
-    return render(request,template,{'form': form}) 
-
+def terminos(request):
+    template='loggeos/terminos_1.html'
+    return render(request,template) 
+    
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
