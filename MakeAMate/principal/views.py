@@ -212,7 +212,7 @@ def registro(request):
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
             form_zona_piso = form.cleaned_data['zona_piso']
-            form_telefono_usuario = form.cleaned_data['telefono_usuario']         
+            form_telefono_usuario = form.cleaned_data['telefono_usuario']        
             
 
             user = User.objects.create(username=form_usuario,first_name=form_nombre,
