@@ -36,7 +36,10 @@ class Foto(models.Model):
     piso=models.ForeignKey(Piso, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.titulo)  
+        return str(self.titulo)
+
+    def url_piso_relativa(self):
+        return str(self.foto).replace("principal","")    
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -70,6 +73,10 @@ class Usuario(models.Model):
         today = timezone.now()
         
         return self.fecha_premium > today
+
+    def url_perfil_relativa(self):
+        return str(self.foto).replace("principal","")
+
 
     def __str__(self):
         return str(self.usuario)         

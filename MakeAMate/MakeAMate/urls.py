@@ -40,7 +40,7 @@ urlpatterns = [
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
     path('', views.homepage,name="home"),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/favicon.ico'))),
-
+    path('estadisticas/',views.estadisticas_mates, name="estadisticas")
 ]
 
 handler403 = "principal.views.error_403"
