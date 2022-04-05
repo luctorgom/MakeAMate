@@ -1,0 +1,332 @@
+.chat-app .people-list {
+    width: 100%;
+    height:100%;
+    position: absolute;
+     /* position: sticky; */
+    /*position: -webkit-sticky; */
+    left: 0;
+    /*top: 0;*/
+    /*padding: 20px;*/
+    /*z-index: 7*/
+}
+
+.chat-app .chat {
+    margin-left: 14%;
+}
+
+.people-list {
+    -moz-transition: .5s;
+    -o-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s
+}
+
+.people-list .chat-list2 li {
+    padding: 10px 15px;
+    list-style: none;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.people-list .chat-list2 li:hover {
+    background: #b392e9;
+    cursor: pointer;
+}
+
+.informacion{
+    margin-top: 5%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+.people-list .chat-list2 li.active {
+    background: rgb(0, 204, 255)
+}
+
+/* .people-list .chat-list2 li .name {
+    font-size: 15px
+} */
+
+.people-list .chat-list2 img {
+    width: 45px;
+    border-radius: 50%
+}
+
+.people-list img {
+    /*float: left;*/
+    border-radius: 50%
+}
+
+.people-list .about {
+    padding-left: 8px
+}
+
+.people-list .status {
+    color: #999;
+    font-size: 13px
+}
+
+.chat .chat-header {
+    padding: 15px 20px;
+    border-bottom: 2px solid #9f6bf1;
+    position: sticky;
+}
+
+.botonesMensaje{
+    position: sticky;
+    bottom: 0;
+    position: fixed;
+    width:100%;
+    padding-bottom: 5px;
+    background-color: rgb(0, 38, 255);
+
+}
+.cuadroTexto{
+    width:90%;
+    background-color: #e47297;
+}
+
+.name{
+    line-height: 40px;
+}
+
+.botonEnviar{
+    width:10%;
+}
+.chat-header{
+    position: sticky;
+    top: 0;
+    /*background-color: #e47297;*/
+    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+
+}
+.row1{
+    position: sticky;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding-top: 12px;
+    padding-bottom: 5px;
+    z-index: 3;
+    background-color: rgb(0, 255, 128);
+
+}
+.chat .chat-header img {
+    float: left;
+    border-radius: 40px;
+    width: 40px
+}
+
+.chat .chat-header .chat-about {
+    float: left;
+    padding-left: 10px
+}
+
+.chat .chat-history {
+    padding: 20px;
+    /*border-bottom: 2px solid rgb(255, 0, 0);*/
+    border-bottom:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
+    overflow-y: scroll;
+    /*height: 100vh;*/
+    height: 75vh;
+}
+.list-unstyled {
+    column-count: 1;
+    margin-top: 2%;
+  }
+
+a.posiblesChats:link {
+    color:black;
+    text-decoration:none;
+}
+a.posiblesChats:visited {
+    color:purple;
+    text-decoration:none;
+}
+
+
+
+.float-right {
+    float: right
+}
+
+.clearfix2:after {
+    /*visibility: hidden;*/
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+    border-radius: 2%;
+    /*bottom:0;*/
+
+}
+/*Estilo del formulario de grupos:*/
+* {box-sizing: border-box;}*
+
+.open-button {
+    float:left;
+    background-color: #9f6bf1;
+    cursor: pointer;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    /*opacity: 0.8;*/
+    position: fixed;
+    bottom:0;
+    width: 14%;
+    /*padding: 3vh;
+    position: sticky;
+    bottom: 0;
+    background-color: #c1a4f1;*/
+  }
+  
+  .form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    border: 3px solid rgb(223, 124, 223);
+    background-color: white;
+    /*z-index: 9;*/
+    width: 264px;
+    text-align:center;
+
+  }
+  
+  /* Add styles to the form container */
+  .form-container {
+    /*max-width: 264px;*/
+    padding: 10px;
+    background-color: white;
+  }
+  
+  /* Full-width input fields */
+  .form-container input[type=text], .form-container input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #e98de9;
+  }
+  
+  /* When the inputs get focus, do something */
+  .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+  
+  /* Set a style for the submit/login button */
+  .form-container .btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+  }
+  
+  /* Add a red background color to the cancel button */
+  .form-container .cancel {
+    float:left;
+    background-color: red;
+    cursor: pointer;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    opacity: 0.8;
+  }
+  
+  /* Add some hover effects to buttons */
+  .form-container .btn:hover, .open-button:hover {
+    opacity: 1;
+  }
+
+
+
+  /*css del modal*/
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+  .logoCentrado{
+    width: 100px;
+    top: 30px;
+    margin-left: 50%;
+
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    margin-top: 15%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 45px;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /*css del botón*/
+  .myBtn {
+    display: inline-block;
+    border-radius: 10px;
+    background-color: #9f6bf1;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 20px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-left: 40%;
+    margin-right: 40%;
+    width: 20%;
+  }
+  
+  .myBtn span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+  .myBtn span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+  
+  .myBtn:hover span {
+    padding-right: 25px;
+  }
+  
+  .myBtn:hover span:after {
+    opacity: 1;
+    right: 0;
+  }

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link rel="stylesheet" href="/static/css/notifications.css" />
+<meta charset="UTF-8">
+<title>Notificaciones</title>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/notifications.css" />
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3 class="m-b-50 heading-line">Notificaciones<i class="fa fa-bell text-muted"></i></h3>
+        {%for i in notificaciones%}
+        {%if i.1 == "Mates" %}
+        <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
+            <div class="notification-list">
+                    <div class="notification-list_img">
+                        <img src="..\static\logotipo.png" alt="user">
+                    </div>
+                    <div class="notification-list_detail">
+                        <p><b>{{i.0.userSalida}}</b> hizo mate contigo</p>
+                        <p class="text-muted">Has hecho mate con {{i.0.userSalida}}. ¿Por qué no chateas con él?</p>
+                        <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
+                    </div>
+                    <div class="notification-list_feature-img">
+                        <img src="..\static\images\icons\Choca_esos_5.png" alt="Feature image">
+                    </div>
+            </div>
+        {% endif %}
+        {%if i.1 == "Premium" %}
+        <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
+            <div class="notification-list">
+                    <div class="notification-list_img">
+                        <img src="..\static\logotipo.png" alt="user">
+                    </div>
+                    <div class="notification-list_detail">
+                        <p><b>{{i.0.userEntrada}}</b> te ha dado like.👑</p>
+                        <p class="text-muted">Gracias a premium puedes conocer qué perfiles te han dado like.</p>
+                        <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
+                    </div>
+                    <div class="notification-list_feature-img">
+                        <img src="..\static\images\icons\heart.png" alt="Feature image">
+                    </div>
+            </div>
+        {% endif %}
+        {% endfor%}
+        </div>
+</div>
+{% endblock %}
