@@ -29,10 +29,6 @@ def index(request):
             raise PermissionDenied
     else:
         return redirect("/login")
-def grupos(request):
-    lista_mates = notificaciones_mates(request)
-    return render(request, 'chat/grupos.html',{'users': lista_mates})
-
 
 def room(request, room_name):
     if request.user.is_authenticated:

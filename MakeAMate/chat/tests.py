@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from channels.testing import WebsocketCommunicator
 from chat.consumers import WebsocketConsumer
 from channels.testing import WebsocketCommunicator
+from django.core.exceptions import PermissionDenied
 # Create your tests here.
 
 class ChatTest(TestCase):
@@ -40,7 +41,7 @@ class ChatTest(TestCase):
 
         set_participants = { user1,  user2}
 
-        chat1 = ChatRoom(name=1)
+        chat1 = ChatRoom(name=5)
 
 
         mate12.save()
@@ -79,20 +80,21 @@ class ChatTest(TestCase):
 
         #Hay 5 usuarios en la base de datos
         self.assertEqual(len(response.context['nombrechats']),5)
+
     def test_chat_user5_index(self):
         c = Client()
         login = c.login(username='us5', password= '123')
         response=c.get('/chat/')
 
-        #El usuario 5 no tiene chats, con lo cual se le redirige a /
-        self.assertRedirects(response, "/")
+        #El usuario 5 no tiene chats, con lo cual salta error de permiso
+        self.assertRaises(PermissionDenied)
 
     def test_chat_user1_chatroom(self):
         c = Client()
         login = c.login(username='us1', password= '123')
-        response=c.get('/chat/1/')
+        response=c.get('/chat/5/')
 
-        self.assertEqual(response.context['room_name'],"1")
+        self.assertEqual(response.context['room_name'],"5")
 
         #El usuario 1 ha hecho mate con 2 usuarios
         self.assertEqual(len(response.context['users']),2)
@@ -103,10 +105,48 @@ class ChatTest(TestCase):
         #Hay 5 usuarios en la base de datos
         self.assertEqual(len(response.context['nombrechats']),5)
 
+    def test_chat_user5_chatroom(self):
+        c = Client()
+        login = c.login(username='us5', password= '123')
+        response=c.get('/chat/5/')
+
+        #El usuario 5 no tiene chats, con lo cual salta error de permiso
+        self.assertRaises(PermissionDenied)
+
+        response=c.get('/chat/20/')
+        
+        #El usuario 5 ha intentado forzar la url yendo a un chat que no existe, con lo cual salta error de permiso
+        self.assertRaises(PermissionDenied)
+
+    def test_anon_user(self):
+        c = Client()
+        response=c.get('/chat/')
+
+        #El usuario anónimo no puede acceder, con lo cual salta error de permiso
+        self.assertRaises(PermissionDenied)
+
+        #El usuario anónimo no puede acceder, con lo cual salta error de permiso
+        response2=c.get('/chat/5/')
+        self.assertRaises(PermissionDenied)
+
+    def test_form_group_positive(self):
+        c = Client()
+        login = c.login(username='us1', password= '123')
+
+        #Se rellena el formulario
+        response=c.post('/chat/', data = {'Nombre':'GrupoTest','Personas': [1,2]})
+
+        #Se comprueba que haya un chat más
+        response2 = c.get('/chat/')
+        self.assertEqual(len(response.context['chats']),2)
+
+        #Se comprueba que el nombre del chat sea GrupoTest
+        response3 = c.get('/chat/1/')
+        self.assertEqual(response3.context['nombre_sala'], 'GrupoTest')
 
     async def test_consumer(self):
         application = WebsocketConsumer.as_asgi()
-        communicator = WebsocketCommunicator(application, path="/chat/1/")
+        communicator = WebsocketCommunicator(application, path="/chat/5/")
         connected, subprotocol = await communicator.connect()
         assert connected
         await communicator.send_to(text_data="hola")
