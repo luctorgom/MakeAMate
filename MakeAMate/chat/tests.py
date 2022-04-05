@@ -7,6 +7,7 @@ from chat.consumers import WebsocketConsumer
 from channels.testing import WebsocketCommunicator
 from django.core.exceptions import PermissionDenied
 from datetime import datetime
+
 # Create your tests here.
 
 class ChatTest(TestCase):
@@ -22,15 +23,15 @@ class ChatTest(TestCase):
         user5 = User(id=4,username="us5")
         user5.set_password('123')
 
-        perfil1 = Usuario(usuario=user1,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+        perfil1 = Usuario(usuario=user1,fecha_nacimiento=datetime.now(),lugar="Sevilla", telefono = "+34667865941", sms_validado=True,
                             nacionalidad="Española", genero='F',estudios="Informática")
-        perfil2 = Usuario(usuario=user2,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+        perfil2 = Usuario(usuario=user2,fecha_nacimiento=datetime.now(),lugar="Sevilla", telefono = "+34667865942", sms_validado=True,
                             nacionalidad="Española", genero='F',estudios="Informática")
-        perfil3 = Usuario(usuario=user3,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+        perfil3 = Usuario(usuario=user3,fecha_nacimiento=datetime.now(),lugar="Sevilla", telefono = "+34667865943", sms_validado=True,
                             nacionalidad="Española", genero='F',estudios="Informática")
-        perfil4 = Usuario(usuario=user4,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+        perfil4 = Usuario(usuario=user4,fecha_nacimiento=datetime.now(),lugar="Sevilla", telefono = "+34667865944", sms_validado=True,
                             nacionalidad="Española", genero='F',estudios="Informática")
-        perfil5 = Usuario(usuario=user5,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+        perfil5 = Usuario(usuario=user5,fecha_nacimiento=datetime.now(),lugar="Sevilla", telefono = "+34667865945", sms_validado=True,
                             nacionalidad="Española", genero='F',estudios="Informática")
 
 

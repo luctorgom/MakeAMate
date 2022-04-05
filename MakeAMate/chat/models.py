@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import base64, os
 from datetime import datetime
-
+from django.utils import timezone
 
 class Chat(models.Model):
     content = models.TextField(max_length=2000)
@@ -19,7 +19,7 @@ class ChatRoom(models.Model):
     participants = models.ManyToManyField(User)
     publicKey = models.TextField(default=base64.urlsafe_b64encode(os.urandom(32)).decode())
     room_name = models.CharField(max_length=255, blank=True, default='')
-    last_message = models.DateTimeField(default=datetime.now)
+    last_message = models.DateTimeField(default=timezone.now)
 
     def group(self):
         if len(self.participants.all()) > 2:
