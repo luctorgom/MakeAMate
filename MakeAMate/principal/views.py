@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .recommendations import rs_score
+from chat.views import crear_sala
 from chat.models import Chat,ChatRoom,LastConnection
 
 def login_view(request):
@@ -74,6 +75,7 @@ def accept_mate(request):
     try:
         reverse_mate = Mate.objects.get(userEntrada=usuario, userSalida=request.user)
         mate_achieved = reverse_mate.mate
+        crear_sala([request.user.id, usuario.id])
     except Mate.DoesNotExist:
         mate_achieved = False
 
