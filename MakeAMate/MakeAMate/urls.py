@@ -15,10 +15,12 @@ Including another URLconf
 """
 #from turtle import home
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from principal import views
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
+from django.conf.urls import handler404,handler403,handler500
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,5 +33,9 @@ urlpatterns = [
     path("info/",views.info,name="info"),
     path('', views.homepage,name="home"),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/favicon.ico'))),
-    
+    path('chat/',include('chat.urls')),
 ]
+
+handler403 = "principal.views.error_403"
+handler404 = "principal.views.error_404"
+handler500 = "principal.views.error_500"
