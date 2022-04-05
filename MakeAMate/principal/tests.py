@@ -313,6 +313,7 @@ class RegistroTest(TestCase):
             'nombre': 'nombreprueba',
             'apellidos':'apellidosprueba',
             'correo':'prueba@gmail.com',
+            'piso_encontrado': True,
             'zona_piso':'Ejemplo de zona',
             'telefono_usuario':'+34666777888',
             'foto_usuario': avatar_file,
@@ -322,8 +323,9 @@ class RegistroTest(TestCase):
             'genero':'M',
             'tags': [t.id for t in Tag.objects.all()],
             'aficiones': [a.id for a in Aficiones.objects.all()],
-            'piso_encontrado': False
+            'terminos': True
         }
+
         super().setUp()
 
     def test_register_positive(self):

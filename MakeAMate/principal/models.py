@@ -57,7 +57,7 @@ class Usuario(models.Model):
     aficiones=models.ManyToManyField(Aficiones)
     piso_encontrado=models.BooleanField(default=False)
     fecha_premium=models.DateTimeField(blank=True, default=None, null=True)
-    descripcion=models.CharField(max_length=1000, default=None)
+    descripcion=models.CharField(max_length=1000, default=None, null=True, blank=True)
     foto=models.ImageField(upload_to="principal/static/images/users")
 
     telefono_regex = RegexValidator(regex = r"^\+[1-9]\d{1,14}$")
