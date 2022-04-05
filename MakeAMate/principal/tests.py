@@ -88,23 +88,42 @@ class MateTestCase(TestCase):
         self.user2.set_password('123')
         self.user3 = User(id=2,username="us3")
         self.user3.set_password('123')
+        self.user4 = User(id=3,username="us4")
+        self.user4.set_password('123')
+        self.user5 = User(id=4,username="us5")
+        self.user5.set_password('123')
+
+        piso1 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        piso2 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
 
         perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
         perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
         perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
-                            genero='F',estudios="Informática")
+                            genero='F',estudios="Informática",piso=piso1)
+        perfil4 = Usuario(usuario=self.user4,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+                            genero='M',estudios="Informática",piso=piso2)
+        perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",nacionalidad="Española",
+                            genero='M',estudios="Informática")
         
-        mate = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
+        mate1 = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
+        mate2 = Mate(userEntrada=self.user4, userSalida=self.user1, mate=False)
 
         self.user1.save()
         self.user2.save()
         self.user3.save()
+        self.user4.save()
+        self.user5.save()
+        piso1.save()
+        piso2.save()
         perfil1.save()
         perfil2.save()
         perfil3.save()
-        mate.save()
+        perfil4.save()
+        perfil5.save()
+        mate1.save()
+        mate2.save()
 
     def test_accept_mate(self):
         self.client.login(username='us1', password='123')
@@ -160,6 +179,79 @@ class MateTestCase(TestCase):
 
         self.assertFalse(json_resp['success'])
 
+    def test_accept_not_same_city(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 4}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_not_same_city(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 4}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_rejected_mate(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 3}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+        
+
+    def test_reject_rejected_mate(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 3}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_already_mated(self):
+        self.client.login(username='us4', password='123')
+
+        data = {'id_us': 0}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_already_mated(self):
+        self.client.login(username='us3', password='123')
+
+        data = {'id_us': 0}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_both_pisos(self):
+        self.client.login(username='us4', password='123')
+
+        data = {'id_us': 2}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_both_pisos(self):
+        self.client.login(username='us3', password='123')
+
+        data = {'id_us': 3}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
     def test_accept_mate_inexistent_user(self):
         self.client.login(username='us1', password='123')
 
@@ -193,13 +285,9 @@ class MateTestCase(TestCase):
 class FiltesTests(TestCase):
     
     def setUp(self):
-        super().setUp()
-    
-    @classmethod
-    def setUpTestData(cls):
-        userPepe= User(username="Pepe")
-        userPepe.set_password("asdfg")
-        userPepe.save()
+        self.userPepe= User(username="Pepe")
+        self.userPepe.set_password("asdfg")
+        self.userPepe.save()
 
         userMaria=User(username="Maria")
         userMaria.set_password("asdfg")
@@ -209,6 +297,14 @@ class FiltesTests(TestCase):
         userSara.set_password("asdfg")
         userSara.save()
 
+        self.userPepa=User(username="Pepa")
+        self.userPepa.set_password("asdfg")
+        self.userPepa.save()
+
+        self.userJuan=User(username="Juan")
+        self.userJuan.set_password("asdfg")
+        self.userJuan.save()
+
         etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
         idioma = Idioma.objects.create(idioma="Español")
@@ -216,20 +312,22 @@ class FiltesTests(TestCase):
         piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
 
-        Pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
+        Pepe= Usuario.objects.create(usuario=self.userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
         Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria)
         Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara)
+        Pepa=Usuario.objects.create(usuario=self.userPepa, fecha_nacimiento=date(2000,12,28), lugar="Sevilla")
+        Juan=Usuario.objects.create(usuario=self.userJuan, fecha_nacimiento=date(2000,12,27), lugar ="Sevilla")
     
     
 
    #Nos logeamos como Pepe usuario sin Piso en Sevilla y 
    # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
-    def test_filter_(self):
+    def test_filter_piso_y_ciudad(self):
         c= Client()
         login= c.login(username='Pepe', password= 'asdfg')
         response=c.get('/')
 
-        self.assertTrue( len(response.context['usuarios']) == 1)
+        self.assertTrue( len(response.context['usuarios']) == 3)
         self.assertEqual(response.status_code, 200)
        
 
@@ -239,8 +337,32 @@ class FiltesTests(TestCase):
         c= Client()
         c.login(username='Pepe', password= 'asdfg')
         response=c.get('/')
-        self.assertFalse( len(response.context['usuarios']) == 2)
+        self.assertFalse( len(response.context['usuarios']) == 4)
         self.assertEqual(response.status_code, 200)
+
+    def test_filter_rejected_mate(self):
+        c= Client()
+        c.login(username='Pepe', password= 'asdfg')
+        response=c.get('/')
+        #Comprombamos que antes de rechazar a un usuario nos salen 3 en total
+        self.assertTrue( len(response.context['usuarios']) == 3)
+        mate=Mate.objects.create(userEntrada=self.userPepe, userSalida=self.userPepa, mate=False)
+        response=c.get('/')
+        #Comprobamos que tras rechazar a un usuario ese ya no nos aparece como usuario recomendado
+        self.assertTrue( len(response.context['usuarios']) == 2)
+
+    def test_filter_accepted_mate(self):
+        c= Client()
+        c.login(username='Pepe', password= 'asdfg')
+        response=c.get('/')
+        #Comprombamos que antes de hacer mate con un usuario nos salen 3 en total
+        self.assertTrue( len(response.context['usuarios']) == 3)
+        mate=Mate.objects.create(userEntrada=self.userPepe, userSalida=self.userJuan, mate=True)
+        response=c.get('/')
+        #Comprobamos que tras hacer mate con un usuario ese ya no nos aparece como usuario recomendado
+        self.assertTrue( len(response.context['usuarios']) == 2)
+    
+
 
 #Test de login
 class LoginTest(TestCase):
