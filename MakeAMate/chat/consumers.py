@@ -1,7 +1,6 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from psutil import users
 from chat.models import Chat,ChatRoom, LastConnection
 from cryptography.fernet import Fernet
 from datetime import datetime
@@ -13,14 +12,15 @@ class ChatConsumer(WebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
-        chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]
-        lista_participantes = []
-        for p in chatroom.participants.all():
-            lista_participantes.append(p.username)
+        user = self.scope['user']
+
+        chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'],participants = user)[0]
+
+        last_connection = LastConnection.objects.get_or_create(name = chatroom, user = user)[0]
+        last_connection.timestamp = datetime.now().isoformat()
         
         # Comprobación si el usuario pertenece a los participantes de ese grupo
-        if self.scope['user'].username in lista_participantes:
-
+        if chatroom:
             # Join room group
             async_to_sync(self.channel_layer.group_add)(
                 self.room_group_name,
@@ -33,12 +33,10 @@ class ChatConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         chat = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
         last_connection = LastConnection.objects.get_or_create(name = chat, user = self.scope['user'])[0]
-        print(last_connection)
+
         last_connection.timestamp = datetime.now().isoformat()
         last_connection.save()
-        # chat.leidos[self.scope['user'].username]=datetime.now().isoformat()
-
-
+        
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
@@ -50,7 +48,6 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
     
-        
         if message!="":
             self.store_message(message)
             # Send message to room group
@@ -74,7 +71,6 @@ class ChatConsumer(WebsocketConsumer):
                 'name': username,
                 'message': message
             }))
-
     
     def store_message(self,text):
         room = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
@@ -87,14 +83,6 @@ class ChatConsumer(WebsocketConsumer):
         )
         room.last_message = chat.timestamp 
         room.save()
-
-    #El chatroom se guarda una vez que se envía el primer mensaje, lo suyo sería que cuando se creen grupos se guarde al inicio
-    #Faltan añadir a los usuarios implicados
-
-    '''
-    def get_all_chatrooms(self):
-        user = self.scope['user']
-    '''
     
     def get_all_messages(self):
         chatroom = ChatRoom.objects.filter(name = self.scope['url_route']['kwargs']['room_name'])[0]

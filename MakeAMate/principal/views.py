@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from chat.views import crear_sala
+from chat.models import Chat,ChatRoom,LastConnection
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -36,6 +37,9 @@ def logout_view(request):
 def homepage(request):
     if request.user.is_authenticated:
         template = 'homepage.html'
+
+        chats = notificaciones_chat(request)
+        print(chats)
 
         registrado= get_object_or_404(Usuario, usuario=request.user)
         ciudad= registrado.lugar
@@ -103,21 +107,36 @@ def payments(request):
 def notificaciones_mates(request):
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
-    print("Usuario loggeado: " + str(loggeado))
-    print(loggeado)
-    print("Lista usuarios: " + str(lista_usuarios))
-    print(lista_usuarios)
     lista_mates=[]
     for i in lista_usuarios:
         try:
             mate1=Mates.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
-            mate2=Mates.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
-            print("Mate 1: " + str(mate1))
-            print("Mate 2: " + str(mate2))
             lista_mates.append(mate1.userSalida)
         except Mates.DoesNotExist:
             pass
     return lista_mates
+
+def notificaciones_chat(request):
+    user = request.user
+    notificaciones_chat=[]
+    chats = ChatRoom.objects.filter(participants=user)
+    for chat in chats:
+        con = LastConnection.objects.filter(user=user,name=chat)
+        if not con:
+            num = Chat.objects.filter(room = chat).count()
+        elif con[0].timestamp<chat.last_message:
+            num = Chat.objects.filter(room = chat,timestamp__gt=con[0].timestamp).exclude(user=user).count()
+        else:
+            num = 0
+        if num != 0:
+            if chat.group():
+                notificaciones_chat.append((chat.room_name,num,chat.last_message,"Chat"))
+            else:
+                nombre = chat.participants.all().filter(~Q(id=user.id))[0].username
+                notificaciones_chat.append((nombre,num,chat.last_message,"Chat"))
+    notificaciones_chat.sort(key=lambda tupla: tupla[2], reverse=True)
+    return notificaciones_chat
+
 
 def error_403(request,exception):
     return render(request,'error403.html')
