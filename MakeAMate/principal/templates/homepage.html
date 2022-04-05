@@ -96,9 +96,9 @@
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <img src="./{{i.foto}}" class="img-fluid float-left" style="width:10%">
+                      <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%">
                       <div class="infoPersonal">
-                        <p class="info"> {{i.usuario.first_name}}, {{i.getedad}} años</p>
+                        <p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>
                         {% if i.genero == "M" %}
                           <h5 class="centrado">Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/male.png"</h5>
                         {% elif i.genero == "F" %}
@@ -130,7 +130,11 @@
                 <div class="row justify-content-center  special-card">
                   <div class="col-sm-8 align-self-center">
                     <div class="card-body">
-                      <p class="card-text text-center">Soy {{i.usuario.username}} estudio {{i.estudios}} en {{i.universidad}} en {{i.lugar}}</p>
+                      {% if i.descripcion == null %}
+                        <p class="card-text text-center">Soy {{i.usuario.username}} estudio {{i.estudios}} en {{i.lugar}}</p>
+                      {% elif i.descripcion != null %}
+                        <p class="card-text text-center">{{i.descripcion}}</p>
+                      {% endif %}
                     </div>
                   </div>
                   <div class="col-sm-4 align-self-center">
