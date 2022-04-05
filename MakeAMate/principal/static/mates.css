@@ -5,7 +5,7 @@
 }
 
 #all{
-  background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+  background: linear-gradient(180deg, rgb(166, 164, 250) 0%, rgb(188, 174, 245) 50%, rgb(197, 160, 240) 100%);
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: "Montserrat-Bold";
@@ -61,8 +61,7 @@ h1, h2, h3, h4, h5, h6 {
        which tends to work better than using !important 
        (future you will thank you later)*/
     
-      background-color: rgba(210, 210, 210, 1);
-      opacity: .4;
+      background-color: rgb(240, 240, 240);
 }
 
 @media (max-width: 575px) {
@@ -265,4 +264,52 @@ h1, h2, h3, h4, h5, h6 {
     bottom: 0;
     z-index: 1
 
+}
+
+.glass-effect {
+    background-color: #b000c010;
+    backdrop-filter: blur(12 px);
+    -webkit-backdrop-filter: blur(12 px);
+}
+
+.nombre-edad {
+    font-family: 'Roboto', sans-serif;
+}
+
+#tagsContainer {
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+img.alineadoTextoImagenCentro{
+    vertical-align: middle;
+}
+
+img.alineadoTextoImagenArriba{
+    vertical-align: top;
+}
+
+
+
+.info {
+    font: 120% sans-serif;
+  }
+
+.location {
+    font: 130% sans-serif;
+}
+
+.infoPersonal p{
+    margin-left: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.infoPersonal .genero{
+    justify-self: right;
+}
+
+.infoPersonal .edad{
+    justify-self: center;
 }

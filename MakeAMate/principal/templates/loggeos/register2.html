@@ -6,6 +6,8 @@
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
      <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 <style>
 * {
     
@@ -13,11 +15,26 @@
     padding: 0
 }
 
+.errorlist{
+    list-style-type:none;
+    color:red;
+    font-size:20px;
+    margin:0;
+    padding:0;
+}
 
 
 p {
     color: grey
 }
+
+
+
+.select2{
+ width: 25% !important;
+ height: 10% !important;
+}
+
 
 #heading {
     text-transform: uppercase;
@@ -49,6 +66,8 @@ p {
 #msform fieldset:not(:first-of-type) {
     display: none
 }
+
+
 
 #msform input,
 #msform textarea {
@@ -165,6 +184,8 @@ p {
     background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
   }
 
+
+
 #progressbar #account:before {
     font-family: FontAwesome;
     content: "\f13e"
@@ -232,14 +253,16 @@ p {
 
 {% block content %}
 <body  id = "all" oncontextmenu='return false' class='snippet-body'>
+   
 <div  class="container-fluid">
     <div  class="row justify-content-center">
-        <div  class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
-            <div  class="card px-0 pt-4 pb-0 mt-3 mb-3">
+        <div  class="col-11 col-sm-9 col-md-7 col-lg-6ii col-xl-5 text-center p-0 mt-3 mb-2">
+            <div  class="card px-5 pt-4 pb-0 mt-3 mb-3">
+
                 <h2 id="heading">Registrate para ser usuario de MakeAMate</h2>
-                <form id="msform" action=""  method="POST" enctype="multipart/form-data">
+                <form id="msform"  method="POST" onsubmit="return validateForm();" enctype="multipart/form-data">
+
                     {% csrf_token %}
-                    <!-- progressbar -->
                     <ul id="progressbar">
                         <li class="active" id="account"><strong>Cuenta</strong></li>
                         <li id="personal"><strong>Personal</strong></li>
@@ -248,64 +271,81 @@ p {
                     </ul>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div> <br> <!-- fieldsets -->
+                    </div> <br> 
                     <fieldset>
                         <div  class="form-card">
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-5">
                                     <h2 class="fs-title">Informacion de la cuenta:</h2>
                                 </div>
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 1 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels" >Email: * </label> {{  form.correo  }}  <label class="fieldlabels">Usuario: *</label>{{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label> {{  form.password2  }} 
+                            </div> <label class="fieldlabels" >Email: * </label> <br>  <span class = "errorlist"> {{  form.correo.errors | striptags  }} </span>  {{  form.correo  }} <label class="fieldlabels">Usuario: *</label> <br>  <span class = "errorlist"> {{  form.username.errors | striptags  }} </span>  {{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> <br>  <span class = "errorlist"> {{  form.password.errors | striptags  }} </span>  {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label>  <br>  <span class = "errorlist"> {{  form.password2.errors | striptags  }} </span> {{  form.password2  }} 
+
+                            <label class="fieldlabels">Teléfono: *</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
+
                         </div> <input type="button" name="next" class="next action-button" value="Siguiente" />
                     </fieldset>
-                    <fieldset>
+                    
+                     <fieldset>
                         <div class="form-card">
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-5">
                                     <h2 class="fs-title">Informacion Personal:</h2>
                                 </div>
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 2 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nombre: *</label>{{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento</label>  {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudios</label>   {{  form.lugar  }}  
-                            <label class="fieldlabels">Género</label>   {{  form.genero  }}
+                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento</label>   <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label>  <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
+                            <label class="fieldlabels">Género</label>  <br>  <span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>   {{  form.genero  }}
+                            <br>
+                            
+                            <label class="fieldlabels">Tags</label>    {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
+                          
+                            <label class="fieldlabels">Aficiones</label>  {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
+                            <br>
                         </div> <input type="button" name="next" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
                     </fieldset>
+                   
                     <fieldset>
                         <div class="form-card">
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-5">
                                     <h2 class="fs-title">Ya queda menos !</h2>
                                 </div>
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 3 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nacionalidad </label>   {{  form.nacionalidad  }}   <label class="fieldlabels">¿Tienes piso?</label>   {{  form.piso  }} <label class="fieldlabels">Adjunta foto de tu piso</label> <input type="file" name="pic" accept="image/*"> <label class="fieldlabels">Adjunta foto de ti</label> <input type="file" name="pic" accept="image/*">
+                            </div> <label class="fieldlabels">Nacionalidad </label>  <br>  <span class = "errorlist"> {{  form.nacionalidad.errors | striptags  }} </span>  {{  form.nacionalidad  }}     
+                            <label class="fieldlabels">¿Tienes piso?</label>  <br>  <span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  {{  form.piso_encontrado  }} 
+                            <div class = "zona_piso">
+                            <label class="fieldlabels">Zona: </label>  <br>  <span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  {{  form.zona_piso  }}
+                            
+                        </div>
+                            <br>
+                            <label class="fieldlabels">Adjunta foto de ti</label> <br>  <span class = "errorlist"> {{  form.foto_usuario.errors | striptags  }} </span>  {{  form.foto_usuario  }}  
                         </div> <input type="button" name="next" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
                     </fieldset>
                     <fieldset>
                         <div class="form-card">
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-5">
                                     <h2 class="fs-title">Termina con :</h2>
                                 </div>
                                 <div class="col-5">
                                     <h2 class="steps">Paso 4 - 4</h2>
                                 </div>
                             </div> <br><br>
-                            <div class="w-full text-center">
-                                <a href="#" class="txt3">
-                                    Verificacion codigo sms
-                                </a>
-                            </div>
-                            
-                        
+                            <div class="" style ="display:flex;flex-direction:row">
+                               
+                                <label for="id_checkbox"> Acepto <a href="terminos" target="_blank" class="text">los terminos y condiciones de este sitio. </a> {{ form.terminos }} </label>
+
+                                
+                            </div>                         
                         </div>
-                        <button type="submit" value="Registrarme">
-                            Registrarme</button>
+                        <br> <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+
                     </fieldset>
                 </form>
             </div>
@@ -396,5 +436,80 @@ p {
     })
 
     });
+    
 </script>
+<script>
+    function validateForm()
+    {
+        // Validate Title
+        var alerta = ""
+        var correo = $("#id_correo").val();
+        if (correo==="" || correo===null) {
+            //alert("El correo no puede estar vacío");
+            //return false;
+            alerta += "El correo no puede estar vacío \n"
+        }
+        var username = $("#id_username").val();
+        if (username==="" || username===null) {
+            //alert("El usuario no puede estar vacío");
+            //return false;
+            alerta += "El usuario no puede estar vacío \n"
+        }
+        var password = $("#id_password").val();
+        if (password==="" || password===null) {
+            alerta += "La contraseña no puede estar vacía \n"
+        }
+        var password2 = $("#id_password2").val();
+        if (password2==="" || password2===null) {
+            alerta += "La confirmación de la contraseña no puede estar vacía \n"
+        }else if(!(password2 === password)){
+            alerta += "La contraseña y su confirmación no coinciden \n"
+        }
+        var telefono = $("#id_telefono_usuario").val();
+        if (telefono==="" || telefono===null) {
+            alerta += "El teléfono no puede estar vacío \n"
+        }
+        var nombre = $("#id_nombre").val();
+        if (nombre==="" || nombre===null) {
+            alerta += "El nombre no puede estar vacío \n"
+        }
+        var apellidos = $("#id_apellidos").val();
+        if (apellidos==="" || apellidos===null) {
+            alerta += "Los apellidos no pueden estar vacíos \n"
+        }
+        var fecha_nacimiento = $("#id_fecha_nacimiento").val();
+        if (fecha_nacimiento==="" || fecha_nacimiento===null) {
+            alerta += "La fecha de nacimiento no puede estar vacía \n"
+        }
+        var lugar = $("#id_lugar").val();
+        if (lugar==="" || lugar===null) {
+            alerta += "La ciudad dónde estudias no puede estar vacía \n"
+        }
+        var nacionalidad = $("#id_nacionalidad").val();
+        if (nacionalidad==="" || nacionalidad===null) {
+            alerta += "La nacionalidad no puede estar vacía \n"
+        }
+        var piso_encontrado = $("#id_piso_encontrado").val();
+        var zona_piso = $("#id_zona_piso").val();
+        if (piso_encontrado === "True" && (zona_piso==="" || zona_piso===null)) {
+            alerta += "La zona del piso no puede estar vacía si tienes un piso \n"
+        }
+        if(!(alerta === "")){
+            alert(alerta)
+            return false;
+        }
+      return true;
+    }
+</script>
+<script>
+$('#id_piso_encontrado').on('change', function() {
+        if($(this).val() === 'False') {
+            $('.zona_piso').hide();
+        } else {
+            $('.zona_piso').show();
+        }
+ });
+</script>
+<script>$('.select_field_class').select2( { placeholder: "Elige", maximumSelectionSize: 100 } );</script>
+
 {% endblock %}

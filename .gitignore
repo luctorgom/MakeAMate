@@ -108,3 +108,4 @@ ENV/
 
 # Visual Studio Code
 .vscode/
+MakeAMate/principal/migrations/0001_initial.py

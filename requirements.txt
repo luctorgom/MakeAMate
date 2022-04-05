@@ -3,7 +3,7 @@ psycopg2==2.9.3
 coverage==6.3.2
 django-heroku
 gunicorn
-channels==3.0.4
+channels
 Pillow==9.0.1
 python-dateutil==2.8.2
 django-twilio==0.13.2

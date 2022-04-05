@@ -10,7 +10,7 @@
 }
 
 #all{
-  background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+  background: linear-gradient(180deg, rgb(166, 164, 250) 0%, rgb(188, 174, 245) 50%, rgb(197, 160, 240) 100%);
 }
 
 h1, h2, h3, h4, h5, h6 {
