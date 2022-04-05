@@ -6,6 +6,7 @@ from channels.testing import WebsocketCommunicator
 from chat.consumers import WebsocketConsumer
 from channels.testing import WebsocketCommunicator
 from django.core.exceptions import PermissionDenied
+from datetime import datetime
 # Create your tests here.
 
 class ChatTest(TestCase):
@@ -21,16 +22,17 @@ class ChatTest(TestCase):
         user5 = User(id=4,username="us5")
         user5.set_password('123')
 
-        perfil1 = Usuario(usuario= user1,piso=True,fecha_nacimiento="2000-1-1",edad=1,lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
-        perfil2 = Usuario(usuario= user2,piso=True,fecha_nacimiento="2000-1-1",edad=1,lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
-        perfil3 = Usuario(usuario= user3,piso=True,fecha_nacimiento="2000-1-1",edad=1,lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
-        perfil4 = Usuario(usuario= user4,piso=True,fecha_nacimiento="2000-1-1",edad=1,lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
-        perfil5 = Usuario(usuario= user5,piso=True,fecha_nacimiento="2000-1-1",edad=1,lugar="Sevilla",nacionalidad="Española",
-                            genero='F',pronombres="Ella",idiomas="ES",universidad="US",estudios="Informática")
+        perfil1 = Usuario(usuario=user1,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+        perfil2 = Usuario(usuario=user2,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+        perfil3 = Usuario(usuario=user3,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+        perfil4 = Usuario(usuario=user4,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+        perfil5 = Usuario(usuario=user5,fecha_nacimiento=datetime.now(),lugar="Sevilla",
+                            nacionalidad="Española", genero='F',estudios="Informática")
+
 
 
         mate12 = Mate(userEntrada= user1, userSalida= user2, mate=True)
