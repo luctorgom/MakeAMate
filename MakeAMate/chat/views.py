@@ -9,10 +9,6 @@ from django.core.exceptions import PermissionDenied
 
 def index(request):
     if request.user.is_authenticated:
-        #form
-        form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
-        crear_grupo_form(request, form)
-
         lista_mates = notificaciones_mates(request)
         if len(lista_mates)>0:
             lista_chat = []
@@ -24,9 +20,9 @@ def index(request):
             usuarios = Usuario.objects.filter(~Q(id=request.user.id))
             for u in usuarios:
                 lista_usuarios.append(u)
-            return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios,'form':form})
+            return render(request, 'chat/index.html',{'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
         else:
-            raise PermissionDenied
+            return render(request, 'chat/index.html',{'users': [], 'chats':[], 'nombrechats':[]})
     else:
         return redirect("/login")
 

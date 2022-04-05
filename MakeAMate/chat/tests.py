@@ -89,7 +89,7 @@ class ChatTest(TestCase):
         response=c.get('/chat/')
 
         #El usuario 5 no tiene chats, con lo cual salta error de permiso
-        self.assertRaises(PermissionDenied)
+        self.assertEqual(len(response.context['chats']),0)
 
     def test_chat_user1_chatroom(self):
         c = Client()
@@ -136,7 +136,7 @@ class ChatTest(TestCase):
         login = c.login(username='us1', password= '123')
 
         #Se rellena el formulario
-        response=c.post('/chat/', data = {'Nombre':'GrupoTest','Personas': [1,2]})
+        response=c.post('/chat/5/', data = {'Nombre':'GrupoTest','Personas': [1,2]})
 
         #Se comprueba que haya un chat más
         response2 = c.get('/chat/')
@@ -145,6 +145,18 @@ class ChatTest(TestCase):
         #Se comprueba que el nombre del chat sea GrupoTest
         response3 = c.get('/chat/1/')
         self.assertEqual(response3.context['nombre_sala'], 'GrupoTest')
+
+    def test_form_group_negative(self):
+        c = Client()
+        login = c.login(username='us1', password= '123')
+
+        #Se rellena el formulario
+        response=c.post('/chat/5/', data = {'Nombre':'GrupoTest','Personas': [2]})
+
+        #Se comprueba que no haya un chat más
+        response2 = c.get('/chat/')
+        self.assertEqual(len(response.context['chats']),2)
+
 
     async def test_consumer(self):
         application = WebsocketConsumer.as_asgi()
