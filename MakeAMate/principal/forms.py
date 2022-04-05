@@ -4,13 +4,18 @@ from principal.models import Idioma, Aficiones, Tag, Usuario
 from django.contrib.auth.models import User
 import re
 from datetime import *
-from soupsieve import select
 from .models import Tag,Aficiones
 
 
 class SmsForm(forms.Form):
     codigo = forms.CharField(required=True)
 
+    def clean_codigo(self):
+        codigo = self.cleaned_data["codigo"]
+        if len(codigo)!= 6:
+            raise forms.ValidationError("El tamaño del código es de 6 caracteres")
+        return codigo
+        
 
 class UsuarioForm(forms.Form):
     username = forms.CharField(max_length=100,

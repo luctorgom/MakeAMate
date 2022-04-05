@@ -253,6 +253,11 @@
                     <h2 id="heading">Verifica tu cuenta</h2>
                 <form id="msform" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    {% endif %}
                     <fieldset>
                         <div  class="form-card">
                             <div class="row">
@@ -260,7 +265,7 @@
                             </div>
                             <br>
                         </div>
-                          <button type="submit" class="btn btn-outline-success" value="Verificar">Registrarme</button>
+                          <button type="submit" class="btn btn-outline-success" value="Submit">Registrarme</button>
                     </fieldset>
                 </form>
                 </div>
