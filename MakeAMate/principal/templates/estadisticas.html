@@ -1,0 +1,176 @@
+{% include "base.html" %}
+{% block extrahead %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard - Brand</title>
+    <link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="../../static/assets/fonts/fontawesome-all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>   
+
+{% endblock %}
+
+{% block content %}
+<body id="page-top">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Estadísticas</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xl-3 mb-4">
+                            <div class="card shadow border-start-primary py-2">
+                                <div class="card-body">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Número de interacciones totales</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{interacciones}}</span></div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-heart fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7 col-xl-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">INTERACCIONES POR DÍA</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <!--<canvas data-bss-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;bold&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}],&quot;yAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}]}}}"></canvas>-->
+                                        <canvas id="myChart" style="width:100%; max-width:600px"></canvas>
+                                        <script>
+                                            new Chart(document.getElementById("myChart").getContext("2d"), {
+                                                type: "bar",
+                                                data: {
+                                                   labels: [{% for d, m in matesGrafica.items %}"{{ d }}",{% endfor %}],
+                                                   datasets: [
+                                                      {
+                                                        label: "Número de mates",
+                                                        backgroundColor: ["#8e5ea2"],
+                                                        data: [{% for d, m in matesGrafica.items %}"{{ m }}",{% endfor %}]
+                                                      }
+                                                   ]
+                                                },
+                                              });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-xl-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">COMPARATIVA PREMIUM VS NO PREMIUM&nbsp;</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <!--<canvas data-bss-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;bold&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}],&quot;yAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}]}}}"></canvas>-->
+                                        <canvas id="comparativa_premium" style="width:100%; max-width:600px"></canvas>
+                                        <script>
+                                            new Chart(document.getElementById("comparativa_premium").getContext("2d"), {
+                                                type: "bar",
+                                                data: {
+                                                   labels: ["No Premium", "Premium"],
+                                                   datasets: [
+                                                      {
+                                                        label: "Número de mates",
+                                                        backgroundColor: ["#d40000","#006ed4"],
+                                                        data: [{{matesNPremium}}, {{matesPremium}}]
+                                                      }
+                                                   ]
+                                                },
+                                              });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-xl-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">TOP TAGS</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="pie">
+                                        <!--<canvas data-bss-chart="{&quot;type&quot;:&quot;doughnut&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Direct&quot;,&quot;Social&quot;,&quot;Referral&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#1cc88a&quot;,&quot;#36b9cc&quot;],&quot;borderColor&quot;:[&quot;#ffffff&quot;,&quot;#ffffff&quot;,&quot;#ffffff&quot;],&quot;data&quot;:[&quot;50&quot;,&quot;30&quot;,&quot;15&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}}"></canvas>-->
+                                        <canvas id="top_tags" style="width:100%; max-width:600px"></canvas>
+                                        <script>
+                                            new Chart(document.getElementById("top_tags"), {
+                                                type: 'pie',
+                                                data: {
+                                                  labels: [{% for t, n in topTags.items %}"{{ t }}",{% endfor %}],
+                                                  datasets: [{
+                                                    label: "Número de tags coincidentes",
+                                                    backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#ff54e3","#54fcff","#6bff54"],
+                                                    data: [{% for t, n in topTags.items %}"{{ n }}",{% endfor %}]
+                                                  }]
+                                                },
+                                                options: {
+                                                  title: {
+                                                    text: 'Top tags',
+                                                    display: true
+                                                  }
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">USUARIOS COMPATIBLES</h6>
+                                </div>
+                                <div class="card-body">
+                                    {% for us, score in scoreLikes.items %}
+                                        <h4 class="small fw-bold">{{us.username}}<span class="float-end">{{score}}%</span></h4>
+                                        <div class="progress mb-4">
+                                            <div class="progress-bar bg-info" aria-valuenow="{{score}}" aria-valuemin="0" aria-valuemax="100" style="width: {{score}}%;"><span class="visually-hidden">{{score}}%</span></div>
+                                        </div>
+                                    {% endfor %}    
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">USUARIOS QUE TE HAN HECHO MATE EN EL ÚLTIMO MES</h6>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    {% for us in lista %}
+                                        <li class="list-group-item">
+                                            <div class="row align-items-center no-gutters">
+                                                <div class="col me-2">
+                                                    <h6 class="mb-0"><strong>{{us.usuario.first_name}}, {{us.get_edad}} años</strong></h6>
+                                                </div>
+                                                <div class="col-auto"><img src="{{us.foto}}"></div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span></span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="../../static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/assets/js/chart.min.js"></script>
+    <script src="../../static/assets/js/bs-init.js"></script>
+    <script src="../../static/assets/js/theme.js"></script>
+</body>
+{% endblock %}

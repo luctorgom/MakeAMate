@@ -89,14 +89,15 @@
               </div>
             </div>
           </div>
-          {% for i,tags_i in usuarios.items%}
+          {% for i,tags_i in usuarios.items %}
           <div class="carousel-item">
             <div class="card mb-3">
               <div class="card-body">
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <img src="../static/images/JoseJuan.png" class="img-fluid float-left">
+                      <p>{{i.foto}}</p>
+                      <img src="{{i.foto}}" class="img-fluid float-left">
                       <div class="infoPersonal">
                         <p>{{i.usuario.username}}, {{i.edad}} años</p>
                         <p class="genero">Género: {{i.genero}}</p>

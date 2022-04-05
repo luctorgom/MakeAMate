@@ -28,4 +28,6 @@ urlpatterns = [
     path("mates/",views.estadisticas_mates,name="mates"),
     path('', views.homepage,name="home"),
     path('registro', views.registro, name="registro"),
+    #path('estadisticas/<int:user_id>/', views.estadisticas_mates)
+    path('estadisticas/',views.estadisticas_mates, name="estadisticas")
 ]
