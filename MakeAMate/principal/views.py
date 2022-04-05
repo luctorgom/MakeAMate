@@ -4,21 +4,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
-<<<<<<< HEAD
 from django.http import HttpResponseForbidden
-
-
 from pagos.models import Suscripcion
 from .models import Usuario,Mate
-
-
 from principal.forms import UsuarioForm
 from .models import Idioma, Piso, Tag, Usuario,Mate
-
-=======
-from principal.forms import UsuarioForm, SmsForm
-from .models import Aficiones, Idioma, Piso, Tag, Usuario,Mate, Foto
->>>>>>> B-015
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -259,7 +249,7 @@ def registro(request):
             #return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
 
     return render(request, 'loggeos/register2.html', {'form': form})
-    
+
 def twilio(request, user_id):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
@@ -304,29 +294,9 @@ def twilio(request, user_id):
     verification = start_verification(telefono)
     form = SmsForm()
     if request.method == 'POST':
-<<<<<<< HEAD
-        form = SmsForm(request.POST)
-        if form.is_valid():
-
-            form_codigo = form.cleaned_data["codigo"]
-
-            if verification.status=="pending":
-                verification_check = client.verify \
-                                    .services(service_sid) \
-                                    .verification_checks \
-                                    .create(to=telefono_validar, code=form_codigo)
-
-                if verification_check.status=="approved":
-                    if usuario.piso != None: piso.save() 
-                    user.save()
-                    usuario.save()
-                elif verification_check.status=="pending":
-                    return twilio(request, user_id)
-=======
         form = SmsForm(request.POST, request.FILES)
         if form.is_valid():
             codigo = form.cleaned_data["codigo"]
             return check_verification(telefono, codigo, verification)
->>>>>>> B-015
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
