@@ -64,7 +64,6 @@ class Usuario(models.Model):
     telefono = models.CharField(validators = [telefono_regex], max_length = 16, unique = True)
     sms_validado=models.BooleanField(default=False)
 
-    
     def get_edad(self):
         today = date.today()
         return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
@@ -78,6 +77,16 @@ class Usuario(models.Model):
         today = timezone.now()
         
         return self.fecha_premium > today
+
+
+    def __str__(self):
+        return str(self.usuario)
+
+class Foto(models.Model):
+    titulo=models.CharField(max_length=30)
+    foto=models.ImageField(upload_to="principal/static/images/pisos")
+    piso=models.ForeignKey(Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
+
 
     def __str__(self):
         return str(self.usuario)         
