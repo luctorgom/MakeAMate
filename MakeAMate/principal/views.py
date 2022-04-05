@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .recommendations import rs_score
+from chat.models import Chat,ChatRoom,LastConnection
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -45,6 +46,7 @@ def homepage(request):
             us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad)
 
         lista_mates=notificaciones_mates(request)
+        chats = notificaciones_chat(request)
         tags_authenticated = registrado.tags.all()
         us_sorted = sorted(us, key=lambda u: rs_score(registrado, u), reverse=True)
 
@@ -132,3 +134,34 @@ def notifications_list(request):
     notis=notificaciones_mates(request)
     response={'notificaciones':notis}
     return render(request,template,response)
+
+def notificaciones_chat(request):
+    user = request.user
+    notificaciones_chat=[]
+    chats = ChatRoom.objects.filter(participants=user)
+    for chat in chats:
+        con = LastConnection.objects.filter(user=user,name=chat)
+        if not con:
+            num = Chat.objects.filter(room = chat).count()
+        elif con[0].timestamp<chat.last_message:
+            num = Chat.objects.filter(room = chat,timestamp__gt=con[0].timestamp).exclude(user=user).count()
+        else:
+            num = 0
+        if num != 0:
+            if chat.group():
+                notificaciones_chat.append((chat.room_name,num,chat.last_message,"Chat"))
+            else:
+                nombre = chat.participants.all().filter(~Q(id=user.id))[0].username
+                notificaciones_chat.append((nombre,num,chat.last_message,"Chat"))
+    notificaciones_chat.sort(key=lambda tupla: tupla[2], reverse=True)
+    return notificaciones_chat
+
+
+def error_403(request,exception):
+    return render(request,'error403.html')
+
+def error_404(request,exception):
+    return render(request,'error404.html')
+
+def error_500(request,*args, **argv):
+    return render(request,'error500.html',status=500)
