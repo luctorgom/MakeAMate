@@ -155,7 +155,7 @@ class ChatTest(TestCase):
 
         #Se comprueba que no haya un chat más
         response2 = c.get('/chat/')
-        self.assertEqual(len(response.context['chats']),2)
+        self.assertEqual(len(response.context['chats']),1)
 
 
     async def test_consumer(self):
