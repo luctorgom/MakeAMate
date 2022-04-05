@@ -46,21 +46,16 @@ def homepage(request):
 
         usuarios_mate=Mate.objects.filter(userEntrada=request.user)
         set_mates={mate.userSalida.id for mate in usuarios_mate}
-       
         usuarios_rejected=Mate.objects.filter(userSalida=request.user, mate=False)
         set_rejected={mate.userEntrada.id for mate in usuarios_rejected}
-        
-
-
-
-        lista_mates=notificaciones_mates(request)
 
         tags_authenticated = registrado.tags.all()
         us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected)]
-       
         us_sorted = sorted(us_filtered, key=lambda u: rs_score(registrado, u), reverse=True)
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
+
+        lista_mates=notificaciones_mates(request)
         
         params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
         return render(request,template,params)
@@ -72,9 +67,17 @@ def accept_mate(request):
         return redirect(login_view)
 
     id_us = request.POST['id_us']
-    usuario = get_object_or_404(User, pk=id_us)  
+    usuario = get_object_or_404(User, pk=id_us)
+    
+    perfil_usuario = get_object_or_404(Usuario, usuario=usuario)
+    perfil_logeado = get_object_or_404(Usuario, usuario=request.user)
 
-    if usuario == request.user:
+    misma_ciudad = perfil_usuario.lugar == perfil_logeado.lugar
+    tienen_piso = perfil_usuario.tiene_piso() and perfil_logeado.tiene_piso()
+    is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
+    has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
+
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
         response = { 'success': False }
         return JsonResponse(response)
 
@@ -99,7 +102,15 @@ def reject_mate(request):
     id_us = request.POST['id_us']
     usuario = get_object_or_404(User, pk=id_us)  
     
-    if usuario == request.user:
+    perfil_usuario = get_object_or_404(Usuario, usuario=usuario)
+    perfil_logeado = get_object_or_404(Usuario, usuario=request.user)
+
+    misma_ciudad = perfil_usuario.lugar == perfil_logeado.lugar
+    tienen_piso = perfil_usuario.tiene_piso() and perfil_logeado.tiene_piso()
+    is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
+    has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
+
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
         response = { 'success': False, }
         return JsonResponse(response)
     

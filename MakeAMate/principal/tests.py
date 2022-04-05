@@ -88,23 +88,42 @@ class MateTestCase(TestCase):
         self.user2.set_password('123')
         self.user3 = User(id=2,username="us3")
         self.user3.set_password('123')
+        self.user4 = User(id=3,username="us4")
+        self.user4.set_password('123')
+        self.user5 = User(id=4,username="us5")
+        self.user5.set_password('123')
+
+        piso1 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        piso2 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
 
         perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
         perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
                             genero='F',estudios="Informática")
         perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
-                            genero='F',estudios="Informática")
+                            genero='F',estudios="Informática",piso=piso1)
+        perfil4 = Usuario(usuario=self.user4,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+                            genero='M',estudios="Informática",piso=piso2)
+        perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",nacionalidad="Española",
+                            genero='M',estudios="Informática")
         
-        mate = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
+        mate1 = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
+        mate2 = Mate(userEntrada=self.user4, userSalida=self.user1, mate=False)
 
         self.user1.save()
         self.user2.save()
         self.user3.save()
+        self.user4.save()
+        self.user5.save()
+        piso1.save()
+        piso2.save()
         perfil1.save()
         perfil2.save()
         perfil3.save()
-        mate.save()
+        perfil4.save()
+        perfil5.save()
+        mate1.save()
+        mate2.save()
 
     def test_accept_mate(self):
         self.client.login(username='us1', password='123')
@@ -155,6 +174,79 @@ class MateTestCase(TestCase):
         self.client.login(username='us1', password='123')
 
         data = {'id_us': 0}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_not_same_city(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 4}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_not_same_city(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 4}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_rejected_mate(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 3}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+        
+
+    def test_reject_rejected_mate(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 3}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_already_mated(self):
+        self.client.login(username='us4', password='123')
+
+        data = {'id_us': 0}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_already_mated(self):
+        self.client.login(username='us3', password='123')
+
+        data = {'id_us': 0}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_accept_both_pisos(self):
+        self.client.login(username='us4', password='123')
+
+        data = {'id_us': 2}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_both_pisos(self):
+        self.client.login(username='us3', password='123')
+
+        data = {'id_us': 3}
         response = self.client.post('/reject-mate/', data, format='json')
         json_resp = json.loads(response.content)
 
