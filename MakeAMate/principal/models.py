@@ -43,7 +43,7 @@ class Foto(models.Model):
 
 class Usuario(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    piso=models.OneToOneField(to=Piso, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    piso=models.ForeignKey(to=Piso, on_delete=models.SET_NULL, default=None, blank=True, null=True)
     fecha_nacimiento=models.DateField()
     lugar=models.CharField(max_length=40)
     nacionalidad=models.CharField(max_length=20)
