@@ -383,13 +383,11 @@ class NotificacionesTest(TestCase):
         self.assertTrue(len(lista_mates) == 1)
 
 
-    # El usuario "user3" no tiene ningún mate, por lo que su lista de mates será de tamaño 0
-    def test_notificaciones_2(self):
+   
 
     
     #El usuario "user3" no tiene ningún mate ni like, por lo que su lista de mates será de tamaño 0
     def test_notificaciones_false(self):
-
         c = Client()
         response = c.post('/login/', {'username': 'usuario3', 'pass': 'qwery'})
         response2 = c.get('/')
@@ -397,7 +395,7 @@ class NotificacionesTest(TestCase):
         self.assertTrue(len(lista_mates) == 0)
 
 
-def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+    def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
 
         data = BytesIO()
         Image.new(image_mode, size).save(data, image_format)
