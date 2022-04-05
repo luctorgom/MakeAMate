@@ -119,8 +119,8 @@ def notificaciones_mates(request):
             pass
     return lista_mates
 
-def error_403(request,*args, **argv):
-    return render(request,'error403.html',status=403)
+def error_403(request,exception):
+    return render(request,'error403.html')
 
 def error_404(request,exception):
     return render(request,'error404.html')
