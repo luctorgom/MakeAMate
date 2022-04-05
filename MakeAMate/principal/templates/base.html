@@ -78,7 +78,7 @@
                     </div>
                 </li>
                 <br><br>
-                <li><label for="check" class="icon-bubble2"></label> Chat</li>
+                <a id="a" href="/chat"> <li> <label for="check" class="icon-bubble2"></label> Chat</li></a>
                 <li><label for="check" class="icon-stats-dots"></label> Statistics</li>
                 <a id="a" href="{% url 'payments' %}">
                     <li><label for="check" class="icon-cart1"></label> Shop</li>
@@ -91,7 +91,7 @@
         </nav>
     </div>
     </div>
-    <div class="container-notificaciones" id="Notificaciones">
+    <!-- <div class="container-notificaciones" id="Notificaciones"> -->
         <div class="logo-notificaciones"></div>
         <a href="{% url 'home' %}"><img class="logo" src="/static/logotipo.png"></a>
         <div class="icon-notificaciones" id="bell"> <img id="notibell" src="..\static\images\icons\bell-on2.png"
@@ -119,7 +119,7 @@
 
         <a href="{% url 'notifications' %}">Ver todas las notificaciones.</a>
     </div>
-    </div>
+
 
     <div class="container-fluid pt-5 mt-xl-4 pepito">
         <div class="row">
