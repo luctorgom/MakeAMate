@@ -4,8 +4,27 @@
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 {% endblock %}
 {% block content %}
+<div>
+    {% for key, value in form.errors.items %}
+        <span class="fieldWrapper">
+            {{ key }}:{{ value }}
+        </span>
+    {% endfor %}
+
+    {% for key, value in form_change_photo.errors.items %}
+        <span class="fieldWrapper">
+            {{ key }}:{{ value }}
+        </span>
+    {% endfor %}
+
+    {% for key, value in form_change_password.errors.items %}
+        <span class="fieldWrapper">
+            {{ key }}:{{ value }}
+        </span>
+    {% endfor %}
+</div>
 <div class="contenedorPerfil">
-    <form class="formularioPerfil" action="edit_photo/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <form class="formularioPerfil" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <div class="Titulo">
             <h1>Mi perfil</h1><br>
             <div class="editarFoto">         
@@ -13,7 +32,7 @@
                 <div class="fotoPerfil"> <img class="fotoPerfil" src="https://i.imgur.com/uIgDDDd.jpg" alt="img"></div>
                 <div class="form-control">{{  form_change_photo.foto_usuario  }}</div>
                 <div class="botones"> 
-                    <button type="submit" class="ActualizarFoto">Actualizar Foto</button>
+                    <button name="actualizarFoto" type="submit" class="ActualizarFoto">Actualizar Foto</button>
                 </div>
                  
             </div>  
@@ -48,12 +67,12 @@
             <div class="form-control descripcion">{{  form.descripcion  }}</div>
 
             <div class="botones"> 
-                <button type="submit" class="ActualizarPerfilTrue">Actualizar Perfil</button>
+                <button name="actualizarPerfil" type="submit" class="ActualizarPerfilTrue">Actualizar Perfil</button>
             </div> 
         </div>
         
     </form> 
-    <form class="formularioPerfil" action="edit_password/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <form class="formularioPerfil" method="POST" enctype="multipart/form-data">{% csrf_token %}
 
             <div class="editarContraseña">
                 <h4 class="">Cambiar contraseña</h4><br>
@@ -63,9 +82,9 @@
                     <label class="form-label">Confirmar contraseña *</label>
                     <div class="form-control">{{  form_change_password.password2  }}</div>
                     <div class="botones"> 
-                        <button type="submit" class="ActualizarContraseña">Cambiar contraseña</button>
+                        <button name="actualizarContraseña" type="submit" class="ActualizarContraseña">Cambiar contraseña</button>
                     </div> 
-                </div>
+            </div>
 
     </form> 
 
