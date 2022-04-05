@@ -314,14 +314,15 @@ class EdicionTest(TestCase):
         avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
 
         self.data = {
+            'actualizarPerfil': 'actualizarPerfil',
             'zona_piso':'Ejemplo de zona',
             'lugar':'Ejemplo de lugar',
             'genero':'M',
             'piso_encontrado': True,
             'descripcion': 'Ejemplo de descripción',
             'idiomas': [i.id for i in Idioma.objects.all()],
-           'tags': [t.id for t in Tag.objects.all()],
-           'aficiones': [a.id for a in Aficiones.objects.all()],
+            'tags': [t.id for t in Tag.objects.all()],
+            'aficiones': [a.id for a in Aficiones.objects.all()],
 
         }
 
@@ -330,9 +331,8 @@ class EdicionTest(TestCase):
         c = Client()
         response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
         print(response1)
-        response = c.post('/profile/edit/', self.data)
+        response = c.post('/profile/', self.data)
         usuario_update = Usuario.objects.get(telefono="+34666777111")
-        self.assertTrue(usuario_update.piso.zona_piso == self.data['zona_piso'])
-        self.assertTrue(usuario_update.piso.foto_usuario == self.data['foto_usuario'])
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(usuario_update.piso.zona == self.data['zona_piso'])
+        self.assertTrue(response.status_code == 302)
 
