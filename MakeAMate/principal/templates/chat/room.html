@@ -104,6 +104,16 @@
         );
         alert(window.location.host)
         chatSocket.onmessage = function(e) {
+            
+            const chatSocket = new WebSocket(
+                'wss://'
+                + window.location.host
+                + '/ws/chat/'
+                + roomName
+                + '/'
+            );
+            
+            
             const data = JSON.parse(e.data);
             document.getElementById("usuarioProv").style.display = "none"
             var micapa = document.getElementById('chat-history');
