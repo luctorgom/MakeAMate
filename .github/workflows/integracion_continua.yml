@@ -33,8 +33,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install codacy-coverage
-    - name: Run migrations
-      run: python MakeAMate/manage.py makemigrations;python MakeAMate/manage.py migrate;
     - name: Run tests with coverage   
       run: cd MakeAMate;coverage run manage.py test; coverage xml;
     - name: Codacy Coverage Reporter
@@ -43,7 +41,7 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: MakeAMate/coverage.xml
   deploy:
-    if: ${{github.ref == 'refs/heads/despliegue-s2'}} 
+    if: ${{github.ref == 'refs/heads/despliegue-s2-prueba'}} 
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -52,6 +50,6 @@ jobs:
     - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
       with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "makeamate-s2"
+          heroku_app_name: "makeamate2022-s2"
           heroku_email: "luctorgom@alum.us.es"
-    - run: heroku run -a makeamate-s2 sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
+    - run: heroku run -a makeamate2022-s2 sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
