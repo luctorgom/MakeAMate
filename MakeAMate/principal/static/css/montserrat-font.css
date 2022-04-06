@@ -1,12 +1,5 @@
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Montserrat';
     src: url('../fonts/Montserrat/Montserrat-ThinItalic.ttf') format('truetype');
     font-weight: 100;
     font-style: italic;
