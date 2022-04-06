@@ -308,6 +308,9 @@ class EdicionTest(TestCase):
         
         piso_pepe = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         pepe= Usuario.objects.create(usuario=user_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, piso=piso_pepe)
+        pepe.idiomas.set(Idioma.objects.all())
+        pepe.tags.set(Tag.objects.all())
+        pepe.aficiones.set(Aficiones.objects.all())
         pepe.save()
 
         avatar = create_image(None, 'avatar.png')
@@ -323,16 +326,118 @@ class EdicionTest(TestCase):
             'idiomas': [i.id for i in Idioma.objects.all()],
             'tags': [t.id for t in Tag.objects.all()],
             'aficiones': [a.id for a in Aficiones.objects.all()],
+        }
 
+        lista_tags = []
+        indice = 0
+        for t in Tag.objects.all():
+            lista_tags.append(t.id)
+            indice += 1
+            if indice == 1:
+                break
+
+        self.data_wrong = {
+            'actualizarPerfil': 'actualizarPerfil',
+            'zona_piso':'Ejemplo de zona',
+            'lugar':'',
+            'genero':'W',
+            'piso_encontrado': True,
+            'descripcion': 'Ejemplo de descripción',
+            'idiomas': [i.id for i in Idioma.objects.all()],
+            'tags': lista_tags,
+            'aficiones': [a.id for a in Aficiones.objects.all()],
+        }
+
+        self.data_password = {
+            'actualizarContraseña': 'actualizarContraseña',
+            'password':'ContraseñaDeEjemplo1',
+            'password2':'ContraseñaDeEjemplo1',
+        }
+
+        self.data_password_wrong = {
+            'actualizarContraseña': 'actualizarContraseña',
+            'password':'ContraseñaEscritaMal12',
+            'password2':'ContraseñaDeEjemplo12',
+        }
+
+        self.data_password_wrong_2 = {
+            'actualizarContraseña': 'actualizarContraseña',
+            'password':'corto',
+            'password2':'corto',
+        }
+
+        avatar = create_image(None, 'avatar.png')
+        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+
+        self.data_photo = {
+            'actualizarFoto': 'actualizarFoto',
+            'foto_usuario': avatar_file,
+        }
+
+        self.data_photo_wrong = {
+            'actualizarFoto': 'actualizarFoto',
+            'foto_usuario': "EstoEsTextoYNoUnaFoto",
         }
 
 
-    def test_positive_edition(self):
+    def test_positive_edition_profile(self):
         c = Client()
         response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
-        print(response1)
         response = c.post('/profile/', self.data)
         usuario_update = Usuario.objects.get(telefono="+34666777111")
         self.assertTrue(usuario_update.piso.zona == self.data['zona_piso'])
         self.assertTrue(response.status_code == 302)
+
+    def test_negative_edition_profile(self):
+        c = Client()
+        response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
+        response = c.post('/profile/', self.data_wrong)
+        usuario_update = Usuario.objects.get(telefono="+34666777111")
+        self.assertFalse(usuario_update.lugar == self.data_wrong['lugar'])
+        self.assertTrue(response.status_code == 200)
+
+    def test_positive_edition_password(self):
+        c = Client()
+        response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
+        response = c.post('/profile/', self.data_password)
+        usuario_update = Usuario.objects.get(telefono="+34666777111")
+        user_update = usuario_update.usuario
+        response2 = c.post('/login/', {'username':'pepe', 'pass':'ContraseñaDeEjemplo1'})
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response2.status_code == 302)
+
+    def test_negative_edition_password(self):
+        c = Client()
+        response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
+        response = c.post('/profile/', self.data_password_wrong)
+        usuario_update = Usuario.objects.get(telefono="+34666777111")
+        response2 = c.post('/login/', {'username':'pepe', 'pass':'ContraseñaEscritaMal12'})
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response2.status_code == 302)
+
+    def test_negative_edition_password_2(self):
+        c = Client()
+        response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
+        response = c.post('/profile/', self.data_password_wrong_2)
+        usuario_update = Usuario.objects.get(telefono="+34666777111")
+        response2 = c.post('/login/', {'username':'pepe', 'pass':'corto'})
+        print(response2)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response2.status_code == 302)
+
+    def test_positive_edition_photo(self):
+        c = Client()
+        response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
+        response = c.post('/profile/', self.data_photo)
+        usuario_update = Usuario.objects.get(telefono="+34666777111")
+        self.assertTrue(usuario_update.foto==self.data_photo['foto_usuario'])
+        self.assertTrue(response.status_code == 302)
+
+    def test_negative_edition_photo(self):
+        c = Client()
+        response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
+        response = c.post('/profile/', self.data_photo_wrong)
+        usuario_update = Usuario.objects.get(telefono="+34666777111")
+        self.assertFalse(usuario_update.foto==self.data_photo['foto_usuario'])
+        self.assertTrue(response.status_code == 200)
 
