@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from .models import ChatRoom
+from chat.models import ChatRoom
 from principal.models import Usuario, Mate
 from django.contrib.auth.models import User
 from channels.testing import WebsocketCommunicator
