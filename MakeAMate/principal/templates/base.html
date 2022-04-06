@@ -74,13 +74,13 @@
             <nav class="menu">
                 <ul>
                     <br>
-                    <li class="mover">
-                        <div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}
+                    <a id="a" href="{% url 'profile' %}"><li class="mover">
+                         <div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}
                         </div>
-                    </li>
+                    </li></a>
                     <br><br>
                     <a id="a" href="/chat"> <li> <label for="check" class="icon-bubble2"></label> Chat</li></a>
-                    <li><label for="check" class="icon-stats-dots"></label> Statistics</li>
+                    <a id="a" href="{% url 'estadisticas' %}"><li><label for="check" class="icon-stats-dots"></label> Statistics</li></a>
                     <a id="a" href="{% url 'payments' %}">
                         <li><label for="check" class="icon-cart1"></label> Shop</li>
                     </a>
