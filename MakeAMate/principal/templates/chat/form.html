@@ -1,10 +1,20 @@
-
-
 <div class="form-popup" id="myForm">
     <h1>Seleccione las personas con las que desee crear el grupo</h1>
-    <form id="form-control" method="POST" action=''>{% csrf_token %}
+    <form id="form-control" method="POST" onsubmit="return validateForm();" action=''>{% csrf_token %}
         {{form.as_p}}
-        <input class="btn btn-primary btn-xl" type='submit' value='Realizaaaaaaaaaaaaaaaaaaar busqueda'/>
+        <input class="btn btn-primary btn-xl" type='submit' value='Realizaaaaaaaaaaaaaaaaaaar busqueda' />
         <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
+        <span class = "errorlist"> {{  form.Personas.errors | striptags  }} </span>
     </form>
-  </div> 
+</div>
+
+<script>
+    function validateForm() {
+        // Validate Title
+        var correo = $("#id_Personas").val();
+        if (correo === "" || len(correo<2)) {
+            alert("El correo no puede estar vacío");
+            return false;
+        }}
+
+</script>

@@ -391,4 +391,12 @@ body{
     opacity: 1;
   }
 
+  .errorlist{
+    list-style-type:none;
+    color:rgb(255, 133, 133);
+    font-size:15px;
+    margin:0;
+    padding:0;
+}
+
 

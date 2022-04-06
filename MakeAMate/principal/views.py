@@ -140,6 +140,9 @@ def notifications_list(request):
 def info(request):
     return render(request,'info.html')
 
+def terminos(request):
+    return render(request,'terminos.html')
+
 def notificaciones_chat(request):
     user = request.user
     notificaciones_chat=[]

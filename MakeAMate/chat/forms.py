@@ -9,9 +9,9 @@ class CrearGrupo(forms.Form):
             widget = forms.CheckboxSelectMultiple,
             choices=tuple([(name.id, name) for name in user_list]),
             )
-        # self.fields['Nombre'].error_messages = {'required': ''}
+        self.fields['Nombre'].error_messages = {'required': 'Seleccione un nombre para el grupo'}
          
-        # self.fields['Personas'].error_messages = {'required': ''}
+        self.fields['Personas'].error_messages = {'required': 'Seleccione al menos 2 usuarios '}
     Nombre = forms.CharField(widget=forms.TextInput(attrs={'class': 'nombrePartitipante'}))
     Personas = forms.MultipleChoiceField()
 
@@ -19,5 +19,5 @@ class CrearGrupo(forms.Form):
     def clean_Personas(self):
         gente = self.cleaned_data.get('Personas')
         if len(gente) < 2:
-            raise forms.ValidationError('Prueba')
+            raise forms.ValidationError('Debe seleccionar al menos 2 personas')
         return gente
