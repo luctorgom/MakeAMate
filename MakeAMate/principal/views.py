@@ -160,8 +160,13 @@ def payments(request):
     suscripcion=Suscripcion.objects.all()[0]
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     template='payments.html'
+    hay_suscripciones=True
+    if(suscripcion==None): 
+        hay_suscripciones=False
+
     premium= loggeado.es_premium()
-    params={'suscripcion':suscripcion, 'premium':premium}
+    params={'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':hay_suscripciones}
+
     return render(request,template,params) 
 
 def terminos(request):
@@ -465,7 +470,7 @@ def profile_view(request):
                 form_change_password = ChangePasswordForm()
                 form_change_photo = ChangePhotoForm()
                 return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
-                'form_change_photo': form_change_photo})
+                'form_change_photo': form_change_photo,'piso_encontrado':usuario.piso_encontrado})
 
         if "actualizarContraseña" in request.POST:
             form_change_password = ChangePasswordForm(request.POST)

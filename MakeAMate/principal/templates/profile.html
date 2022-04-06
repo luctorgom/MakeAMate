@@ -8,7 +8,7 @@
 window.onload = esconder;
 
 function esconder() {
-    $('#id_piso_encontrado').on('change', function() {
+    $('#id_piso_encontrado').on('click', function() {
         if($(this).val() === 'False') {
             $('.zona_piso').hide();
         } else {
@@ -63,7 +63,8 @@ function esconder() {
 
             <label class="form-label">Piso Encontrado</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
             <div class="form-control">{{  form.piso_encontrado  }}</div>
-            <div class="zona_piso"name="zona_piso" >
+            
+            <div class="zona_piso"name="zona_piso">
                 <label class="form-label">Zona Piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
                 <div class="form-control">{{  form.zona_piso  }}</div>
             </div>
