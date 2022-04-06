@@ -89,7 +89,10 @@ DATABASES = {
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONGIF": {
+            "hosts": [("https://makeamate2022-s2.herokuapp.com", 6379)]
+        }
     }
 }
 
