@@ -120,54 +120,70 @@ def notificaciones_mates(request):
 def estadisticas_mates(request):
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
+    es_premium= perfil.es_premium()
+    
+    if(es_premium):
+        #NUMERO DE INTERACIONES
+        interacciones=Mate.objects.filter(userSalida=loggeado).count()
+        
+        #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
+        mesActual=datetime.now().month
+        listmates=[]
+        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
+        for mR in matesRecibidos:
+            listmates.append(mR.userEntrada)
+        matesDados=Mate.objects.filter(userEntrada=loggeado)
+        eliminados=0
+        for mD in matesDados:
+            #print(mD.userSalida)
+            if(mD.userSalida in listmates):
+                eliminados+=1
+                listmates.remove(mD.userSalida)
+        listperfiles=[]
+        for us in listmates:
+            listperfiles.append(Usuario.objects.get(usuario=us))
 
-    #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
-    mesActual=datetime.now().month
-    listmates=[]
-    matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
-    for mR in matesRecibidos:
-        listmates.append(mR.userEntrada)
-    matesDados=Mate.objects.filter(userEntrada=loggeado)
-    eliminados=0
-    for mD in matesDados:
-        #print(mD.userSalida)
-        if(mD.userSalida in listmates):
-            eliminados+=1
-            listmates.remove(mD.userSalida)
+        #INTERACCIONES POR DÍA PARA LA GRÁFICA
+        matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')).order_by()
+        listFecha=[]
+        listdcount=[]
+        for i in range(0,matesporFecha.count()):
+            listFecha.append(matesporFecha[i]['fecha_mate__date'].strftime("%d/%m/%Y"))
+            listdcount.append(matesporFecha[i]['dcount'])
+        dictGrafica=dict(zip(listFecha,listdcount))
+        
+        #TOP TAGS CON QUIEN TE HA DADO LIKE
+        listtags=[]
+        tagsloggeado=perfil.tags.all().values()
+        for tagl in tagsloggeado:
+            listtags.append(tagl['etiqueta'])
+        listTop=[]
+        for m in listmates:
+            tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
+            for tm in tagsMates:
+                if tm['etiqueta'] in listtags:
+                    listTop.append(tm['etiqueta'])
+        dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
+        sorted_tuples = sorted(dicTags.items(), key=lambda item: item[1], reverse=True)
+        sortedTags = {k: v for k, v in sorted_tuples}
 
-    #LIKES POR DÍA PARA LA GRÁFICA
-    matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')-eliminados).order_by()
-    #print(matesporFecha[0]['fecha_mate__date']) Recorrer diccionario par dia-numero likes
+        #COMPARATIVA NO PREMIUM VS PREMIUM
+        fechaInicioPremium=perfil.fecha_premium - timedelta(days=30)
+        mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
+        mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
 
-    #TOP TAGS CON QUIEN TE HA DADO LIKE
-    listtags=[]
-    tagsloggeado=perfil.tags.all().values()
-    for tagl in tagsloggeado:
-        listtags.append(tagl['etiqueta'])
-
-    listTop=[]
-    for m in listmates:
-        tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
-        for tm in tagsMates:
-            if tm['etiqueta'] in listtags:
-                listTop.append(tm['etiqueta'])
-    dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
-
-    #COMPARATIVA NO PREMIUM VS PREMIUM
-    fechaInicioPremium=perfil.fecha_premium + timedelta(days=30)
-    mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
-    mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
-
-    #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
-    listScore=[]
-    for i in listmates:
-        perfilU=Usuario.objects.get(usuario=i)
-        score = rs_score(perfil,perfilU)
-        listScore.append(score)
-    dictScore=dict(zip(listmates,listScore))
-    params={"lista":listmates, "topTags":dicTags, "matesGrafica":matesporFecha, "matesNPremium":mRNoPremium,
-            "matesPremium":mRPremium, "scoreLikes":dictScore}
-    return render(request,'homepage.html',params)
+        #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
+        listScore=[]
+        for i in listmates:
+            perfilU=Usuario.objects.get(usuario=i)
+            score = rs_score(perfil,perfilU)
+            listScore.append(round(score*100) if(score*100 < 100)  else 100)
+        dictScore=dict(zip(listmates,listScore))
+        params={"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
+                "matesPremium":mRPremium, "scoreLikes":dictScore}
+        return render(request,'homepage.html',params)
+    else:
+        return render(request,'homepage.html')
 
 def registro(request):
     form = RegistroForm()
