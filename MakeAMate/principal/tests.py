@@ -139,7 +139,7 @@ class MateTestCase(TestCase):
         perfil2.save()
         perfil3.save()
         mate1.save()
-        mate2.save()
+        mate.save()
 
     def test_accept_mate(self):
         self.client.login(username='us1', password='123')
@@ -298,16 +298,13 @@ class MateTestCase(TestCase):
         self.assertEquals(response.status_code,302)
         self.assertRedirects(response,"/login/", target_status_code=200)
   
+#Test filtros automáticos
 class FiltesTests(TestCase):
     
     def setUp(self):
-         super().setUp()
-    
-    @classmethod
-    def setUpTestData(cls):
-        userPepe= User(username="Pepe")
-        userPepe.set_password("asdfg")
-        userPepe.save()
+        self.userPepe= User(username="Pepe")
+        self.userPepe.set_password("asdfg")
+        self.userPepe.save()
 
         userMaria=User(username="Maria")
         userMaria.set_password("asdfg")
@@ -316,11 +313,20 @@ class FiltesTests(TestCase):
         userSara=User(username="Sara")
         userSara.set_password("asdfg")
         userSara.save()
+        
+        self.userPepa=User(username="Pepa")
+        self.userPepa.set_password("asdfg")
+        self.userPepa.save()
 
+        self.userJuan=User(username="Juan")
+        self.userJuan.set_password("asdfg")
+        self.userJuan.save()
 
         tfn1 = "+34666777111"
         tfn2 = "+34666777222"
         tfn3 = "+34666777333"
+        tfn4 = "+34666777444"
+        tfn5 = "+34666777555"
 
         etiquetas= Tag.objects.create(etiqueta="No fumador")
         aficion= Aficiones.objects.create(opcionAficiones="Deportes")
@@ -329,26 +335,14 @@ class FiltesTests(TestCase):
         piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
 
 
-        Pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, sms_validado=True)
+        Pepe= Usuario.objects.create(usuario=self.userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, sms_validado=True)
         Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria, telefono=tfn2, sms_validado=True)
         Sara= Usuario.objects.create(usuario=userSara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz", piso=piso_sara, telefono=tfn3, sms_validado=True)
-
-        
-
-
-
-
-    # Nos logeamos como Pepe usuario sin Piso en Sevilla y 
-    # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
-    def test_filter_(self):
-        Pepe= Usuario.objects.create(usuario=self.userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla")
-        Pepa=Usuario.objects.create(usuario=self.userPepa, fecha_nacimiento=date(2000,12,28), lugar="Sevilla")
-        Juan=Usuario.objects.create(usuario=self.userJuan, fecha_nacimiento=date(2000,12,27), lugar ="Sevilla")
-    
-    
+        Pepa=Usuario.objects.create(usuario=self.userPepa, fecha_nacimiento=date(2000,12,28), lugar="Sevilla",telefono=tfn5, sms_validado=True)
+        Juan=Usuario.objects.create(usuario=self.userJuan, fecha_nacimiento=date(2000,12,27), lugar ="Sevilla", telefono=tfn4, sms_validado=True)
 
    #Nos logeamos como Pepe usuario sin Piso en Sevilla y 
-   # comprobamos que solo nos sale 1 usuario, que es el que esta en la misma ciudad
+   # comprobamos que solo nos sale 3 usuarios, que son los que están en la misma ciudad
     def test_filter_piso_y_ciudad(self):
         c= Client()
         login= c.login(username='Pepe', password= 'asdfg')
@@ -359,7 +353,7 @@ class FiltesTests(TestCase):
     
 
     #Nos logeamos como Pepe usuario sin Piso en Sevilla y 
-    #comprobamos que efectivamente no salen 2 usuarios ya que uno de ellos no vive en la misma ciudad
+    #comprobamos que efectivamente no salen 4 usuarios ya que uno de ellos no vive en la misma ciudad
     def test_filter_error(self):
         c= Client()
         c.login(username='Pepe', password= 'asdfg')
@@ -486,15 +480,15 @@ class NotificacionesTest(TestCase):
         self.assertTrue(len(lista_mates) == 0)
 
 
-    def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
 
-        data = BytesIO()
-        Image.new(image_mode, size).save(data, image_format)
-        data.seek(0)
-        if not storage:
-            return data
-        image_file = ContentFile(data.read())
-        return storage.save(filename, image_file)
+    data = BytesIO()
+    Image.new(image_mode, size).save(data, image_format)
+    data.seek(0)
+    if not storage:
+        return data
+    image_file = ContentFile(data.read())
+    return storage.save(filename, image_file)
     
 
 class RegistroTest(TestCase):
