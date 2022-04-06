@@ -8,3 +8,4 @@ Pillow==9.0.1
 python-dateutil==2.8.2
 django-twilio==0.13.2
 websockets==9.1
+channels_redis
