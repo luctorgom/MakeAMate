@@ -392,3 +392,10 @@ body{
   }
 
 
+  .errorlist{
+    list-style-type:none;
+    color:rgb(153, 0, 255);
+    font-size:15px;
+    margin:0;
+    padding:0;
+}

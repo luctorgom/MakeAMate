@@ -160,13 +160,14 @@ def payments(request):
     template='payments.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
+    lista_mates=notificaciones_mates(request)
 
     try :
         suscripcion=Suscripcion.objects.all()[0]  
-        params={'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
+        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
         return render(request,template,params) 
     except:
-        params={'premium':premium,'hay_suscripciones':False}
+        params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False}
         return render(request,template,params) 
 
     
@@ -208,7 +209,9 @@ def notifications_list(request):
     return render(request,template,response)
 
 def info(request):
-    return render(request,'info.html')
+    lista_mates=notificaciones_mates(request)
+
+    return render(request,'info.html',{'notificaciones':lista_mates})
 
 def notificaciones_chat(request):
     user = request.user
@@ -246,7 +249,8 @@ def estadisticas_mates(request):
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
     es_premium= perfil.es_premium()
-    
+    lista_mates=notificaciones_mates(request)
+
     if(es_premium):
         #NUMERO DE INTERACIONES
         interacciones=Mate.objects.filter(userSalida=loggeado).count()
@@ -305,11 +309,11 @@ def estadisticas_mates(request):
             listScore.append(round(score*100) if(score*100 < 100)  else 100)
         dictScore=dict(zip(listmates,listScore))
 
-        params={"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
+        params={"notificaciones":lista_mates,"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
                 "matesPremium":mRPremium, "scoreLikes":dictScore}
         return render(request,'estadisticas.html',params)
     else:
-        return render(request,'payments.html')
+        return payments(request)
 
 def registro(request):
     if request.user.is_authenticated:
@@ -417,6 +421,7 @@ def profile_view(request):
 
     user = request.user
     usuario = Usuario.objects.get(usuario = user)
+    lista_mates=notificaciones_mates(request)
 
     initial_dict = {
         'foto_usuario': usuario.foto,
@@ -471,7 +476,7 @@ def profile_view(request):
             else:
                 form_change_password = ChangePasswordForm()
                 form_change_photo = ChangePhotoForm()
-                return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+                return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
                 'form_change_photo': form_change_photo,'piso_encontrado':usuario.piso_encontrado})
 
         if "actualizarContraseña" in request.POST:
@@ -487,7 +492,7 @@ def profile_view(request):
             else:
                 form_change_photo = ChangePhotoForm()
                 form = UsuarioFormEdit(initial = initial_dict)
-                return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+                return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
                 'form_change_photo': form_change_photo,'usuario':usuario})
         
         if "actualizarFoto" in request.POST:
@@ -503,11 +508,11 @@ def profile_view(request):
                 return redirect("/profile")
             else:
                 form = UsuarioFormEdit(initial = initial_dict)
-                return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+                return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
                 'form_change_photo': form_change_photo,'usuario':usuario})
 
 
-    return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+    return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
             'form_change_photo': form_change_photo})
 
 
