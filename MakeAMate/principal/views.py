@@ -452,7 +452,7 @@ def profile_view(request):
                     genero = form_genero, piso_encontrado = form_piso_encontrado,
                     piso = piso_usuario)
                 else:
-                    Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
+                    Usuario.objects.filter(usuario = user_actual).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
                         genero = form_genero, piso_encontrado = form_piso_encontrado)
 
                 perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
@@ -461,6 +461,11 @@ def profile_view(request):
                 perfil_updated_2.aficiones.set(form_aficiones)
                 perfil_updated_2.save() 
                 return redirect("/profile") 
+            else:
+                form_change_password = ChangePasswordForm()
+                form_change_photo = ChangePhotoForm()
+                return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
+                'form_change_photo': form_change_photo})
 
         if "actualizarContraseña" in request.POST:
             form_change_password = ChangePasswordForm(request.POST)
@@ -473,18 +478,6 @@ def profile_view(request):
                 usuario.save()
                 return redirect("/profile") 
             else:
-                initial_dict = {
-                    'foto_usuario': usuario.foto,
-                    'lugar': usuario.lugar,
-                    'genero': usuario.genero,
-                    'zona_piso': usuario.piso.zona if (usuario.piso)  else "",
-                    'descripcion': usuario.descripcion,
-                    'piso_encontrado': usuario.piso_encontrado,
-                    # 'idiomas': usuario.idiomas.all(),
-                    'tags': usuario.tags.all(), 
-                    'aficiones': usuario.aficiones.all()
-                }
-
                 form_change_photo = ChangePhotoForm()
                 form = UsuarioFormEdit(initial = initial_dict)
                 return render(request, 'profile.html', {'form': form, 'form_change_password':form_change_password,
