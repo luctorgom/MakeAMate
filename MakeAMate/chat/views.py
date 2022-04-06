@@ -22,7 +22,7 @@ def index(request):
                 lista_usuarios.append(u)
             return render(request, 'chat/index.html',{'notificaciones':lista_mates,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
         else:
-            return render(request, 'chat/index.html',{'notificaciones':lista_mates,'users': [], 'chats':[], 'nombrechats':[]})
+            return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[]})
     else:
         return redirect("/login")
 
@@ -63,7 +63,7 @@ def room(request, room_name):
 
         # Comprobación si el usuario pertenece a los participantes de ese grupo
         if request.user.username in lista_participantes :
-            return render(request, 'chat/room.html', {'notificaciones':lista_mates,'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
+            return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
         else:
             raise PermissionDenied
     else:

@@ -19,8 +19,6 @@ from django.db.models import Q
 
 @csrf_protect
 def paypal(request,pk):
-    lista_mates = notificaciones_mates(request)
-
     if not request.user.is_authenticated:
         return redirect(login_view)
     loggeado=get_object_or_404(Usuario, usuario=request.user)
@@ -28,6 +26,7 @@ def paypal(request,pk):
     if premium:
         return redirect(homepage)
     template_name='pagos.html'
+    lista_mates = notificaciones_mates(request)
     suscripcion= get_object_or_404(Suscripcion, id=pk)
     context={'notificaciones':lista_mates,'suscripcion': suscripcion}
     return render(request, template_name, context)
