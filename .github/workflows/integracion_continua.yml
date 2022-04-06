@@ -34,7 +34,7 @@ jobs:
         pip install -r requirements.txt
         pip install codacy-coverage
     - name: Run migrations
-      run: python MakeAMate/manage.py makemigrations;python MakeAMate/manage.py migrate; 
+      run: python MakeAMate/manage.py makemigrations;python MakeAMate/manage.py migrate;python MakeAMate/manage.py collectstatic;
     - name: Run tests with coverage   
       run: cd MakeAMate;coverage run manage.py test; coverage xml;
     - name: Codacy Coverage Reporter
