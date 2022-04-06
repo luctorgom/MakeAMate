@@ -155,19 +155,21 @@ def reject_mate(request):
 
 def payments(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
-        
-    suscripcion=Suscripcion.objects.all()[0]
-    loggeado=get_object_or_404(Usuario, usuario=request.user)
+        return redirect(login_view) 
+
     template='payments.html'
-    hay_suscripciones=True
-    if(suscripcion==None): 
-        hay_suscripciones=False
-
+    loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
-    params={'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':hay_suscripciones}
 
-    return render(request,template,params) 
+    try :
+        suscripcion=Suscripcion.objects.all()[0]  
+        params={'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
+        return render(request,template,params) 
+    except:
+        params={'premium':premium,'hay_suscripciones':False}
+        return render(request,template,params) 
+
+    
 
 def terminos(request):
     template='loggeos/terminos_1.html'
