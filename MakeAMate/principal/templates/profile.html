@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link rel="stylesheet" href="/static/css/profile.css">
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+
+<script>
+
+window.onload = esconder;
+
+function esconder() {
+    $('#id_piso_encontrado').on('click', function() {
+        if($(this).val() === 'False') {
+            $('.zona_piso').hide();
+        } else {
+            $('.zona_piso').show();
+        }
+ }); }
+
+</script>
+
+{% endblock %}
+{% block content %}
+
+
+</div>
+<div class="contenedorPerfil">
+    <form class="formularioPerfil" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <div class="Titulo">
+            <h1>Mi perfil</h1><br>
+            <div class="editarFoto">         
+                <h2 class="nombreUsuario">{{request.user.username}}</h2> <br> 
+                <div class="fotoPerfil"> <img class="fotoPerfil" src="https://i.imgur.com/uIgDDDd.jpg" alt="img"></div>
+                <div class="form-control">{{  form_change_photo.foto_usuario  }}</div><span class = "errorlist"> {{  form_change_photo.foto_usuario.errors | striptags  }} </span>  
+                <div class="botones"> 
+                    <button name="actualizarFoto" value="actualizarFoto" type="submit" class="ActualizarFoto">Actualizar Foto</button>
+                </div>
+                 
+            </div>  
+        </div>   
+    </form>        
+    <form class="formularioPerfil" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+        <div class="editarPerfil">         
+            <h4 class="">Información general</h4><br>
+           
+            <label class="form-label">Lugar</label><span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  
+            <div class="form-control">{{  form.lugar  }}</div>
+        
+            <label class="form-label">Género</label><span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>  
+            <div class="form-control">{{  form.genero  }}</div>
+
+            {% comment %} <label class="form-label">Idiomas</label><span class = "errorlist"> {{  form.idiomas.errors | striptags  }} </span>  
+            <div class="form-control">{{  form.idiomas  }}</div> {% endcomment %}
+
+            <label class="form-label">Etiquetas</label><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span>            
+            <div class="form-control">{{  form.tags  }}</div>
+
+            <label class="form-label">Aficiones</label><span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span>  
+            <div class="form-control">{{  form.aficiones  }}</div>
+
+            <label class="form-label">Descripción</label><span class = "errorlist"> {{  form.descripcion.errors | striptags  }} </span>  
+            <div class="form-control descripcion">{{  form.descripcion  }}</div>
+
+            <label class="form-label">Piso Encontrado</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
+            <div class="form-control">{{  form.piso_encontrado  }}</div>
+            
+            <div class="zona_piso"name="zona_piso">
+                <label class="form-label">Zona Piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
+                <div class="form-control">{{  form.zona_piso  }}</div>
+            </div>
+            
+            <div class="botones"> 
+                <button name="actualizarPerfil" value="actualizarPerfil" type="submit" class="ActualizarPerfilTrue">Actualizar Perfil</button>
+            </div> 
+
+        </div>
+        
+    </form> 
+    <form class="formularioPerfil" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="editarContraseña">
+                <h4 class="">Cambiar contraseña</h4><br>
+                    <label class="form-label">Nueva contraseña *</label><span class = "errorlist"> {{  form_change_password.password.errors | striptags  }} </span>  
+                    <div class="form-control">{{  form_change_password.password  }}</div>
+                    
+                    <label class="form-label">Confirmar contraseña *</label><span class = "errorlist"> {{  form_change_password.password2.errors | striptags  }} </span>  
+                    <div class="form-control">{{  form_change_password.password2  }}</div>
+                    <div class="botones"> 
+                        <button name="actualizarContraseña" value="actualizarContraseña" type="submit" class="ActualizarContraseña">Cambiar contraseña</button>
+                    </div> 
+            </div>
+
+    </form> 
+
+    </div>
+</div>
+
+{% endblock %}
