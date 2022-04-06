@@ -31,7 +31,6 @@ urlpatterns = [
     path("payments/",views.payments,name="payments"),
     path("notifications/",views.notifications_list,name="notifications"),
     path("info/",views.info,name="info"),
-    path('chat/',include('chat.urls')),
     path('paypal/<int:pk>/', include('pagos.urls')),
     path('pagos/', include('pagos.urls')),
     path("register/",views.registro,name="register"),
