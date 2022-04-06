@@ -102,7 +102,7 @@
             + roomName
             + '/'
         );
-
+        alert(window.location.host)
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.getElementById("usuarioProv").style.display = "none"
