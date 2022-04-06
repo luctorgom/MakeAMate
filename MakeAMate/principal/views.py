@@ -231,10 +231,10 @@ def notificaciones_chat(request):
 
 
 def error_403(request,exception):
-    return render(request,'error403.html')
+    return render(request,'error403.html', status=403)
 
 def error_404(request,exception):
-    return render(request,'error404.html')
+    return render(request,'error404.html', status=404)
 
 def error_500(request,*args, **argv):
     return render(request,'error500.html',status=500)
