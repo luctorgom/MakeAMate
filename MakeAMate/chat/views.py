@@ -12,7 +12,6 @@ from datetime import timedelta
 def index(request):
     if request.user.is_authenticated:
         lista_mates = notificaciones_mates(request)
-
         if len(lista_mates)>0:
             lista_chat = []
             chats = ChatRoom.objects.all()
@@ -66,7 +65,7 @@ def room(request, room_name):
 
         # Comprobación si el usuario pertenece a los participantes de ese grupo
         if request.user.username in lista_participantes :
-            return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
+            return render(request, 'chat/room.html', {'notificaciones':notificaciones(request),'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
         else:
             raise PermissionDenied
     else:
@@ -97,6 +96,19 @@ def crear_sala_grupo(group_name, room_participants):
     room.participants.set(room_participants)
 
 def notificaciones_mates(request):
+    loggeado= request.user
+    lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
+    lista_mates=[]
+    for i in lista_usuarios:
+        try:
+            mate1=Mate.objects.get(mate=True,userEntrada=loggeado,userSalida=i)
+            mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
+            lista_mates.append(mate1.userSalida)
+        except Mate.DoesNotExist:
+            pass
+    return lista_mates
+
+def notificaciones_mates2(request):
     lista_notificaciones=[]
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
@@ -144,11 +156,10 @@ def notificaciones_chat(request):
     return notificaciones_chat
 
 def notificaciones(request):
-    notificaciones=notificaciones_mates(request)
+    notificaciones=notificaciones_mates2(request)
     lista_chat=notificaciones_chat(request)
     notificaciones.extend(lista_chat)
     notificaciones.sort(key=lambda mates: mates[1], reverse=True)
     return notificaciones
-
 
 
