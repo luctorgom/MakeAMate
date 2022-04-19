@@ -1,6 +1,9 @@
-{% extends "base.html" %}
+{% include "base.html" %}
 {% block extrahead %}
 <link rel="stylesheet" href="/static/css/profile.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+<script src="../../static/assets_base/js/bs-init.js"></script>
+<script src="../../static/assets_base/js/theme.js"></script>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 
 <script>
@@ -96,3 +99,4 @@ function esconder() {
 </div>
 
 {% endblock %}
+{% include "footer.html" %}

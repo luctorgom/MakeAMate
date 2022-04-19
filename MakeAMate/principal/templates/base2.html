@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/static/base.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/fonts.css">
+
+    <!-- Importar AJAX -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            var down = false;
+            document.querySelector('#bell').addEventListener('click', () => {
+                if (down) {
+                    document.getElementById("box").style.height = "0px";
+                    document.getElementById("box").style.opacity = "0";
+                    down = false
+                }
+                else {
+                    document.getElementById("box").style.height = "auto";
+                    document.getElementById("box").style.opacity = "1";
+                    down = true
+                }
+            })
+
+        })     
+    </script>
+
+    <script>
+        window.onload = numeronotificaciones;
+        function numeronotificaciones() {
+            let n = document.getElementById("notis").textContent;
+            let im1 = "/static/images/icons/bell-off.png";
+            let im2 = "/static/images/icons/bell-on2.png"
+
+            if (n === "0") {
+                document.getElementById("notibell").src = im1;
+            } else {
+                document.getElementById("notibell").src = im2;
+            }
+        }
+    </script>
+    {% block extrahead %}
+
+
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container-notificaciones" id="Notificaciones">
+        <div class="menuprincipal" id="all">
+            <input type="checkbox" id="check">
+            <label for="check" class="icon-paragraph-justify"></label>
+            <nav class="menu">
+                <ul>
+                    <br>
+                    <a id="a" href="{% url 'profile' %}"><li class="mover">
+                         <div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}
+                        </div>
+                    </li></a>
+                    <br><br>
+                    <a id="a" href="/chat"> <li> <label for="check" class="icon-bubble2"></label> Chat</li></a>
+                    <a id="a" href="{% url 'estadisticas' %}"><li><label for="check" class="icon-stats-dots"></label> Statistics</li></a>
+                    <a id="a" href="{% url 'payments' %}">
+                        <li><label for="check" class="icon-cart1"></label> Shop</li>
+                    </a>
+                    <a id="a" href="{% url 'info' %}"><li><label for="check" class="icon-info"></label>   About us</li></a>
+                    <a id="a" href="{% url 'logout' %}">
+                        <li><label class="icon-log-out"></label> Log-out</li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="logo-notificaciones">
+        </div>
+
+        <a href="{% url 'home' %}">
+            <img class="logo" src="/static/logotipo.png">
+        </a>
+
+        <div class="icon-notificaciones" id="bell"> 
+            <img id="notibell" src="\static\images\icons\bell-on2.png" alt="img">
+        </div>
+
+        <div class="notifications" id="box">
+            <h2 class="notificacion-text"><a href="{% url 'notifications' %}">Notificaciones</a> - <span id="notis">{{notificaciones|length}}</span></h2>
+            {%for i in notificaciones %}
+                {%if forloop.counter0 < 7 %}
+                    <div class="notifications-item">
+                        {%if i.1 == "Mates" %}
+                        <img src="\static\images\icons\Choca_esos_5.png" alt="img">
+                            <div class="text-notificaciones">
+                                <h4>Nuevo Mate!</h4>
+                                <p>Has hecho mate con {{i.0.userSalida}}.</p>
+                            </div>
+                        {% endif %}
+                        {%if i.1 == "Premium" %}
+                        <img src="\static\images\icons\heart.png" alt="img">
+                            <div class="text-notificaciones">
+                                <h4>Nuevo like!👑</h4>
+                                <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <a href="{% url 'notifications' %}">Ver todas las notificaciones.</a>
+        </div>
+    </div>
+
+    <div class="container-fluid pt-5 mt-xl-4 pepito">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 text-center">
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

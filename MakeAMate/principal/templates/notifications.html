@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% include "base.html" %}
 {% block extrahead %}
 <link rel="stylesheet" href="/static/css/notifications.css" />
 <meta charset="UTF-8">
@@ -6,12 +6,19 @@
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/static/css/notifications.css" />
+<link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <script src="../../static/assets_base/js/bs-init.js"></script>
+    <script src="../../static/assets_base/js/theme.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container">
     <h3 class="m-b-50 heading-line">Notificaciones<i class="fa fa-bell text-muted"></i></h3>
+    {%if notificaciones|length == 0 %}
+        <p>No hay notificaciones</p>
+    {% endif %}
         {%for i in notificaciones%}
-        {%if i.1 == "Mates" %}
+            {%if i.1 == "Mates" %}
         <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
             <div class="notification-list">
                     <div class="notification-list_img">
@@ -26,6 +33,7 @@
                         <img src="..\static\images\icons\Choca_esos_5.png" alt="Feature image">
                     </div>
             </div>
+        </div>
         {% endif %}
         {%if i.1 == "Premium" %}
         <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
@@ -42,8 +50,10 @@
                         <img src="..\static\images\icons\heart.png" alt="Feature image">
                     </div>
             </div>
+        </div>
+            
         {% endif %}
         {% endfor%}
-        </div>
-</div>
+    </div>
 {% endblock %}
+{% include "footer.html" %}
