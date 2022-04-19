@@ -29,7 +29,9 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'estadisticas' %}"><i class="far fa-chart-bar"></i><span class="nav-link1">Estadísticas</span></a></li>
                     <li class="nav-item"><a class="nav-link " href="{% url 'payments' %}"><i class="fas fa-medal"></i><span class="nav-link1">Suscripciones</span></a>
                     <li class="nav-item"><a class="nav-link" href="{% url 'info' %}"><i class="fas fa-info-circle"></i><span class="nav-link1">Sobre nosotros</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-file-alt"></i><span class="nav-link1">Términos y condiciones</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-power-off"></i><span class="nav-link1">Cerrar sesión</span></a></li>
+               
                 </ul>
                 <div class="text-center d-none d-md-inline"><button onclick= esconder2() class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -59,30 +61,30 @@
                                         <h6 class="dropdown-header" style="background: var(--bs-purple);">Notificaciones</h6><a class="dropdown-item d-flex align-items-center" href="#">
                                             {%for i in notificaciones %}
                                                 {%if forloop.counter0 < 7 %}
-                                                    {%if i.1 == "Premium" %}
+                                                    {%if i.2 == "Premium" %}
                                                     <a class="dropdown-item d-flex align-items-center" href="{% url 'notifications' %}">
                                                         <div class="me-3">
                                                             <div class="bg-primary icon-circle" style="--bs-primary: #cb4edf;--bs-primary-rgb: 203,78,223;"><i class="fas fa-crown text-white"></i></div>
                                                         </div>
-                                                        <div><span class="small text-gray-500">Añadir fecha</span>
+                                                        <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
                                                             <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
                                                         </div>
                                                     {% endif %}
-                                                    {%if i.1 == "Chat" %}
+                                                    {%if i.2 == "Chat" %}
                                                         <a class="dropdown-item d-flex align-items-center" href="{% url 'notifications' %}">
                                                             <div class="me-3">
                                                                 <div class="bg-success icon-circle"><i class="far fa-comment text-white"></i></div>
                                                             </div>
-                                                            <div><span class="small text-gray-500">Añadir fecha</span>
-                                                                <p>Tienes un mensaje de {{i.0.userEntrada}} .</p>
+                                                            <div><span class="small text-gray-500">{{i.1}}</span>
+                                                                <p>Tienes un mensaje de {{i.0}}.</p>
                                                             </div>
                                                     {% endif %}
-                                                    {%if i.1 == "Mates" %}
+                                                    {%if i.2 == "Mates" %}
                                                         <a class="dropdown-item d-flex align-items-center" href="{% url 'notifications' %}">
                                                             <div class="me-3">
                                                                 <div class="bg-warning icon-circle"><i class="fas fa-user-friends text-white"></i></div>
                                                             </div>
-                                                            <div><span class="small text-gray-500">Añadir fecha</span>
+                                                            <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
                                                                 <p>Has hecho mate con {{i.0.userSalida}}.</p>
                                                             </div>
                                                     {% endif %}
@@ -109,5 +111,3 @@
                             {% block content %}
             
                             {% endblock %}
-
-
