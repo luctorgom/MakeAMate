@@ -43,7 +43,7 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: MakeAMate/coverage.xml
   deploy:
-    if: ${{github.ref == 'refs/heads/main'}} 
+    if: ${{github.ref == 'refs/heads/despliegue-s3'}} 
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -52,6 +52,6 @@ jobs:
     - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
       with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "makeamate-s1"
+          heroku_app_name: "makeamate-s3"
           heroku_email: "luctorgom@alum.us.es"
-    - run: heroku run -a makeamate-s1 sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
+    - run: heroku run -a makeamate-s3 sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
