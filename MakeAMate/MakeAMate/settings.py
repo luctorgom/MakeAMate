@@ -99,7 +99,7 @@ CHANNEL_LAYERS = {
 #             "hosts": [("redis-server-name", 6379)],
 #         },
 #     },
-}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
