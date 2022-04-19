@@ -13,5 +13,6 @@ daphne
 channels-redis
 Twisted
 asgiref
+asgi_redis
 asgi-redis
 redis
