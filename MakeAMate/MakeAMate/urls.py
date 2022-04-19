@@ -39,7 +39,8 @@ urlpatterns = [
     path("profile/",views.profile_view,name="profile"),
     path('', views.homepage,name="home"),
     path('favicon.ico/', RedirectView.as_view(url=staticfiles_storage.url('principal/images/'))),
-    path('estadisticas/',views.estadisticas_mates, name="estadisticas")
+    path('estadisticas/',views.estadisticas_mates, name="estadisticas"),
+    path('chat/',include('chat.urls')),
 ]
 
 handler403 = "principal.views.error_403"

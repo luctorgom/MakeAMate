@@ -10,6 +10,7 @@
 
 {% endblock %}
 {% block content %}
+<script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
     <div class="containerchat">
         <div class="row clearfix">
             <div class="col-lg-12">
@@ -95,8 +96,10 @@
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-        const chatSocket = new WebSocket(
-            'wss://'
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        const chatSocket = new ReconnectingWebSocket(
+            ws_scheme 
+            + '://' 
             + window.location.host
             + '/ws/chat/'
             + roomName
