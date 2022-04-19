@@ -190,7 +190,7 @@ def notificaciones_mates(request):
             mate2=Mate.objects.get(mate=True,userEntrada=i,userSalida=loggeado)
 
             lista_mates.append(mate1.userSalida)
-            lista_notificaciones.append((mate1,"Mates"))
+            lista_notificaciones.append((mate1,mate1.fecha_mate + timedelta(hours=2),"Mates"))
         except Mate.DoesNotExist:
             pass
 
@@ -198,20 +198,9 @@ def notificaciones_mates(request):
         matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado)
         for mR in matesRecibidos:
             if(mR.userEntrada not in lista_mates):
-                lista_notificaciones.append((mR,"Premium"))
-    lista_notificaciones.sort(key=lambda mates: mates[0].fecha_mate, reverse=True)
+                lista_notificaciones.append((mR,mR.fecha_mate + timedelta(hours=2),"Premium"))
+    #lista_notificaciones.sort(key=lambda mates: mates[0].fecha_mate, reverse=True)
     return lista_notificaciones
-
-def notifications_list(request):
-    template='notifications.html'
-    notis=notificaciones_mates(request)
-    response={'notificaciones':notis}
-    return render(request,template,response)
-
-def info(request):
-    lista_mates=notificaciones_mates(request)
-
-    return render(request,'info.html',{'notificaciones':lista_mates})
 
 def notificaciones_chat(request):
     user = request.user
@@ -230,10 +219,26 @@ def notificaciones_chat(request):
                 notificaciones_chat.append((chat.room_name,num,chat.last_message,"Chat"))
             else:
                 nombre = chat.participants.all().filter(~Q(id=user.id))[0].username
-                notificaciones_chat.append((nombre,num,chat.last_message,"Chat"))
-    notificaciones_chat.sort(key=lambda tupla: tupla[2], reverse=True)
+                notificaciones_chat.append((nombre,chat.last_message,num,"Chat"))
+    #notificaciones_chat.sort(key=lambda tupla: tupla[2], reverse=True)
     return notificaciones_chat
 
+def notificaciones(request):
+    notificaciones=notificaciones_mates(request)
+    lista_chat=notificaciones_chat(request)
+    notificaciones.extend(lista_chat)
+    notificaciones.sort(key=lambda mates: mates[1], reverse=True)
+    return notificaciones
+
+def notifications_list(request):
+    template='notifications.html'
+    notis=notificaciones_mates(request)
+    response={'notificaciones':notis}
+    return render(request,template,response)
+
+def info(request):
+    lista_mates=notificaciones_mates(request)
+    return render(request,'info.html',{'notificaciones':lista_mates})
 
 def error_403(request,exception):
     return render(request,'error403.html', status=403)

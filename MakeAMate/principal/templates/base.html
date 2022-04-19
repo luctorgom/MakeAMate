@@ -1,126 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="/static/base.css">
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/fonts.css">
-
-    <!-- Importar AJAX -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            var down = false;
-            document.querySelector('#bell').addEventListener('click', () => {
-                if (down) {
-                    document.getElementById("box").style.height = "0px";
-                    document.getElementById("box").style.opacity = "0";
-                    down = false
-                }
-                else {
-                    document.getElementById("box").style.height = "auto";
-                    document.getElementById("box").style.opacity = "1";
-                    down = true
-                }
-            })
-
-        })     
-    </script>
-
-    <script>
-        window.onload = numeronotificaciones;
-        function numeronotificaciones() {
-            let n = document.getElementById("notis").textContent;
-            let im1 = "/static/images/icons/bell-off.png";
-            let im2 = "/static/images/icons/bell-on2.png"
-
-            if (n === "0") {
-                document.getElementById("notibell").src = im1;
-            } else {
-                document.getElementById("notibell").src = im2;
-            }
-        }
-    </script>
-    {% block extrahead %}
-
-
-    {% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Blank Page - Brand</title>
+    <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="../../static/assets_base/fonts/fontawesome-all.min.css">
+    <script src="../../static/assets_base/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/assets_base/js/bs-init.js"></script>
+    <script src="../../static/assets_base/js/theme.js"></script>
 </head>
 
-<body>
-    <div class="container-notificaciones" id="Notificaciones">
-        <div class="menuprincipal" id="all">
-            <input type="checkbox" id="check">
-            <label for="check" class="icon-paragraph-justify"></label>
-            <nav class="menu">
-                <ul>
-                    <br>
-                    <a id="a" href="{% url 'profile' %}"><li class="mover">
-                         <div class="foto"> <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">{{request.user.username}}
-                        </div>
-                    </li></a>
-                    <br><br>
-                    <li> <label for="check" class="icon-bubble2"></label> Chat</li>
-                    <a id="a" href="{% url 'estadisticas' %}"><li><label for="check" class="icon-stats-dots"></label> Statistics</li></a>
-                    <a id="a" href="{% url 'payments' %}">
-                        <li><label for="check" class="icon-cart1"></label> Shop</li>
-                    </a>
-                    <a id="a" href="{% url 'info' %}"><li><label for="check" class="icon-info"></label>   About us</li></a>
-                    <a id="a" href="{% url 'logout' %}">
-                        <li><label class="icon-log-out"></label> Log-out</li>
-                    </a>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: var(--bs-purple);font-weight: bold;">
+                <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="{% url 'home' %}"><img src="../../static/assets_base/img/Logotipo%20make%20a%20mate.png" style="width: 3rem;height: 3rem;">
+                    <div class="sidebar-brand-icon rotate-n-15"></div>
+                    <div class="sidebar-brand-text mx-3"><span>MAKE A MATE</span></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i><span class="nav-link1">Página principal</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="fas fa-user"></i><span class="nav-link1">Perfil</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/chat"><i class="far fa-comment"></i><span class="nav-link1">Chat</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'estadisticas' %}"><i class="far fa-chart-bar"></i><span class="nav-link1">Estadísticas</span></a></li>
+                    <li class="nav-item"><a class="nav-link " href="{% url 'payments' %}"><i class="fas fa-medal"></i><span class="nav-link1">Suscripciones</span></a>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'info' %}"><i class="fas fa-info-circle"></i><span class="nav-link1">Sobre nosotros</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-file-alt"></i><span class="nav-link1">Términos y condiciones</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-power-off"></i><span class="nav-link1">Cerrar sesión</span></a></li>
+               
                 </ul>
-            </nav>
-        </div>
-
-        <div class="logo-notificaciones">
-        </div>
-
-        <a href="{% url 'home' %}">
-            <img class="logo" src="/static/logotipo.png">
-        </a>
-
-        <div class="icon-notificaciones" id="bell"> 
-            <img id="notibell" src="\static\images\icons\bell-on2.png" alt="img">
-        </div>
-
-        <div class="notifications" id="box">
-            <h2 class="notificacion-text"><a href="{% url 'notifications' %}">Notificaciones</a> - <span id="notis">{{notificaciones|length}}</span></h2>
-            {%for i in notificaciones %}
-                {%if forloop.counter0 < 7 %}
-                    <div class="notifications-item">
-                        {%if i.1 == "Mates" %}
-                        <img src="\static\images\icons\Choca_esos_5.png" alt="img">
-                            <div class="text-notificaciones">
-                                <h4>Nuevo Mate!</h4>
-                                <p>Has hecho mate con {{i.0.userSalida}}.</p>
-                            </div>
-                        {% endif %}
-                        {%if i.1 == "Premium" %}
-                        <img src="\static\images\icons\heart.png" alt="img">
-                            <div class="text-notificaciones">
-                                <h4>Nuevo like!👑</h4>
-                                <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-            <a href="{% url 'notifications' %}">Ver todas las notificaciones.</a>
-        </div>
-    </div>
-
-    <div class="container-fluid pt-5 mt-xl-4 pepito">
-        <div class="row">
-            <div class="col-md-8 offset-md-2 text-center">
-                {% block content %}
-
-                {% endblock %}
+                <div class="text-center d-none d-md-inline"><button onclick= esconder2() class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
-        </div>
-    </div>
-</body>
-</html>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars" style="color: #865fcd;"></i></button>
+                        <div></div>
+                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                            <div class="input-group"></div>
+                        </form>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
+                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                                    <form class="me-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="badge bg-danger badge-counter">{{notificaciones|length}}+</span><i class="fas fa-bell fa-fw"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                        <h6 class="dropdown-header" style="background: var(--bs-purple);">Notificaciones</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            {%for i in notificaciones %}
+                                                {%if forloop.counter0 < 7 %}
+                                                    {%if i.2 == "Premium" %}
+                                                    <a class="dropdown-item d-flex align-items-center" href="{% url 'notifications' %}">
+                                                        <div class="me-3">
+                                                            <div class="bg-primary icon-circle" style="--bs-primary: #cb4edf;--bs-primary-rgb: 203,78,223;"><i class="fas fa-crown text-white"></i></div>
+                                                        </div>
+                                                        <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
+                                                            <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
+                                                        </div>
+                                                    {% endif %}
+                                                    {%if i.2 == "Chat" %}
+                                                        <a class="dropdown-item d-flex align-items-center" href="{% url 'notifications' %}">
+                                                            <div class="me-3">
+                                                                <div class="bg-success icon-circle"><i class="far fa-comment text-white"></i></div>
+                                                            </div>
+                                                            <div><span class="small text-gray-500">{{i.1}}</span>
+                                                                <p>Tienes un mensaje de {{i.0}}.</p>
+                                                            </div>
+                                                    {% endif %}
+                                                    {%if i.2 == "Mates" %}
+                                                        <a class="dropdown-item d-flex align-items-center" href="{% url 'notifications' %}">
+                                                            <div class="me-3">
+                                                                <div class="bg-warning icon-circle"><i class="fas fa-user-friends text-white"></i></div>
+                                                            </div>
+                                                            <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
+                                                                <p>Has hecho mate con {{i.0.userSalida}}.</p>
+                                                            </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="{% url 'notifications' %}">Abrir todas las notificaciones</a>
+                                    </div>
+                                </div>
+                            </li>
+  
+                            <div class="d-none d-sm-block topbar-divider"></div>
+                            <li class="nav-item dropdown no-arrow">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">{{request.user.username}}</span><img class="border rounded-circle img-profile" src="../../static/assets_base/img/avatars/avatar1.jpeg"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" href="{% url 'notifications' %}"><i class="far fa-bell fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Notificaciones</a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Cerrar sesión</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+ 
+                            {% block content %}
+            
+                            {% endblock %}
