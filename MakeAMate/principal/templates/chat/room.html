@@ -5,11 +5,11 @@
     <link href="/static/css/styleChat.css" rel="stylesheet">
     <link href="/static/css/formChat.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-
     <title>Tus chats</title>
 
 {% endblock %}
 {% block content %}
+<script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
     <div class="containerchat">
         <div class="row clearfix">
             <div class="col-lg-12">
@@ -94,9 +94,9 @@
     {{ room_name|json_script:"room-name" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
-        const chatSocket = new WebSocket(
-            'ws://'
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        const chatSocket = new ReconnectingWebSocket(
+            ws_scheme + '://' 
             + window.location.host
             + '/ws/chat/'
             + roomName
