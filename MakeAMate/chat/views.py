@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from chat.models import ChatRoom
+from chat.models import ChatRoom, Chat
 from principal.models import Mate, Usuario
 from django.db.models import Q
 from chat.forms import CrearGrupo
 from django.core.exceptions import PermissionDenied
+from cryptography.fernet import Fernet
+
 
 
 def index(request):
@@ -42,10 +44,13 @@ def room(request, room_name):
         #lista chats
         lista_mates = notificaciones_mates(request)
         lista_chat = []
+        lista_last_message = []
         chats = ChatRoom.objects.all()
         for c in chats:
             if request.user in c.participants.all():
                 lista_chat.append(c)
+                lista_last_message.append(Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+            
         lista_usuarios = []
         usuarios = Usuario.objects.filter(~Q(id=request.user.id))
         for u in usuarios:
@@ -61,9 +66,12 @@ def room(request, room_name):
         else:
             nombre_sala = chatroom.participants.all().filter(~Q(id=request.user.id))[0].username
 
+
+        # last_message_decoded = Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = chatroom.last_message)[0].content,'utf-8')).decode()
+
         # Comprobación si el usuario pertenece a los participantes de ese grupo
         if request.user.username in lista_participantes :
-            return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo})
+            return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo, 'last_message':lista_last_message})
         else:
             raise PermissionDenied
     else:
