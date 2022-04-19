@@ -157,7 +157,7 @@ def payments(request):
     if not request.user.is_authenticated:
         return redirect(login_view) 
 
-    template='payments.html'
+    template='payments2.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
     lista_mates=notificaciones_mates(request)
