@@ -705,8 +705,8 @@ Website: http://emilcarlsson.se/
 	<div id="sidepanel">
 		<div id="profile">
 			<div class="wrap">
-				<img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />
-				<p>Mike Ross</p>
+				<img id="profile-img" src="{{usuario_actual.url_perfil_relativa}}" class="online" alt="" />
+				<p>{{usuario_actual}}</p>
 				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
 				<div id="status-options">
 					<ul>
@@ -745,7 +745,7 @@ Website: http://emilcarlsson.se/
 					            <div class="wrap">
                       <div id="room_id" hidden>{{c.name}}</div> 
 				          		<span class="contact-status online"></span>
-			          			<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+			          			<img src="{{n.url_perfil_relativa}}" alt="" />
 				          		<div class="meta">
 					        		<p class="name">{{n.usuario}}</p>
 					        		<p class="preview" id="preview-{{c.name}}"></p>
@@ -760,7 +760,7 @@ Website: http://emilcarlsson.se/
                       <div class="wrap">
                       <div id="room_id" hidden>{{c.name}}</div> 
                       <span class="contact-status online"></span>
-                      <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png" alt="" />
                       <div class="meta">
                       <p class="name">{{c.room_name}}</p>
                       <p class="preview" id="preview-{{c.name}}"></p>
@@ -781,7 +781,11 @@ Website: http://emilcarlsson.se/
 	</div>
 	<div class="content">
 		<div class="contact-profile">
-			<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+      {% if es_grupo %}
+			<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png" alt="" />
+      {% else %}
+      <img src="{{usuario_opuesto.url_perfil_relativa}}" alt="" />
+      {%endif%}
 			<p>{{nombre_sala}}</p>
 		</div>
 		<div class="messages">
