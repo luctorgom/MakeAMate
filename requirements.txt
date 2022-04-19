@@ -11,3 +11,5 @@ websockets==9.1
 # waitress
 daphne
 channels_redis
+Twisted
+asgiref
