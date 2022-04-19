@@ -3,4 +3,4 @@ release: sh -c 'cd MakeAMate && python manage.py makemigrations && python manage
 % especifica el comando para lanzar MakeAMate
 # web: sh -c 'cd MakeAMate && gunicorn MakeAMate.wsgi --log-file -'
 # web: sh -c 'cd MakeAMate && waitress-serve --port=$PORT MakeAMate.asgi:application'
-web: sh -c 'cd MakeAMate && daphne MakeAMate.wsgi:application --log-file -'
+web: sh -c 'cd MakeAMate && daphne MakeAMate.wsgi:application'
