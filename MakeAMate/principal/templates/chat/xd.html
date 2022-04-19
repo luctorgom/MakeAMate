@@ -1,0 +1,166 @@
+{% include "base.html" %}
+{% block extrahead %}
+    
+    {%load static %}
+    <link href="/static/css/styleChat.css" rel="stylesheet">
+    <link href="/static/css/formChat.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <script src="../../static/assets_base/js/bs-init.js"></script>
+    <script src="../../static/assets_base/js/theme.js"></script>
+
+    <title>Tus chats</title>
+
+{% endblock %}
+{% block content %}
+<script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
+    <div class="containerchat">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card chat-app">
+                    <div id="plist" class="people-list">
+                        <ul class="personasChats chat-list mt-2 mb-0" id="people-chat-list">
+                            {% for c in chats %}
+                                <a href="/chat/{{c.name}}">
+                                <li class="clearfix">
+                                {% if c.group is not True %}
+                                    {% for p in c.participants.all %}
+                                        {% if request.user != p%}
+                                            {% for n in nombrechats%}
+                                                {% if p.username == n.usuario.username %}
+                                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                                                <div class="about">
+                                                    <div class="name"> {{n.usuario}} </div>
+                                                </div>
+                                                {%endif%}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name"> {{c.room_name}} </div>
+                                </div>
+                                {%endif%}
+                                </li>
+                                </a>
+
+                            {% endfor %}
+                        </ul>
+                        <button class="open-button" onclick="openForm()">Crear un grupo</button>
+                        <div class="form-popup" id="myForm">
+                            <h3>Seleccione las personas con las que desee crear el grupo:</h3>
+                            <form id="form-control" method="POST" action='' class="form-container">{% csrf_token %}
+                                {{form.as_p}}
+                                <input class="btn btn-primary btn-xl" type='submit' value='Crear grupo'/>
+                                <button type="button" class="btn cancel" onclick="closeForm()">Cancelar</button>
+                            </form>
+                        </div>  
+                    </div>
+                    <div class="chat">
+                        <div class="chat-header clearfix3">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
+                                    </a>
+                                    <div class="chat-about">
+                                        <div class="name" id="nombresala">{{nombre_sala}}</div> 
+                                        <!--<div id="ocultisimo">{{chatUser}}</div>-->
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                        <div id="mensajes" class="divDeLosMensajes">
+                            <ul class="m-b-0">
+                                <div class="chat-history" id="chat-history"></div>
+                            </ul>
+                        </div>
+
+                        <div class="BotonesEnviarChat">
+                            <div class="input-group mb-0">
+                                <input  class="chat-message-input" id="chat-message-input" type="text">
+                                <input class="chat-message-submit" id="chat-message-submit" type="button" value="Enviar">                                
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="name" id="usuarioProv" hidden>{{request.user.username}}</div> 
+        <div class="name" id="es_grupo" hidden>{{es_grupo}}</div> 
+    </div>
+
+</body>
+
+    {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        const chatSocket = new ReconnectingWebSocket(
+            ws_scheme 
+            + '://' 
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.getElementById("usuarioProv").style.display = "none"
+            var micapa = document.getElementById('chat-history');
+            var usuarioProv= document.getElementById('usuarioProv').textContent;            
+              
+
+
+            if(usuarioProv == data.name)
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message other-message float-right">'+data.message+'</div></li>';
+            else
+                if (document.getElementById('es_grupo').textContent=="True")
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message my-message">'+data.name + ": "+data.message+'</div></li>';
+                else
+                micapa.innerHTML += '<li class="clearfix2" style="list-style:none"><div class="message my-message">'+data.message+'</div></li>';
+            micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
+        
+        };
+        
+
+        // onclose - An event listener to be called when the connection is closed.
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+
+            // Send the msg object as a JSON-formatted string.
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+
+            // Blank the text input element, ready to receive the next line of text from the user.
+            messageInputDom.value = '';
+        };
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+    </script>
+
+{% endblock %}
+{% include "footer.html" %}
+

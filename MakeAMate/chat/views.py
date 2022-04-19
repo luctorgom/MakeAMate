@@ -20,9 +20,9 @@ def index(request):
             usuarios = Usuario.objects.filter(~Q(id=request.user.id))
             for u in usuarios:
                 lista_usuarios.append(u)
-            return render(request, 'chat/index2.html',{'notificaciones':lista_mates,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
+            return render(request, 'chat/index.html',{'notificaciones':lista_mates,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
         else:
-            return render(request, 'chat/index2.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[]})
+            return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[]})
     else:
         return redirect("/login")
 
