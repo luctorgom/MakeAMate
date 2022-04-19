@@ -10,6 +10,8 @@ django-twilio==0.13.2
 websockets==9.1
 # waitress
 daphne
-channels_redis
+channels-redis
 Twisted
 asgiref
+asgi-redis
+redis
