@@ -743,11 +743,12 @@ Website: http://emilcarlsson.se/
                     {% if p.username == n.usuario.username %}
 
 					            <div class="wrap">
+                      <div id="room_id" hidden>{{c.name}}</div> 
 				          		<span class="contact-status online"></span>
 			          			<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
 				          		<div class="meta">
 					        		<p class="name">{{n.usuario}}</p>
-					        		<p class="preview" id="preview-{{c.name}}">You just got LITT up, Mike.</p>
+					        		<p class="preview" id="preview-{{c.name}}"></p>
 	          					</div>
 	            				</div>
 	              			</li></a>
@@ -757,6 +758,7 @@ Website: http://emilcarlsson.se/
               {% endfor %}
           {% else %}
                       <div class="wrap">
+                      <div id="room_id" hidden>{{c.name}}</div> 
                       <span class="contact-status online"></span>
                       <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
                       <div class="meta">
@@ -780,7 +782,7 @@ Website: http://emilcarlsson.se/
 	<div class="content">
 		<div class="contact-profile">
 			<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-			<p>Harvey Specter</p>
+			<p>{{nombre_sala}}</p>
 		</div>
 		<div class="messages">
 			<ul>
@@ -816,9 +818,24 @@ Website: http://emilcarlsson.se/
 <script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script><script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 <script>
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
-    var last_messages = document.getElementById('list_message');
+    var last_messages = document.getElementById('list_message').textContent;
+    chatlist = document.querySelectorAll("#room_id");
+    console.log(chatlist[0].textContent)
+    console.log(last_messages)
 
-
+    function last_messages_for(last_messages, chatlist) {
+        last_messages = last_messages.replace("[", "")
+        last_messages = last_messages.replace("]", "")
+        last_messages = last_messages.replaceAll("'", "")
+        list_messages = last_messages.split(",")
+        var results = [], item;
+        for (var i = 0; i < list_messages.length; i++) {
+            search = "preview-"+chatlist[i].textContent
+            item = document.getElementById(search);
+            item.innerHTML = list_messages[i]
+        }
+    }
+    last_messages_for(last_messages, chatlist) 
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
     const chatSocket = new ReconnectingWebSocket(
         ws_scheme 
@@ -834,7 +851,7 @@ Website: http://emilcarlsson.se/
         document.getElementById("usuarioProv").style.display = "none"
         var micapa = document.getElementById('messages-history');
         var usuarioProv= document.getElementById('usuarioProv').textContent;            
-          
+
 
 
         if(usuarioProv == data.name)

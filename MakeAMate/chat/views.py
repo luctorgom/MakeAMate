@@ -49,7 +49,10 @@ def room(request, room_name):
         for c in chats:
             if request.user in c.participants.all():
                 lista_chat.append(c)
-                lista_last_message.append(Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+                try:
+                    lista_last_message.append(Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+                except IndexError:
+                    lista_last_message.append("No se ha enviado ningún mensaje")
             
         lista_usuarios = []
         usuarios = Usuario.objects.filter(~Q(id=request.user.id))
