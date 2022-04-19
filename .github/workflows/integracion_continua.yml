@@ -54,4 +54,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "makeamate-s3"
           heroku_email: "luctorgom@alum.us.es"
-    # - run: heroku run -a makeamate-s3 sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
+    - run: heroku run -a makeamate-s3 sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin') or User.objects.create_superuser('admin', 'admin@example.com', 'admin')\""
