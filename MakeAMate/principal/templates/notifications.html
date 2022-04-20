@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% include "base.html" %}
 {% block extrahead %}
 <link rel="stylesheet" href="/static/css/notifications.css" />
 <meta charset="UTF-8">
@@ -6,44 +6,74 @@
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/static/css/notifications.css" />
+<link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <script src="../../static/assets_base/js/bs-init.js"></script>
+    <script src="../../static/assets_base/js/theme.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container">
     <h3 class="m-b-50 heading-line">Notificaciones<i class="fa fa-bell text-muted"></i></h3>
+    {%if notificaciones|length == 0 %}
+        <p>No hay notificaciones</p>
+    {% endif %}
         {%for i in notificaciones%}
-        {%if i.1 == "Mates" %}
+            {%if i.2 == "Mates" %}
         <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
             <div class="notification-list">
-                    <div class="notification-list_img">
-                        <img src="..\static\logotipo.png" alt="user">
-                    </div>
+                <div class="notification-list_feature-img">
+                    <img src="..\static\logotipo.png" alt="Feature image">
+                </div>
                     <div class="notification-list_detail">
                         <p><b>{{i.0.userSalida}}</b> hizo mate contigo</p>
-                        <p class="text-muted">Has hecho mate con {{i.0.userSalida}}. ¿Por qué no chateas con él?</p>
+                        <p class="text-muted">Has hecho mate con {{i.0.userSalida}}. ¿Nuevo compi de piso?</p>
                         <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
                     </div>
-                    <div class="notification-list_feature-img">
-                        <img src="..\static\images\icons\Choca_esos_5.png" alt="Feature image">
+
+                    <div class="me-3">
+                        <div class="bg-warning icon-circle"><i class="fas fa-user-friends text-white"></i></div>
                     </div>
             </div>
+        </div>
         {% endif %}
-        {%if i.1 == "Premium" %}
+        {%if i.2 == "Premium" %}
         <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
             <div class="notification-list">
-                    <div class="notification-list_img">
-                        <img src="..\static\logotipo.png" alt="user">
-                    </div>
+                <div class="notification-list_feature-img">
+                    <img src="..\static\logotipo.png" alt="Feature image">
+                </div>
                     <div class="notification-list_detail">
                         <p><b>{{i.0.userEntrada}}</b> te ha dado like.👑</p>
                         <p class="text-muted">Gracias a premium puedes conocer qué perfiles te han dado like.</p>
                         <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
                     </div>
-                    <div class="notification-list_feature-img">
-                        <img src="..\static\images\icons\heart.png" alt="Feature image">
+
+                    <div class="me-3">
+                        <div class="bg-primary icon-circle" style="--bs-primary: #cb4edf;--bs-primary-rgb: 203,78,223;"><i class="fas fa-crown text-white"></i></div>
                     </div>
             </div>
+        </div>
+            
+        {% endif %}
+        {%if i.2 == "Chat" %}
+        <div class="notification-ui_dd-content{%if False %}notification-list--unread{% endif%}"><!-- if para unread!-->
+            <div class="notification-list">
+                <div class="notification-list_feature-img">
+                    <img src="..\static\logotipo.png" alt="Feature image">
+                </div>
+                    <div class="notification-list_detail">
+                        <p><b>{{i.0}}</b> te ha mandado un mensaje</p>
+                        <p class="text-muted">Recibiste un mensaje de {{i.0}}. ¿Por qué no chateais?</p>
+                        <p class="text-muted"><small>{{i.1}}</small></p>
+                    </div>
+
+                    <div class="me-3">
+                        <div class="bg-success icon-circle"><i class="far fa-comment text-white"></i></div>
+                    </div>
+            </div>
+        </div>
         {% endif %}
         {% endfor%}
-        </div>
-</div>
+    </div>
 {% endblock %}
+{% include "footer.html" %}

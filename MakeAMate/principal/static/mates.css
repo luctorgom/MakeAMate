@@ -293,11 +293,16 @@ img.alineadoTextoImagenArriba{
 
 
 .info {
-    font: 120% sans-serif;
-  }
+    font: 150% nunito;
+}
+
+.description {
+    font: 110% nunito;
+}
 
 .location {
-    font: 130% sans-serif;
+    font: 150% nunito;
+    color:rgb(131, 131, 131);
 }
 
 .infoPersonal p{
