@@ -12,7 +12,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
-BASE_CLOUDIFY_URL = "https://res.cloudinary.com/deqjxxfzm/image/upload/v1650488233/"
+BASE_CLOUDIFY_URL = "https://res.cloudinary.com/deqjxxfzm/image/upload/v1/"
 
 # Create your models here.
 class Aficiones(models.Model):
