@@ -153,8 +153,9 @@ div.ckbox div label input:checked{
 
 .logoCentrado{
     width: 100px;
-    top: 30px;
-    margin-left: 50%;
+    top: 14px;
+    margin-left: auto;
+    margin-right: auto;
 
 }
   
@@ -164,6 +165,27 @@ div.ckbox div label input:checked{
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 5px;
     margin-top: 15%;
+}
+
+.ventanaEmergente{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 0.3rem;
+    outline: 0;
+    top: 30%;
+    left: 30%;
+    padding: 2%;
+
+    
+}
+
+.close{
+    font-size:30px;
 }
