@@ -30,7 +30,7 @@ class UsuarioForm(forms.Form):
     telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
     foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
     fecha_nacimiento = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS, error_messages={'invalid': 'Inserta una fecha válida'})
-    lugar = forms.CharField(required=False, max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudias'}))
+    lugar = forms.CharField(required=False, max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     nacionalidad = forms.CharField(required=False, max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
     genero = forms.ChoiceField(required=False, choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))
     tags = forms.ModelMultipleChoiceField(required=False, label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'select_field_class' }))
@@ -207,8 +207,8 @@ class UsuarioFormEdit(forms.Form):
     descripcion = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
 
     # idiomas = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
-    tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple)
-    aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple)
+    tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'}, queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
+    aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
 
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')

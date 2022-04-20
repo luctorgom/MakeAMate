@@ -103,20 +103,20 @@
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
                       <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%">
-                      <div class="infoPersonal">
-                        <p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>
+                      <div>
+                        <!--<p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>-->
                         {% if i.genero == "M" %}
-                          <h5 class="centrado">Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/male.png"</h5>
+                          <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género:<img class="alineadoTextoImagenCentro" src="../../static/images/icons/male.png"</p>
                         {% elif i.genero == "F" %}
-                          <h5 class="centrado">Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/female.png"></h5>
+                          <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/female.png"></p>
                         {% elif i.genero == "O" %}  
-                          <h5 class="centrado">Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/agender.png"></h5>
+                          <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/agender.png"></p>
                         {% endif %}
+                        <p class="location"><img class="alineadoTextoImagenCentro" src="../../static/images/icons/location.png">{{i.lugar}}</p>
                       </div>
-                      <p class="location"><img class="alineadoTextoImagenCentro" src="../../static/images/icons/place_black_24dp.svg">{{i.lugar}}</p>
                     </div>
                   </div>
-                  <hr class="sm">
+                  <!--<hr class="sm">-->
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
                       {% if i.piso != null %}
@@ -137,9 +137,9 @@
                   <div class="col-sm-8 align-self-center">
                     <div class="card-body">
                       {% if i.descripcion == null %}
-                        <p class="card-text text-center">Soy {{i.usuario.username}} estudio {{i.estudios}} en {{i.lugar}}</p>
+                        <p class="card-text text-center description">Soy {{i.usuario.username}} estudio {{i.estudios}} en {{i.lugar}}</p>
                       {% elif i.descripcion != null %}
-                        <p class="card-text text-center">{{i.descripcion}}</p>
+                        <p class="card-text text-center description">{{i.descripcion}}</p>
                       {% endif %}
                     </div>
                   </div>
