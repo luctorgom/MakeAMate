@@ -152,9 +152,10 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 # Image Storage
 
+CLOUDINARY_SECRET = os.getenv('CLOUDINARY_SECRET')
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'deqjxxfzm',
     'API_KEY': '862584419384981',
-    'API_SECRET': 'KCtoyTe2TtcF1_RUNBOd5siX8fE',
+    'API_SECRET': CLOUDINARY_SECRET,
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
