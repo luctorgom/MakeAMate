@@ -12,3 +12,5 @@ daphne
 channels-redis
 Twisted
 asgiref
+cloudinary==1.17.0
+django-cloudinary-storage==0.2.3
