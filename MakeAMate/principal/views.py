@@ -56,12 +56,6 @@ def logout_view(request):
     return redirect(homepage)
 
 
-def register_view(request):
-    template='loggeos/register2.html'    
-    params = {'form': UsuarioForm()}
-    return render(request,template, params)
-
-
 @login_required(login_url="/login")
 def homepage(request):
     if request.user.is_authenticated:
