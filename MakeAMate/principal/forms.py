@@ -207,8 +207,8 @@ class UsuarioFormEdit(forms.Form):
     descripcion = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
 
     # idiomas = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
-    tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple())
-    aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple())
+    tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'ckbox'}))
+    aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'ckbox'}))
 
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')
