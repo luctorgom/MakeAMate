@@ -437,6 +437,7 @@
 }
 #frame #sidepanel #contacts ul li.contact .wrap .meta .name {
   font-weight: 600;
+  font-size: large;
 }
 #frame #sidepanel #contacts ul li.contact .wrap .meta .preview {
   margin: 5px 0 0 0;
@@ -632,7 +633,7 @@
   font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
   float: left;
   border: none;
-  width: calc(100% - 90px);
+  width: calc(100% - 50px);
   padding: 11px 32px 10px 8px;
   font-size: 0.8em;
   color: #4e3752;
@@ -712,28 +713,7 @@ Website: http://emilcarlsson.se/
 			<div class="wrap">
 				<img id="profile-img" src="{{usuario_actual.url_perfil_relativa}}" class="online" alt="" />
 				<p>{{usuario_actual}}</p>
-				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
-				<div id="status-options">
-					<ul>
-						<li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
-						<li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
-						<li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
-						<li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
-					</ul>
-				</div>
-				<div id="expanded">
-					<label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
-					<input name="twitter" type="text" value="mikeross" />
-					<label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
-					<input name="twitter" type="text" value="ross81" />
-					<label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
-					<input name="twitter" type="text" value="mike.ross" />
-				</div>
 			</div>
-		</div>
-		<div id="search">
-			<label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
-			<input type="text" placeholder="Search contacts..." />
 		</div>
 		<div id="contacts">
 			<ul>
@@ -780,8 +760,8 @@ Website: http://emilcarlsson.se/
 			</ul>
 		</div>
 		<div id="bottom-bar">
-			<button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>
-			<button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
+			<button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Crear Grupo</span></button>
+			<button id="settings" onclick="" href="/chat/" ><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Inicio</span></button>
 		</div>
 	</div>
 	<div class="content">
