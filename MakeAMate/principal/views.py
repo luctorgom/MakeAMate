@@ -1,38 +1,25 @@
-from hashlib import new
-from tabnanny import check
 from datetime import datetime,timedelta
-from urllib import request
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
-from django.http import HttpResponseForbidden
 from pagos.models import Suscripcion
 from principal.forms import UsuarioForm, SmsForm
-from .models import Aficiones, Piso, Tag, Usuario,Mate, Foto
+from .models import Piso, Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from django.http.response import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .recommendations import rs_score
 from chat.views import crear_sala
 from chat.models import Chat,ChatRoom,LastConnection
 from django.db.models import Q, Count
 from datetime import datetime
-from django.db.models import Q
 from .forms import ChangePasswordForm, ChangePhotoForm, UsuarioForm, SmsForm, UsuarioFormEdit
-from principal import models
 from .forms import UsuarioForm, SmsForm
 import os
-import secrets
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-import json
 from django.views.decorators.cache import never_cache
-from .recommendations import rs_score
 from django.contrib import messages
-import ctypes
 
 
 @never_cache
@@ -54,12 +41,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect(homepage)
-
-
-def register_view(request):
-    template='loggeos/register2.html'    
-    params = {'form': UsuarioForm()}
-    return render(request,template, params)
 
 
 @login_required(login_url="/login")
@@ -87,8 +68,7 @@ def homepage(request):
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
 
-        lista_mates=notificaciones_mates(request)
-        chats = notificaciones_chat(request)
+        lista_mates=notificaciones(request)
         
         params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
         return render(request,template,params)
@@ -160,7 +140,7 @@ def payments(request):
     template='payments.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
 
     try :
         suscripcion=Suscripcion.objects.all()[0]  
@@ -176,6 +156,11 @@ def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
     
+
+def privacidad(request):
+    template='loggeos/privacidad.html'
+    return render(request,template) 
+
 def notificaciones_mates(request):
     lista_notificaciones=[]
     loggeado= request.user
@@ -216,10 +201,10 @@ def notificaciones_chat(request):
             num = 0
         if num != 0:
             if chat.group():
-                notificaciones_chat.append((chat.room_name,num,chat.last_message,"Chat"))
+                notificaciones_chat.append((chat.room_name,chat.last_message,"Chat",num))
             else:
                 nombre = chat.participants.all().filter(~Q(id=user.id))[0].username
-                notificaciones_chat.append((nombre,chat.last_message,num,"Chat"))
+                notificaciones_chat.append((nombre,chat.last_message,"Chat",num))
     #notificaciones_chat.sort(key=lambda tupla: tupla[2], reverse=True)
     return notificaciones_chat
 
@@ -232,12 +217,12 @@ def notificaciones(request):
 
 def notifications_list(request):
     template='notifications.html'
-    notis=notificaciones_mates(request)
+    notis=notificaciones(request)
     response={'notificaciones':notis}
     return render(request,template,response)
 
 def info(request):
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
     return render(request,'info.html',{'notificaciones':lista_mates})
 
 def error_403(request,exception):
@@ -254,7 +239,7 @@ def estadisticas_mates(request):
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
     es_premium= perfil.es_premium()
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
 
     if(es_premium):
         #NUMERO DE INTERACIONES
@@ -426,7 +411,7 @@ def profile_view(request):
 
     user = request.user
     usuario = Usuario.objects.get(usuario = user)
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
 
     initial_dict = {
         'foto_usuario': usuario.foto,
@@ -435,7 +420,6 @@ def profile_view(request):
         'zona_piso': usuario.piso.zona if (usuario.piso)  else "",
         'descripcion': usuario.descripcion,
         'piso_encontrado': usuario.piso_encontrado,
-        # 'idiomas': usuario.idiomas.all(),
         'tags': usuario.tags.all(), 
         'aficiones': usuario.aficiones.all()
     }
@@ -459,30 +443,26 @@ def profile_view(request):
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
 
-                user_actual = request.user
-                perfil = Usuario.objects.get(usuario = user_actual)
                 if form_zona_piso != "":
-                    piso_usuario, no_existe = Piso.objects.get_or_create(zona = form_zona_piso)
-                    if no_existe:
-                        piso_usuario.save()
-                    Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, piso_encontrado = form_piso_encontrado,
-                    piso = piso_usuario)
-                else:
-                    Usuario.objects.filter(usuario = user_actual).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
-                        genero = form_genero, piso_encontrado = form_piso_encontrado)
+                    piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
+                    Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
+                    genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario)
 
-                perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
-                # perfil_updated_2.idiomas.set(form_idiomas)
+                else:
+                    Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
+                        genero = form_genero, piso_encontrado = form_piso_encontrado)
+                
+                perfil_updated_2 = Usuario.objects.get(usuario = user)
                 perfil_updated_2.tags.set(form_tags)
                 perfil_updated_2.aficiones.set(form_aficiones)
                 perfil_updated_2.save() 
                 return redirect("/profile") 
+
             else:
                 form_change_password = ChangePasswordForm()
                 form_change_photo = ChangePhotoForm()
                 return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
-                'form_change_photo': form_change_photo,'piso_encontrado':usuario.piso_encontrado})
+                'form_change_photo': form_change_photo,'piso_encontrado':usuario.piso_encontrado,'usuario':usuario})
 
         if "actualizarContraseña" in request.POST:
             form_change_password = ChangePasswordForm(request.POST)
@@ -490,9 +470,8 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_password.is_valid():
                 form_password = form_change_password.cleaned_data['password']
-                usuario = request.user
-                usuario.set_password(form_password)
-                usuario.save()
+                user.set_password(form_password)
+                user.save()
                 return redirect("/profile") 
             else:
                 form_change_photo = ChangePhotoForm()
@@ -506,10 +485,7 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_photo.is_valid(): 
                 form_photo = form_change_photo.cleaned_data['foto_usuario']
-                user = request.user
-
                 Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
- 
                 return redirect("/profile")
             else:
                 form = UsuarioFormEdit(initial = initial_dict)
@@ -518,7 +494,7 @@ def profile_view(request):
 
 
     return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
-            'form_change_photo': form_change_photo})
+            'form_change_photo': form_change_photo,'usuario':usuario})
 
 
 
