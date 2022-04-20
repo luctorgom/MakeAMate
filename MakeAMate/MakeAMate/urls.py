@@ -34,14 +34,15 @@ urlpatterns = [
     path('paypal/<int:pk>/', include('pagos.urls')),
     path('pagos/', include('pagos.urls')),
     path("register/",views.registro,name="register"),
-    path("register/terminos/",views.terminos,name="terminos"),
+    path("register/terminos/",views.terminos2,name="terminos"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
     path("profile/",views.profile_view,name="profile"),
     path('', views.homepage,name="home"),
     path('favicon.ico/', RedirectView.as_view(url=staticfiles_storage.url('principal/images/'))),
     path('estadisticas/',views.estadisticas_mates, name="estadisticas"),
     path('chat/',include('chat.urls')),
-    path('noti/',views.notificaciones_chat,name='noti')
+    path('privacidad/',views.privacidad,name='privacidad'),
+
 ]
 
 handler403 = "principal.views.error_403"
