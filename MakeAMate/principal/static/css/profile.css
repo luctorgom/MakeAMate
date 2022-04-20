@@ -117,6 +117,10 @@ div.ckbox div label input:checked{
     margin-top: 0.25rem;
 }
 
+#boton1 {
+    margin-right: 0.25rem;
+}
+
 .p-form input[type="text"], .p-form input[type="password"], .p-form textarea, .p-form select {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;

@@ -5,7 +5,7 @@
 <script src="../../static/assets_base/js/bs-init.js"></script>
 <script src="../../static/assets_base/js/theme.js"></script>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 <title>edit_profile</title>
@@ -49,7 +49,16 @@
 
     }
 </script>
-
+<script>
+    $(document).ready(function () {
+        $("#boton1").click(function () {
+            alert("Si deseas borrar tus datos envía un correo electrónico a makeamate@gmail.com con Asunto: Borrar Datos");
+        });
+        $("#boton2").click(function () {
+            alert("Si deseas extraer tus datos envía un correo electrónico a makeamate@gmail.com con Asunto: Extraer Datos");
+        });
+    });
+</script>
 
 {% endblock %}
 {% block content %}
@@ -91,6 +100,10 @@
                 </div>
             </div>
         </form>
+        <div class="container d-flex align-items-center justify-content-center">
+            <button type="button" class="btn btn-danger" id="boton1">Borrar mi cuenta</button>
+            <button type="button" class="btn btn-primary" id="boton2">Datos almacenados en la página</button>
+        </div>
     </div>
     <div class="parte-dcha">
         <form class="p-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
