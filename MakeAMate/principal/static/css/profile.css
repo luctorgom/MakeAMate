@@ -1,175 +1,133 @@
-body{
-    margin:0;
-
-}
-
-.contenedorPerfil{
-    margin-top:10vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    
-}
-
-.formularioPerfil{
-    border-radius: 35px;
-    height:70vh;
-    width: 80vw;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around ; 
-    overflow: visible;
-    
-}
-
-.formularioPerfil ul{
-    overflow-wrap: break-word;
-    list-style:none;
-    -moz-column-count: 3;
-    -moz-column-gap: 20px;
-    -webkit-column-count: 3;
-    -webkit-column-gap: 20px;
-    column-count: 3;
-    column-gap: 20px;
-}
-
-.Titulo{
-    width:15vw;
+.titulo {
+    margin-top: 3%;
     text-align: center;
-
+    flex-direction: row;
+    margin-left: 15%;
+    margin-right: 15%;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(197, 160, 240);
 }
-.editarFoto{
-    border-radius: 20px;
-    height:fit-content;
-    width:fit-content;
-    padding: 2rem;
-    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-    min-width: 15vw;
-
+  
+.p-form {
+    margin: 1%;
+    background: rgb(242,233,254);
+    margin-bottom: 2%;
 }
-
-.editarPerfil{
-    border-radius: 20px;
-    width:35rem;
-    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-    height:fit-content;
-    padding: 2rem;
-    
+  
+.form-foto {
+    text-align: center;
 }
-
-.form-control  .descripcion{
-    width: 100%;
-}
-.editarContraseña{
-    border-radius: 20px;
-    width:30rem;
-    background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-    height:fit-content;
-    padding: 2rem;
-}
-
-.fotoPerfil {
-    border-radius: 100%;
-    width: 5rem;
-    height:5rem;
-    margin:auto;
-
-  }
-
-.nombreUsuario{
-    font-weight: bolder;
-
-}
-
-.form-label{
-    padding: 10px;
-    font-weight: bolder;
-
-}
-.form-control{
-    padding: 10px;
-
-}
-.botones{
-    display: flex;
-    justify-content: center;
-    border-radius: 30%;
-
-}
-
-.ActualizarContraseña, .ActualizarFoto,.ActualizarPerfilTrue{
-    padding: 10px;
-    border-radius: 15px;
-    background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
-    border:2px solid rgb(255,255,255)
-
-}
-
-.ActualizarContraseña:active, .ActualizarFoto:active,.ActualizarPerfilTrue:active{
-    background: rgba(255, 255, 255, 0.4);
-}
-#id_correo, #id_password, #id_password2, #id_nombre, #id_apellidos, #id_telefono_usuario, #id_lugar, #id_nacionalidad, #id_genero, #id_tags, #id_idiomas, #id_aficiones,#id_fecha_nacimiento,#id_zona_piso{
-    width: 100%;
+  
+.foto-perfil {
+    width: 40%;
     height: 100%;
-    border-color:transparent;
+    border-radius: 50%;
+    margin-bottom: 1%;
 }
-#id_descripcion { 
-    width: 100%; 
+  
+.head-form {
+    border-bottom: 2px solid rgb(197,160,240);
+    margin-right: 5%;
+    margin-left: 5%;
+    margin-bottom: 2%;
+}
+  
+.head-form-img {
+    width: 35px;
+    display: block;
+    margin-top: 3%;
+    border-radius: 50%;
+    text-align: left;
+}
+  
+.subtitulo {
+    display: block;
+    
+    margin-left: 5%;
+}
+  
+.botones {
+    text-align: center;
+    padding: 2%;
+}
+  
+.btn {
+    background: rgb(197,160,240);
+    border-radius: 15px;
+    border: 2px solid rgb(104, 67, 146) ;
+    padding: 1.5%;
+}
+  
+@media (min-width: 768px) {
+    .parte-dcha {
+      float: right;
+      width: 50%;
+    }
+}
+  
+@media (min-width: 768px) {
+    .parte-izqda {
+      float: left;
+      width: 50%;
+    }
+}
+  
+.form-label {
+    padding-left: 2%;
+    font-weight: bolder;
+    margin-top: 2%;
+}
+  
+.errorlist {
+    color: #f10606;
 }
 
-@media screen and (max-width: 768px) {
-    /* For mobile phones: */
-    .contenedorPerfil{
-        display: flex;
-        flex-direction: column;
+/*-----------------------------------------------------------------------------------------------------*/
 
-    }
-
-    .formularioPerfil{
-        border-radius: 35px;
-        width: 100%;
-        height: fit-content;
-        display: inline-block;
-        overflow: visible;
-        vertical-align:top;
-        margin-bottom: 2rem;
-
-    }
-    .editarFoto{
-        width:100vw;
-        padding: 2rem;
-        background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-    }
+div.ckbox div label{
+    margin: 4px;
+    background-color: #c4f3cc;
+    border: 1px solid rgb(80, 107, 85);
+    overflow: hidden;
+}
+  
+div.ckbox div label{
+    text-align: center;
+    padding: 3px 0;
     
-    .editarPerfil{
-        border-radius: 20px;
-        width:100%;
-        background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-        height:fit-content;
-        padding: 2rem;
-        
-    }
+}
+  
+div.ckbox div label input {
+    position: absolute;
+    display: none;
+    color: #fff
+}
+  /* selects all of the text within the input element and changes the color of the text */
+ div.ckbox div label input {color: #fff;}
+  
+  
+ /* This will declare how a selected input will look giving generic properties */
+div.ckbox div label input:checked{
+      color: #000000;
+      text-shadow: 0 0  6px rgba(0, 0, 0, 0.8);
+}
+
+/*-----------------------------------------------------------------------------------------------------*/
+.btn, .btn-primary {
+    margin-top: 0.25rem;
+}
+
+.p-form input[type="text"], .p-form input[type="password"], .p-form textarea, .p-form select {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #673AB7;
+    background: #fff;
+    outline-width: 0;
+    border-radius: 15rem;
+    margin: 1%;
+    width: 98%;
+    padding: 1%;
+
     
-    .editarContraseña{
-        border-radius: 20px;
-        width:100%;
-        background:  linear-gradient(180deg, rgb(197, 160, 240) 0%, rgb(188, 174, 245) 50%,  rgb(166, 164, 250) 100%);
-        height:fit-content;
-        padding: 2rem;
-    }
-    .Titulo {
-        width: 100vw;
-        text-align: center;
-    }
-    .formularioPerfil ul{
-        -moz-column-count: 2;
-        -webkit-column-count: 2;
-        column-count: 2;
-    }
-  }
-.errorlist{
-    list-style-type:none;
-    color:rgb(153, 0, 255);
-    margin:0;
-    padding:0;
 }
