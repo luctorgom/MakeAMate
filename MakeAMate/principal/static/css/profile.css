@@ -10,7 +10,6 @@
   
 .p-form {
     margin: 1%;
-    box-shadow: 1px 1px 2px rgb(121, 116, 126);
     background: rgb(242,233,254);
     margin-bottom: 2%;
 }
@@ -101,7 +100,7 @@ div.ckbox div label{
 div.ckbox div label input {
     position: absolute;
     display: none;
-    color: #fff !important;
+    color: #fff
 }
   /* selects all of the text within the input element and changes the color of the text */
  div.ckbox div label input {color: #fff;}
@@ -114,31 +113,21 @@ div.ckbox div label input:checked{
 }
 
 /*-----------------------------------------------------------------------------------------------------*/
-
-/* input[name="tags"] {
-    visibility: hidden;
-    /* position: absolute;
-    left: -9999px; */
-} */
-
-
-  
-/*-----------------------------------------------------------------------------------------------------*/
+.btn, .btn-primary {
+    margin-top: 0.25rem;
+}
 
 .p-form input[type="text"], .p-form input[type="password"], .p-form textarea, .p-form select {
-    margin: 1%;
-    width: 98%;
-    padding: 1%;
-    background: #f1efef;
-    border: 1px solid;
-}
-    
-.p-form input[type="text"]:focus, .p-form input[type="password"]:focus, .p-form textarea:focus, .p-form select:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
     border: 1px solid #673AB7;
     background: #fff;
     outline-width: 0;
-    border-radius: 15px;
+    border-radius: 15rem;
+    margin: 1%;
+    width: 98%;
+    padding: 1%;
+
+    
 }
