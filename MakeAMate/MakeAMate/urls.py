@@ -31,7 +31,6 @@ urlpatterns = [
     path("payments/",views.payments,name="payments"),
     path("notifications/",views.notifications_list,name="notifications"),
     path("info/",views.info,name="info"),
-    path('chat/',include('chat.urls')),
     path('paypal/<int:pk>/', include('pagos.urls')),
     path('pagos/', include('pagos.urls')),
     path("register/",views.registro,name="register"),
@@ -39,8 +38,9 @@ urlpatterns = [
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
     path("profile/",views.profile_view,name="profile"),
     path('', views.homepage,name="home"),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/favicon.ico'))),
+    path('favicon.ico/', RedirectView.as_view(url=staticfiles_storage.url('principal/images/'))),
     path('estadisticas/',views.estadisticas_mates, name="estadisticas"),
+    path('chat/',include('chat.urls')),
     path('privacidad/',views.privacidad,name='privacidad'),
 
 ]
