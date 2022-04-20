@@ -155,6 +155,10 @@ def payments(request):
 def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
+
+def terminos2(request):
+    template='loggeos/terminos_2.html'
+    return render(request,template) 
     
 
 def privacidad(request):
