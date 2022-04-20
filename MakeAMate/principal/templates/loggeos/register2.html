@@ -266,7 +266,7 @@ p {
                     <ul id="progressbar">
                         <li class="active" id="account"><strong>Cuenta</strong></li>
                         <li id="personal"><strong>Personal</strong></li>
-                        <li id="payment"><strong>Imagenes</strong></li>
+                        <li id="payment"><strong>Imágenes</strong></li>
                         <li id="confirm"><strong>Termina</strong></li>
                     </ul>
                     <div class="progress">
@@ -278,14 +278,23 @@ p {
                                 <div class="col-5">
                                     <h2 class="fs-title">Informacion de la cuenta:</h2>
                                 </div>
+                              
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 1 - 4</h2>
                                 </div>
+                                <div>
+                                    {% if  form.errors.items %}
+                                        <span class = "errorlist"> 
+                                           Se han encontrado errores en el formulario, por favor, revise todos los campos.
+                                        </span>
+                                    {% endif %}
+                                </div>
                             </div> <label class="fieldlabels" >Email: * </label> <br>  <span class = "errorlist"> {{  form.correo.errors | striptags  }} </span>  {{  form.correo  }} <label class="fieldlabels">Usuario: *</label> <br>  <span class = "errorlist"> {{  form.username.errors | striptags  }} </span>  {{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> <br>  <span class = "errorlist"> {{  form.password.errors | striptags  }} </span>  {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label>  <br>  <span class = "errorlist"> {{  form.password2.errors | striptags  }} </span> {{  form.password2  }} 
 
-                            <label class="fieldlabels">Teléfono: *</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
+                            <label class="fieldlabels">Teléfono: (Debe empezar con el prefijo de tu pais, por ej +34)</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
 
-                        </div> <input type="button" name="next" class="next action-button" value="Siguiente" />
+                        </div><input type="button" name="next" class="next action-button" value="Siguiente" />
+                        ¿Ya estas registrado? <a href="/login" class="text">Accede a tu cuenta </a>
                     </fieldset>
                     
                      <fieldset>
@@ -297,13 +306,13 @@ p {
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 2 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento</label>   <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label>  <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
+                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento (Formato: dd-mm-yyyy , ej 02-03-1998)</label>   <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label>  <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
                             <label class="fieldlabels">Género</label>  <br>  <span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>   {{  form.genero  }}
                             <br>
                             
-                            <label class="fieldlabels">Tags</label>    {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
+                            <label class="fieldlabels">Elige al menos 3 Etiquetas que te definan</label>    <br> {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
                           
-                            <label class="fieldlabels">Aficiones</label>  {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
+                            <label class="fieldlabels">Elige al menos 3 Aficiones que te definan</label> <br> {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
                             <br>
                         </div> <input type="button" name="next" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
                     </fieldset>
@@ -344,7 +353,7 @@ p {
                                 
                             </div>                         
                         </div>
-                        <br> <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                        <br>  <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
 
                     </fieldset>
                 </form>
@@ -502,13 +511,15 @@ p {
     }
 </script>
 <script>
-$('#id_piso_encontrado').on('change', function() {
-        if($(this).val() === 'False') {
+function ocultarZona() {
+        if($('#id_piso_encontrado').val() === 'False') {
             $('.zona_piso').hide();
         } else {
             $('.zona_piso').show();
         }
- });
+ }
+$('#id_piso_encontrado').on('change', ocultarZona);
+window.onload = ocultarZona;
 </script>
 <script>$('.select_field_class').select2( { placeholder: "Elige", maximumSelectionSize: 100 } );</script>
 
