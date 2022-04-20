@@ -35,7 +35,7 @@ urlpatterns = [
     path('paypal/<int:pk>/', include('pagos.urls')),
     path('pagos/', include('pagos.urls')),
     path("register/",views.registro,name="register"),
-    path("register/terminos/",views.terminos,name="terminos"),
+    path("register/terminos/",views.terminos2,name="terminos"),
     path("register/registerSMS/<int:user_id>",views.twilio,name="registerSMS"),
     path("profile/",views.profile_view,name="profile"),
     path('', views.homepage,name="home"),
