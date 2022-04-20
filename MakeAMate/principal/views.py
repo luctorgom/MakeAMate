@@ -81,8 +81,7 @@ def homepage(request):
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
 
-        lista_mates=notificaciones_mates(request)
-        chats = notificaciones_chat(request)
+        lista_mates=notificaciones(request)
         
         params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
         return render(request,template,params)
@@ -154,7 +153,7 @@ def payments(request):
     template='payments.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
 
     try :
         suscripcion=Suscripcion.objects.all()[0]  
@@ -210,10 +209,10 @@ def notificaciones_chat(request):
             num = 0
         if num != 0:
             if chat.group():
-                notificaciones_chat.append((chat.room_name,num,chat.last_message,"Chat"))
+                notificaciones_chat.append((chat.room_name,chat.last_message,"Chat",num))
             else:
                 nombre = chat.participants.all().filter(~Q(id=user.id))[0].username
-                notificaciones_chat.append((nombre,chat.last_message,num,"Chat"))
+                notificaciones_chat.append((nombre,chat.last_message,"Chat",num))
     #notificaciones_chat.sort(key=lambda tupla: tupla[2], reverse=True)
     return notificaciones_chat
 
@@ -226,12 +225,12 @@ def notificaciones(request):
 
 def notifications_list(request):
     template='notifications.html'
-    notis=notificaciones_mates(request)
+    notis=notificaciones(request)
     response={'notificaciones':notis}
     return render(request,template,response)
 
 def info(request):
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
     return render(request,'info.html',{'notificaciones':lista_mates})
 
 def error_403(request,exception):
@@ -248,7 +247,7 @@ def estadisticas_mates(request):
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
     es_premium= perfil.es_premium()
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
 
     if(es_premium):
         #NUMERO DE INTERACIONES
@@ -420,7 +419,7 @@ def profile_view(request):
 
     user = request.user
     usuario = Usuario.objects.get(usuario = user)
-    lista_mates=notificaciones_mates(request)
+    lista_mates=notificaciones(request)
 
     initial_dict = {
         'foto_usuario': usuario.foto,

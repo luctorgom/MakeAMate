@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% include "base.html" %}
 {% block extrahead %}
         <link rel="stylesheet" href="/static/paypal.css">
     <!-- Add meta tags for mobile and IE -->
@@ -79,9 +79,9 @@
            
     </div>
     
-</div>
 
 
 
 
 {% endblock %}
+{% include "footer.html" %}
