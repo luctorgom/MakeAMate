@@ -156,6 +156,11 @@ def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
     
+
+def privacidad(request):
+    template='loggeos/privacidad.html'
+    return render(request,template) 
+
 def notificaciones_mates(request):
     lista_notificaciones=[]
     loggeado= request.user
@@ -387,7 +392,7 @@ def twilio(request, user_id):
             # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
             # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
-        return render(request, 'loggeos/index.html', {'form': form})
+        return redirect("/login")
 
 
     verification = start_verification(telefono)
