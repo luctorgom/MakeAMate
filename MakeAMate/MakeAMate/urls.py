@@ -41,6 +41,8 @@ urlpatterns = [
     path('', views.homepage,name="home"),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/favicon.ico'))),
     path('estadisticas/',views.estadisticas_mates, name="estadisticas"),
+    path('privacidad/',views.privacidad,name='privacidad'),
+
 ]
 
 handler403 = "principal.views.error_403"
