@@ -176,6 +176,11 @@ def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
     
+
+def privacidad(request):
+    template='loggeos/privacidad.html'
+    return render(request,template) 
+
 def notificaciones_mates(request):
     lista_notificaciones=[]
     loggeado= request.user
