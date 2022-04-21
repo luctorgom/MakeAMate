@@ -64,7 +64,7 @@
                     <img class="head-form-img" src="/static/logotipo.png" />
                     <div class="subtitulo"><h3>{{request.user.username}}<br /></h3></div>   
                 </div>
-                <img class="foto-perfil" src="../static/images/users/{{ usuario.foto }}" alt="{{usuario.foto}}" />
+                <img class="foto-perfil" src="{{ usuario.url_perfil_relativa }}" alt="{{usuario.foto}}" />
                 <div class="form-control">{{  form_change_photo.foto_usuario  }}</div><span class = "errorlist"> {{  form_change_photo.foto_usuario.errors | striptags  }} </span>  
                 <div class="botones"><button class="btn btn-primary" type="submit" name="actualizarFoto" value="actualizarFoto">Actualizar foto</button></div>
             </div>
@@ -75,17 +75,15 @@
                     <div class="subtitulo">
                         <h4>Cambiar contraseña</h4>
                     </div>
-                </div class="form-control">
+                </div>
                 
-                <label class="form-label">Nueva contraseña*</label>
-                <div class="form-control">
-                    <input class="form-control" name="password" type="password" placeholder="Escriba aquí su contraseña" />
-                </div>
+                <label class="form-label">Nueva contraseña* </label><span class = "errorlist"> {{  form_change_password.password.errors | striptags  }} </span>
+                <div class="form-control">{{  form_change_password.password  }}</div>
 
-                <label class="form-label">Confirmar contraseña*</label>
-                <div class="form-control">
-                    <input class="form-control" name="password2" type="password" placeholder="Vuelva a introducir su contraseña" />
-                </div>
+                <label class="form-label">Confirmar contraseña* </label><span class = "errorlist"> {{  form_change_password.password2.errors | striptags  }} </span>
+                <div class="form-control">{{  form_change_password.password2  }}</div> 
+               
+
                 <div class="botones">
                     <button class="btn btn-primary" name="actualizarContraseña" value="actualizarContraseña" type="submit">Actualizar contraseña</button>
                 </div>
@@ -144,13 +142,16 @@
 
                     <label class="form-label">Descripción</label><span class = "errorlist"> {{  form.descripcion.errors | striptags  }} </span>  
                     <div class="form-control descripcion">{{  form.descripcion  }}</div>
+
+                    <label class="form-label">Estudios</label><span class = "errorlist"> {{  form.estudios.errors | striptags  }} </span>  
+                    <div class="form-control estudios">{{  form.estudios  }}</div>
         
                     <label class="form-label">Piso Encontrado</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
-                    <div class="form-control">{{  form.piso_encontrado  }}</div>
+                    <div class="form-control piso_encontrado">{{  form.piso_encontrado  }}</div>
                     
                     <div class="zona_piso"name="zona_piso">
                         <label class="form-label">Zona Piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
-                        <div class="form-control">{{  form.zona_piso  }}</div>
+                        <div class="form-control zona_piso">{{  form.zona_piso  }}</div>
                     </div>
                 <div class="botones"><button class="btn btn-primary" name="actualizarPerfil" value="actualizarPerfil" type="submit">Actualizar perfil</button></div>
             </div>
