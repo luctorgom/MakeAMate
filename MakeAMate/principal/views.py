@@ -69,8 +69,11 @@ def homepage(request):
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
 
         lista_mates=notificaciones(request)
+
+        user = request.user
+        usuario = Usuario.objects.get(usuario = user)
         
-        params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
+        params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado, 'usuario':usuario}
         return render(request,template,params)
 
     return login_view(request)
@@ -137,7 +140,7 @@ def payments(request):
     if not request.user.is_authenticated:
         return redirect(login_view) 
 
-    template='payments.html'
+    template='payments2.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
     lista_mates=notificaciones(request)
@@ -147,13 +150,17 @@ def payments(request):
         params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
         return render(request,template,params) 
     except:
-        params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False}
+        params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False, 'usuario': loggeado}
         return render(request,template,params) 
 
     
 
 def terminos(request):
     template='loggeos/terminos_1.html'
+    return render(request,template) 
+
+def terminos2(request):
+    template='loggeos/terminos_2.html'
     return render(request,template) 
     
 
@@ -223,7 +230,9 @@ def notifications_list(request):
 
 def info(request):
     lista_mates=notificaciones(request)
-    return render(request,'info.html',{'notificaciones':lista_mates})
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    return render(request,'info.html',{'notificaciones':lista_mates, 'usuario': usuario})
 
 def error_403(request,exception):
     return render(request,'error403.html', status=403)
@@ -470,6 +479,7 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_password.is_valid():
                 form_password = form_change_password.cleaned_data['password']
+                print(form_password)
                 user.set_password(form_password)
                 user.save()
                 return redirect("/profile") 
@@ -485,7 +495,22 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_photo.is_valid(): 
                 form_photo = form_change_photo.cleaned_data['foto_usuario']
+
+                #PARCHE PARA MOSTRAR LAS FOTOS AL HACER UPDATE-----
+                user_falso = User.objects.create(username="usuarioImposible",first_name="Ejemplo",
+                last_name="Ejemplo", email="ejemplooo@gmail.com")
+                user_falso.set_password("contras200000")
+                user_falso.save()
+
+                Usuario.objects.create(usuario = user_falso,
+                    fecha_nacimiento = datetime.today(), lugar = "Sevilla", nacionalidad = "Española",
+                    genero = "M", foto = form_photo, telefono="+34666666666")
+                user_falso.delete()
+                #----------------------------------------------------
+
                 Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
+                perfil_foto = Usuario.objects.get(usuario=user.id)
+                perfil_foto.save()
                 return redirect("/profile")
             else:
                 form = UsuarioFormEdit(initial = initial_dict)
