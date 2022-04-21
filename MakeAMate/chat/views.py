@@ -5,7 +5,6 @@ from principal.models import Mate, Usuario
 from django.db.models import Q
 from chat.forms import CrearGrupo
 from django.core.exceptions import PermissionDenied
-from cryptography.fernet import Fernet
 from chat.models import Chat,ChatRoom,LastConnection
 from datetime import timedelta
 

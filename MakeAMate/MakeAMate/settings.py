@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pagos',
-    'channels',
     'chat',
     'principal',
 ]
@@ -143,7 +142,7 @@ STATICFILES_FINDERS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 NOSE_ARGS = ['--with-xunit']
-import django_heroku
-django_heroku.settings(locals(),test_runner=False)
+#import django_heroku
+#django_heroku.settings(locals(),test_runner=False)
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
