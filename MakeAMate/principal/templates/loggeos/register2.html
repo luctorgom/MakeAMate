@@ -3,12 +3,29 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Register</title>
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+    <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+   
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
-     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
-     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+      <!--<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-<style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script> -->
+
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+ 
+    <!-- Include the plugin's CSS and JS: -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.css" type="text/css"/>
+    
+    <style>
 * {
     
     margin: 0;
@@ -47,6 +64,8 @@ p {
     position: relative;
     margin-top: 20px
 }
+
+
 
 #msform fieldset {
     background: white;
@@ -111,6 +130,13 @@ p {
 #msform .action-button:focus {
     background-color: #311B92
 }
+
+.form-check-input {
+    position: absolute;
+    margin-top: 0.3rem;
+    visibility: hidden;
+}
+
 
 #msform .action-button-previous {
     width: 100px;
@@ -253,7 +279,7 @@ p {
 
 {% block content %}
 <body  id = "all" oncontextmenu='return false' class='snippet-body'>
-   
+
 <div  class="container-fluid">
     <div  class="row justify-content-center">
         <div  class="col-11 col-sm-9 col-md-7 col-lg-6ii col-xl-5 text-center p-0 mt-3 mb-2">
@@ -306,7 +332,8 @@ p {
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 2 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento (Formato: dd-mm-yyyy , ej 02-03-1998)</label>   <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label>  <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
+                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }} <div class="bootstrap-iso"> <label class="fieldlabels">Fecha de Nacimiento (Formato: dd-mm-yyyy , ej 02-03-1998)</label>  
+                               <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label> </div> <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
                             <label class="fieldlabels">Género</label>  <br>  <span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>   {{  form.genero  }}
                             <br>
                             
@@ -681,6 +708,25 @@ function ocultarZona() {
 $('#id_piso_encontrado').on('change', ocultarZona);
 window.onload = ocultarZona;
 </script>
-<script>$('.select_field_class').select2( { placeholder: "Elige", maximumSelectionSize: 100 } );</script>
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="fecha_nacimiento"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'dd-mm-yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>
+<!--<script>$('.select_field_class').select2( { placeholder: "Elige", maximumSelectionSize: 100 } );</script>
+ Initialize the plugin: -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.select_field_class').multiselect();
 
+    });
+</script>
 {% endblock %}

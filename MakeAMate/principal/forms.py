@@ -116,7 +116,9 @@ class UsuarioForm(forms.Form):
 
     def clean_fecha_nacimiento(self):
         hoy = datetime.now().date()
+        
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+        print(fecha_nacimiento)
 
         if fecha_nacimiento == None:
             raise forms.ValidationError('La fecha de nacimiento no debe estar vacía')
