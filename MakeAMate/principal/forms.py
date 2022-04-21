@@ -116,7 +116,9 @@ class UsuarioForm(forms.Form):
 
     def clean_fecha_nacimiento(self):
         hoy = datetime.now().date()
+        
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+        print(fecha_nacimiento)
 
         if fecha_nacimiento == None:
             raise forms.ValidationError('La fecha de nacimiento no debe estar vacía')
@@ -296,10 +298,11 @@ class ChangePasswordForm(forms.Form):
 
 class ChangePhotoForm(forms.Form):
     foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
-
+    #foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
+    
     def clean_foto_usuario(self):
         foto_usuario = self.cleaned_data.get('foto_usuario')
 
-        if foto_usuario == None:
-            raise forms.ValidationError("Debe añadir una foto")
+        '''if foto_usuario == None:
+            raise forms.ValidationError("Debe añadir una foto")'''
         return foto_usuario

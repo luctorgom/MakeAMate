@@ -653,8 +653,8 @@ class EdicionTest(TestCase):
         pepe.aficiones.set(Aficiones.objects.all())
         pepe.save()
 
-        avatar = create_image(None, 'avatar.png')
-        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+        avatar = create_image(None, 'insta.png')
+        avatar_file = SimpleUploadedFile('insta.png', avatar.getvalue())
 
         self.data = {
             'actualizarPerfil': 'actualizarPerfil',

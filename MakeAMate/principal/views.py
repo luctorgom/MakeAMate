@@ -474,6 +474,7 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_password.is_valid():
                 form_password = form_change_password.cleaned_data['password']
+                print(form_password)
                 user.set_password(form_password)
                 user.save()
                 return redirect("/profile") 
@@ -489,7 +490,22 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_photo.is_valid(): 
                 form_photo = form_change_photo.cleaned_data['foto_usuario']
+
+                #PARCHE PARA MOSTRAR LAS FOTOS AL HACER UPDATE-----
+                user_falso = User.objects.create(username="usuarioImposible",first_name="Ejemplo",
+                last_name="Ejemplo", email="ejemplooo@gmail.com")
+                user_falso.set_password("contras200000")
+                user_falso.save()
+
+                Usuario.objects.create(usuario = user_falso,
+                    fecha_nacimiento = datetime.today(), lugar = "Sevilla", nacionalidad = "Española",
+                    genero = "M", foto = form_photo, telefono="+34666666666")
+                user_falso.delete()
+                #----------------------------------------------------
+
                 Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
+                perfil_foto = Usuario.objects.get(usuario=user.id)
+                perfil_foto.save()
                 return redirect("/profile")
             else:
                 form = UsuarioFormEdit(initial = initial_dict)
