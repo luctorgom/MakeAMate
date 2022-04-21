@@ -21,7 +21,7 @@ from chat.models import Chat,ChatRoom,LastConnection
 @csrf_protect
 def paypal(request,pk):
     if not request.user.is_authenticated:
-        return redirect(homepage)
+        return redirect(login_view)
     else:
         loggeado=get_object_or_404(Usuario, usuario=request.user)
         premium=loggeado.es_premium()
