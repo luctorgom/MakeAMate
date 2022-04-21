@@ -51,12 +51,7 @@
     padding: 2%;
 }
   
-.btn {
-    background: rgb(197,160,240);
-    border-radius: 15px;
-    border: 2px solid rgb(104, 67, 146) ;
-    padding: 1.5%;
-}
+
   
 @media (min-width: 768px) {
     .parte-dcha {
@@ -151,11 +146,13 @@ div.ckbox div label input:checked{
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.logoCentrado{
-    width: 100px;
+.logoCentrado, .logo {
+    width: 50px;
     top: 30px;
-    margin-left: 50%;
+}
 
+.logoCentrado {
+    margin-left: 50%;
 }
   
   /* Modal Content */
