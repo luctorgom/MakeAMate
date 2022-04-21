@@ -296,10 +296,11 @@ class ChangePasswordForm(forms.Form):
 
 class ChangePhotoForm(forms.Form):
     foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
-
+    #foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
+    
     def clean_foto_usuario(self):
         foto_usuario = self.cleaned_data.get('foto_usuario')
 
-        if foto_usuario == None:
-            raise forms.ValidationError("Debe añadir una foto")
+        '''if foto_usuario == None:
+            raise forms.ValidationError("Debe añadir una foto")'''
         return foto_usuario

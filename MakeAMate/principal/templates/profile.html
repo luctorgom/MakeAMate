@@ -64,7 +64,7 @@
                     <img class="head-form-img" src="/static/logotipo.png" />
                     <div class="subtitulo"><h3>{{request.user.username}}<br /></h3></div>   
                 </div>
-                <img class="foto-perfil" src="{{ usuario.foto.url }}" alt="/static/assets/img/avatars/avatar1.jpeg" />
+                <img class="foto-perfil" src="../static/images/users/{{ usuario.foto }}" alt="{{usuario.foto}}" />
                 <div class="form-control">{{  form_change_photo.foto_usuario  }}</div><span class = "errorlist"> {{  form_change_photo.foto_usuario.errors | striptags  }} </span>  
                 <div class="botones"><button class="btn btn-primary" type="submit" name="actualizarFoto" value="actualizarFoto">Actualizar foto</button></div>
             </div>
@@ -79,12 +79,12 @@
                 
                 <label class="form-label">Nueva contraseña*</label>
                 <div class="form-control">
-                    <input class="form-control" type="password" placeholder="Escriba aquí su contraseña" />
+                    <input class="form-control" name="password" type="password" placeholder="Escriba aquí su contraseña" />
                 </div>
-                
+
                 <label class="form-label">Confirmar contraseña*</label>
                 <div class="form-control">
-                    <input class="form-control" type="password" placeholder="Vuelva a introducir su contraseña" />
+                    <input class="form-control" name="password2" type="password" placeholder="Vuelva a introducir su contraseña" />
                 </div>
                 <div class="botones">
                     <button class="btn btn-primary" name="actualizarContraseña" value="actualizarContraseña" type="submit">Actualizar contraseña</button>
