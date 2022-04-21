@@ -318,7 +318,7 @@ def estadisticas_mates(request):
             dictScore=dict(zip(listmates,listScore))
 
             params={"notificaciones":lista_mates,"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
-                    "matesPremium":mRPremium, "scoreLikes":dictScore}
+                    "matesPremium":mRPremium, "scoreLikes":dictScore, 'usuario': perfil}
             return render(request,'estadisticas.html',params)
         else:
             return payments(request)
