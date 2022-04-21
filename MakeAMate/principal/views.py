@@ -339,7 +339,6 @@ def registro(request):
             form_foto = form.cleaned_data['foto_usuario']
             form_fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
             form_lugar = form.cleaned_data['lugar']
-            form_nacionalidad = form.cleaned_data['nacionalidad']
             form_genero = form.cleaned_data['genero']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
@@ -356,11 +355,12 @@ def registro(request):
             if form_zona_piso != "":
                 piso = Piso.objects.create(zona = form_zona_piso)
                 perfil = Usuario.objects.create(usuario = user, piso = piso,
-                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
+                
                 genero = form_genero,foto = form_foto,telefono=form_telefono_usuario)
             else:
                 perfil = Usuario.objects.create(usuario = user, 
-                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario) 
 
             perfil.tags.set(form_tags)
@@ -435,6 +435,7 @@ def profile_view(request):
         'foto_usuario': usuario.foto,
         'lugar': usuario.lugar,
         'genero': usuario.genero,
+        'estudios': usuario.estudios,
         'zona_piso': usuario.piso.zona if (usuario.piso)  else "",
         'descripcion': usuario.descripcion,
         'piso_encontrado': usuario.piso_encontrado,
@@ -456,19 +457,19 @@ def profile_view(request):
                 form_zona_piso = form.cleaned_data['zona_piso']
                 form_descripcion = form.cleaned_data['descripcion']
                 form_piso_encontrado = form.cleaned_data['piso_encontrado']
-
-                # form_idiomas = form.cleaned_data['idiomas']
+                form_estudios = form.cleaned_data['estudios']
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
 
                 if form_zona_piso != "":
                     piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
                     Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario)
+                    genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario,
+                    estudios = form_estudios)
 
                 else:
                     Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
-                        genero = form_genero, piso_encontrado = form_piso_encontrado)
+                        genero = form_genero, piso_encontrado = form_piso_encontrado, estudios = form_estudios)
                 
                 perfil_updated_2 = Usuario.objects.get(usuario = user)
                 perfil_updated_2.tags.set(form_tags)
@@ -488,7 +489,6 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_password.is_valid():
                 form_password = form_change_password.cleaned_data['password']
-                print(form_password)
                 user.set_password(form_password)
                 user.save()
                 return redirect("/profile") 
@@ -505,20 +505,8 @@ def profile_view(request):
             if form_change_photo.is_valid(): 
                 form_photo = form_change_photo.cleaned_data['foto_usuario']
 
-                #PARCHE PARA MOSTRAR LAS FOTOS AL HACER UPDATE-----
-                user_falso = User.objects.create(username="usuarioImposible",first_name="Ejemplo",
-                last_name="Ejemplo", email="ejemplooo@gmail.com")
-                user_falso.set_password("contras200000")
-                user_falso.save()
-
-                Usuario.objects.create(usuario = user_falso,
-                    fecha_nacimiento = datetime.today(), lugar = "Sevilla", nacionalidad = "Española",
-                    genero = "M", foto = form_photo, telefono="+34666666666")
-                user_falso.delete()
-                #----------------------------------------------------
-
-                Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
                 perfil_foto = Usuario.objects.get(usuario=user.id)
+                perfil_foto.foto = form_photo
                 perfil_foto.save()
                 return redirect("/profile")
             else:

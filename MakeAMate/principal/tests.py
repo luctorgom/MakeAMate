@@ -30,11 +30,11 @@ class RecommendationTestCase(TestCase):
 
         premium_fin = timezone.now()+ relativedelta(months=1)
         self.perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=datetime.now(),lugar="Sevilla",telefono="+34655444333",
-                            nacionalidad="Española", genero='F',estudios="Informática",fecha_premium=premium_fin,sms_validado=True)
+                            genero='F',estudios="Informática",fecha_premium=premium_fin,sms_validado=True)
         self.perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=datetime.now(),lugar="Sevilla",telefono="+34655444334",
-                            nacionalidad="Española", genero='F',estudios="Informática",sms_validado=True)
+                            genero='F',estudios="Informática",sms_validado=True)
         self.perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=datetime.now(),lugar="Sevilla",telefono="+34655444335",
-                            nacionalidad="Española", genero='F',estudios="Informática",sms_validado=True)
+                            genero='F',estudios="Informática",sms_validado=True)
         
         tag1 = Tag(etiqueta="No fumador")
         tag2 = Tag(etiqueta="Mascotas")
@@ -106,15 +106,15 @@ class MateTestCase(TestCase):
         piso1 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso2 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
 
-        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",telefono="+34655444333",sms_validado=True)
-        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",telefono="+34655444334",sms_validado=True)
-        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",piso=piso1,telefono="+34655444335",sms_validado=True)
-        perfil4 = Usuario(usuario=self.user4,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil4 = Usuario(usuario=self.user4,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='M',estudios="Informática",piso=piso2,telefono="+34655444336",sms_validado=True)
-        perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",nacionalidad="Española",
+        perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",
                             genero='M',estudios="Informática",telefono="+34655444337",sms_validado=True)
         
         mate1 = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
@@ -388,7 +388,7 @@ class LoginTest(TestCase):
         user.set_password('qwery')
         tfn = "+34666777444"
         piso = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
-        perfil = Usuario(usuario=user,piso=piso,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil = Usuario(usuario=user,piso=piso,fecha_nacimiento="2000-1-1",lugar="Sevilla",
                 genero='F',estudios="Informática", telefono=tfn, sms_validado=True)
         user.save()
         perfil.save()
@@ -529,7 +529,6 @@ class RegistroTest(TestCase):
             'foto_usuario': avatar_file,
             'fecha_nacimiento':'01-01-2000',
             'lugar':'Ejemplo de lugar',
-            'nacionalidad':'Ejemplo',
             'genero':'M',
             'tags': [t.id for t in Tag.objects.all()],
             'aficiones': [a.id for a in Aficiones.objects.all()],
