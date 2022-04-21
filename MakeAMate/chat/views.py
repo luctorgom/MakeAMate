@@ -57,7 +57,7 @@ def room(request, room_name):
                     lista_last_message.append("No se ha enviado ningún mensaje")
             
         lista_usuarios = []
-        usuarios = Usuario.objects.filter(~Q(id=request.user.id))
+        usuarios = Usuario.objects.filter(~Q(usuario=request.user))
         for u in usuarios:
             lista_usuarios.append(u)
 
@@ -73,7 +73,7 @@ def room(request, room_name):
 
         usuario_opuesto = ""
         if es_grupo== False:
-            usuario_opuesto = Usuario.objects.filter(id=chatroom.participants.all().filter(~Q(id=request.user.id))[0].id)[0]
+            usuario_opuesto = Usuario.objects.filter(usuario=chatroom.participants.all().filter(~Q(id=request.user.id))[0])[0]
         # last_message_decoded = Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = chatroom.last_message)[0].content,'utf-8')).decode()
 
         # Comprobación si el usuario pertenece a los participantes de ese grupo
@@ -81,7 +81,7 @@ def room(request, room_name):
 
             return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
                                                     'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo, 'last_message':lista_last_message,
-                                                    'usuario_actual':Usuario.objects.filter(id=request.user.id)[0], 'usuario_opuesto':usuario_opuesto})
+                                                    'usuario_actual':Usuario.objects.filter(usuario=request.user)[0], 'usuario_opuesto':usuario_opuesto})
         else:
             raise PermissionDenied
     else:
