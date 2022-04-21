@@ -35,6 +35,8 @@ jobs:
         pip install codacy-coverage
     - name: Run migrations
       run: python MakeAMate/manage.py makemigrations;python MakeAMate/manage.py migrate;
+    - name: Set env
+      run: echo "CLOUDINARY_SECRET=${{ secrets.CLOUDINARY_SECRET }}" >> $GITHUB_ENV
     - name: Run tests with coverage   
       run: cd MakeAMate;coverage run manage.py test; coverage xml;
     - name: Codacy Coverage Reporter

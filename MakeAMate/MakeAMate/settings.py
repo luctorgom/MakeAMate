@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'pagos',
     'chat',
     'principal',
@@ -146,3 +148,13 @@ NOSE_ARGS = ['--with-xunit']
 #django_heroku.settings(locals(),test_runner=False)
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
+
+# Image Storage
+
+CLOUDINARY_SECRET = os.getenv('CLOUDINARY_SECRET')
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'deqjxxfzm',
+    'API_KEY': '763857159616848',
+    'API_SECRET': CLOUDINARY_SECRET,
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
