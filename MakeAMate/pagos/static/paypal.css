@@ -1,17 +1,17 @@
 .payment {
-    background: #DEDDDB;
+    background: #f8f9fc;
     padding: 30px 0
 }
 
 .paypalTable {
+    margin-left:20%;
+    margin-right:20%;
     padding-bottom: 20px;
-    background: #fff;
+    background:#f8f9fc;
     border-radius: 10px;
     text-align: center;
     position: relative;
     transition: all .3s ease 0s;
-    border-radius: 10px;
-
 
 }
 .title{
@@ -22,10 +22,11 @@
 .paypalTable .title {
     padding: 40px 20px 170px;
     margin: 0 0 30px;
-    background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+    background: rgb(151, 103, 240);
     color: rgb(0, 0, 0);
     text-transform: uppercase;
     overflow: hidden;
+    font-family: Nunito;
     position: relative
 }
 
@@ -35,7 +36,7 @@
     width: 280px;
     height: 200px;
     border-radius: 80px;
-    background: #fff;
+    background: #f8f9fc;
     position: absolute;
     bottom: -175px;
     left: -46px;
@@ -58,12 +59,12 @@
     height: 140px;
     line-height: 65px;
     border-radius: 50%;
-    background: #fff;
+    background: #f8f9fc;
     box-shadow: 0 0 0 8px rgba(77, 16, 177, 0.3);
     padding: 30px 0;
     font-size: 35px;
     font-weight: 600;
-    color: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+    color: rgb(151, 103, 240);
     position: absolute;
     top: 130px;
     left: 50%;
@@ -72,8 +73,8 @@
 }
 
 .paypalTable:hover .price-value {
-    background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
-    color: #fff
+    background: rgb(151, 103, 240);
+    color: #f8f9fc;
 }
 
 .paypalTable .month {
@@ -126,7 +127,7 @@
     display: inline-block;
     padding: 13px 45px;
     border-radius: 30px;
-    background: linear-gradient(180deg, rgba(220,176,237,1) 0%, rgba(190,165,222,1) 50%, rgba(153,153,204,1) 100%);
+    background: rgb(151, 103, 240);
     color: #404040;
     text-transform: uppercase;
     z-index: 1;
@@ -143,7 +144,7 @@
     width: 98%;
     height: 92%;
     border-radius: 30px;
-    background: #fff;
+    background: #f8f9fc;
     position: absolute;
     top: 2px;
     left: 2px;

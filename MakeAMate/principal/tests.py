@@ -404,13 +404,16 @@ class LoginTest(TestCase):
         self.assertRedirects(response, '/', status_code=302, 
         target_status_code=200, fetch_redirect_response=True)
 
-#         user2 = User(username='usuario2')
-#         user2.set_password('qwery')
-#         user2.save()
+    def test_logout_positive(self):
+        c = Client()
+        c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
+        response = c.get('/logout/')
+        user = auth.get_user(c)
+        self.assertTrue(response.status_code == 302)
+        self.assertFalse(user.is_authenticated)
 
-#         user3 = User(username='usuario3')
-#         user3.set_password('qwery')
-#         user3.save()
+
+
 
 class NotificacionesTest(TestCase):
     
@@ -477,6 +480,12 @@ class NotificacionesTest(TestCase):
         response2 = c.get('/')
         lista_mates = response2.context['notificaciones']
         self.assertTrue(len(lista_mates) == 0)
+
+    def test_notificaciones_list(self):
+        c = Client()
+        response = c.post('/login/', {'username': 'usuario3', 'pass': 'qwery'})
+        response2 = c.get('/notifications/')
+        self.assertTrue(response2.status_code == 200)
 
 def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
 
@@ -613,6 +622,11 @@ class RegistroTest(TestCase):
         self.assertTrue(num_usuarios == 0)
         self.assertTrue(error == "Por favor, elige al menos tres aficiones que te gusten")
 
+    def test_see_terminos(self):
+        c = Client()
+        response = c.get('/register/terminos/')
+        self.assertTrue(response.status_code == 200)
+
 
 class EdicionTest(TestCase):
     def setUp(self):
@@ -639,8 +653,8 @@ class EdicionTest(TestCase):
         pepe.aficiones.set(Aficiones.objects.all())
         pepe.save()
 
-        avatar = create_image(None, 'avatar.png')
-        avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
+        avatar = create_image(None, 'insta.png')
+        avatar_file = SimpleUploadedFile('insta.png', avatar.getvalue())
 
         self.data = {
             'actualizarPerfil': 'actualizarPerfil',
@@ -762,5 +776,147 @@ class EdicionTest(TestCase):
         response = c.post('/profile/', self.data_photo_wrong)
         usuario_update = Usuario.objects.get(telefono="+34666777111")
         self.assertFalse(usuario_update.foto==self.data_photo['foto_usuario'])
+        self.assertTrue(response.status_code == 200)
+
+class EstadisticasTest(TestCase):
+    
+    def setUp(self):
+        user = User(username='usuario')
+        user.set_password('qwery')
+        user.save()
+
+        user2 = User(username='usuario2')
+        user2.set_password('qwery')
+        user2.save()
+
+        user3 = User(username='usuario3')
+        user3.set_password('qwery')
+        user3.save()
+        self.user3=user3
+        user4 = User(username='usuario4')
+        user4.set_password('qwery')
+        user4.save()
+        self.user4=user4
+        
+        et1= Tag.objects.create(etiqueta="Netflix")
+        et1.save()
+        et2=Tag.objects.create(etiqueta="Chill")
+        et2.save()
+        et3=Tag.objects.create(etiqueta="Fiesta")
+        et3.save()
+        af1= Aficiones.objects.create(opcionAficiones="Moda")
+        af1.save()
+        af2= Aficiones.objects.create(opcionAficiones="Cine")
+        af2.save()
+        af3= Aficiones.objects.create(opcionAficiones="Leer")
+        af3.save()
+
+        piso_pepe = Piso.objects.create(zona="Calle Marqués Luca de Tena 1", descripcion="Descripción de prueba 1")
+        piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+        piso_sara = Piso.objects.create(zona="Calle Marqués Luca de Tena 5", descripcion="Descripción de prueba 3")
+        piso_juan = Piso.objects.create(zona="Calle Marqués Luca de Tena 4", descripcion="Descripción de prueba ")
+        
+
+        fecha_premium=timezone.now() + timedelta(days=120)
+        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", fecha_premium=fecha_premium, telefono='+34111222333')
+        pepe.save()
+        pepe.tags.add(et1)
+        pepe.tags.add(et2)
+        pepe.tags.add(et3)
+        pepe.aficiones.add(af1)
+        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla",telefono='+34111222334')
+        maria.save()
+        maria.tags.add(et2)
+        maria.aficiones.add(af2)
+        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz",telefono='+34111222335')
+        sara.save()
+        sara.save()
+        sara.tags.add(et1)
+        sara.tags.add(et3)
+        sara.aficiones.add(af2)
+        sara.aficiones.add(af3)
+        juan= Usuario.objects.create(usuario=user4, piso=piso_juan,fecha_nacimiento=date(2000,1,2),lugar="Granada",telefono='+34111222336')
+        juan.save()
+        juan.save()
+        juan.tags.add(et1)
+        juan.tags.add(et2)
+        juan.aficiones.add(af1)
+        juan.aficiones.add(af2)
+        juan.aficiones.add(af3)
+        #MATE ENTRE user y user2
+        mate12 = Mate.objects.create(mate=True,userEntrada=user, userSalida=user2)
+        """ mate12.save()
+        mate12.fecha_mate.set(datetime(2022,4,4,16,30))
+        print(mate12.fecha_mate) """
+        mate21 = Mate.objects.create(mate=True,userEntrada=user2, userSalida=user)
+
+        like31 = Mate.objects.create(mate=True,userEntrada=user3, userSalida=user)
+        like41 = Mate.objects.create(mate=True,userEntrada=user4, userSalida=user)
+        super().setUp()
+
+
+    #El usuario "user" tiene un mate con user 2 y dos likes de user 2 y user 3 -> Total 3
+    def test_interacciones(self):
+        c = Client()
+        response_user = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
+        response = c.get('/estadisticas/')
+        interacciones = response.context['interacciones']
+        self.assertTrue(interacciones == 3)
+
+    #El usuario "user" tiene dos likes de user 2 y user 3 en el mes actual-> Total 2
+    def test_likes_mes(self):
+        c = Client()
+        response_user = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
+        response = c.get('/estadisticas/')
+        likeMes = response.context['lista']
+        self.assertTrue(len(likeMes) == 2)
+
+    #El usuario "user" tiene dos likes de user 2 y user 3 en el día de hoy (autoadd)-> Total 2
+    def test_likes_hoy(self):
+        c = Client()
+        response_user = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
+        response = c.get('/estadisticas/')
+        dictLikeFecha = response.context['matesGrafica']
+        self.assertTrue(dictLikeFecha[datetime.today().strftime('%d/%m/%Y')] == 3)
+    
+    #El usuario "user" tiene tags Netflix, Chill y Fiesta
+    #El usuario "user3" tiene tags Netflix y Fiesta
+    #El usuario "user4" tiene tags Netflix y Chill-> Netflix 2, Chill 1, Fiesta 1
+    def test_top_tags(self):
+        c = Client()
+        response_user = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
+        response = c.get('/estadisticas/')
+        dictTags = response.context['topTags']
+        self.assertTrue(dictTags['Netflix'] == 2)
+        self.assertTrue(dictTags['Fiesta'] == 1)
+        self.assertTrue(dictTags['Chill'] == 1)
+    
+    #El usuario "user" tiene dos likes de user 2 y user 3 en el día de hoy (autoadd)-> Total 2
+    def test_score_likes(self):
+        c = Client()
+        response_user = c.post('/login/', {'username': 'usuario', 'pass': 'qwery'})
+        response = c.get('/estadisticas/')
+        scoreLikes = response.context['scoreLikes']
+        self.assertTrue(scoreLikes[self.user3] == 62)
+        self.assertTrue(scoreLikes[self.user4] == 71)
+
+class InfoTest(TestCase):
+
+    def setUp(self):
+
+        userMaria=User(username="Maria")
+        userMaria.set_password("asdfg")
+        userMaria.save()
+
+        tfn2 = "+34666777222"
+
+        piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+    
+        Maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria, telefono=tfn2, sms_validado=True)
+        
+    def test_info(self):
+        c = Client()
+        c.post('/login/', {'username': 'Maria', 'pass': 'asdfg'})
+        response = c.get('/info/')
         self.assertTrue(response.status_code == 200)
 

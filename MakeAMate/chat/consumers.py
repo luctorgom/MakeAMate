@@ -20,15 +20,15 @@ class ChatConsumer(WebsocketConsumer):
         last_connection.timestamp = datetime.now().isoformat()
         
         # Comprobación si el usuario pertenece a los participantes de ese grupo
-        if chatroom:
+        #if chatroom:
             # Join room group
-            async_to_sync(self.channel_layer.group_add)(
-                self.room_group_name,
-                self.channel_name
-            )
-            self.accept()
-            room = ChatRoom.objects.get_or_create(name = self.room_name)
-            self.get_all_messages()
+        async_to_sync(self.channel_layer.group_add)(
+        self.room_group_name,
+        self.channel_name
+        )
+        self.accept()
+        room = ChatRoom.objects.get_or_create(name = self.room_name)
+        self.get_all_messages()
 
     def disconnect(self, close_code):
         chat = ChatRoom.objects.get_or_create(name = self.scope['url_route']['kwargs']['room_name'])[0]
