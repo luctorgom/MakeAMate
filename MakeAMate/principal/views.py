@@ -228,7 +228,9 @@ def notifications_list(request):
     else:
         template='notifications.html'
         notis=notificaciones(request)
-        response={'notificaciones':notis}
+        user = request.user
+        usuario = Usuario.objects.get(usuario = user)
+        response={'notificaciones':notis, 'usuario': usuario}
         return render(request,template,response)
 
 def info(request):

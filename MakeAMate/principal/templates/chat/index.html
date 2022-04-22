@@ -727,7 +727,7 @@ Website: http://emilcarlsson.se/
             <li class="contact">
             {% if c.group is not True %}
               {% for p in c.participants.all %}
-                {% if request.user != p%}
+                {% if request.user != p%}                
                   {% for n in nombrechats%}
                     {% if p.username == n.usuario.username %}
 

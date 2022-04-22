@@ -5,6 +5,7 @@ from principal.models import Mate, Usuario
 from django.db.models import Q
 from chat.forms import CrearGrupo
 from django.core.exceptions import PermissionDenied
+from cryptography.fernet import Fernet
 from chat.models import Chat,ChatRoom,LastConnection
 from datetime import timedelta
 
@@ -13,6 +14,8 @@ from datetime import timedelta
 def index(request):
     if request.user.is_authenticated:
         lista_mates = notificaciones_mates(request)
+        user = request.user
+        usuario = Usuario.objects.get(usuario = user)
         if len(lista_mates)>0:
             lista_chat = []
             chats = ChatRoom.objects.all()
@@ -20,10 +23,10 @@ def index(request):
                 if request.user in c.participants.all():
                     lista_chat.append(c)
             lista_usuarios = []
-            usuarios = Usuario.objects.filter(~Q(id=request.user.id))
+            usuarios = Usuario.objects.filter(~Q(usuario=request.user))
             for u in usuarios:
                 lista_usuarios.append(u)
-            return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
+            return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 'usuario_actual': usuario})
         else:
             return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[]})
     else:
