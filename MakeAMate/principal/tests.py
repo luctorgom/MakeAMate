@@ -102,6 +102,8 @@ class MateTestCase(TestCase):
         self.user4.set_password('123')
         self.user5 = User(id=4,username="us5")
         self.user5.set_password('123')
+        self.user6 = User(id=5,username="us6")
+        self.user6.set_password('123')
 
         piso1 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso2 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
@@ -116,6 +118,8 @@ class MateTestCase(TestCase):
                             genero='M',estudios="Informática",piso=piso2,telefono="+34655444336",sms_validado=True)
         perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",
                             genero='M',estudios="Informática",telefono="+34655444337",sms_validado=True)
+        perfil6 = Usuario(usuario=self.user6,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
+                            genero='M',estudios="Informática",telefono="+34655444369",sms_validado=False)
         
         mate1 = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
         mate2 = Mate(userEntrada=self.user4, userSalida=self.user1, mate=False)
@@ -125,6 +129,7 @@ class MateTestCase(TestCase):
         self.user3.save()
         self.user4.save()
         self.user5.save()
+        self.user6.save()
         piso1.save()
         piso2.save()
         perfil1.save()
@@ -132,8 +137,27 @@ class MateTestCase(TestCase):
         perfil3.save()
         perfil4.save()
         perfil5.save()
+        perfil6.save()
         mate1.save()
         mate2.save()
+
+    def test_accept_no_sms(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 5}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_no_sms(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 5}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
 
     def test_accept_mate(self):
         self.client.login(username='us1', password='123')
