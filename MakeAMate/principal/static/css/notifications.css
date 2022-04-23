@@ -1,20 +1,3 @@
-body {
-    font-family: "Monserrat";
-    background: #EFF1F3;
-    min-height: 100vh;
-    overflow-y: auto;
-
-  }
-
-  .section-50 {
-    padding: 20px 0;
-    overflow: auto;
-  }
-  
-  .m-b-50 {
-    margin-bottom: 20px;
-  }
-  
   .dark-link {
     color: #333;
   }
@@ -34,9 +17,6 @@ body {
     left: 0;
   }
   
-  .notification-ui_dd-content {
-    margin-bottom: 30px;
-  }
   
   .notification-list {
     display: -webkit-box;
@@ -51,6 +31,9 @@ body {
     background: #fff;
     -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: left;
   }
   
   .notification-list--unread {
@@ -58,16 +41,7 @@ body {
 
   }
   
-  .notification-list {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    margin-left: 60px;
-    display:left;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: left;
-    /* border: 1px red solid; */
-  }
+
   .notification-list_img{
     left: 0px;
     
@@ -85,8 +59,9 @@ body {
     line-height: 1.2;
    }
    .me-3{
-     margin: auto;
-  
+     margin-top: auto;
+     margin-bottom: auto;
+
     }
    .bg-warning , .icon-circle {
     margin: inherit;
@@ -103,4 +78,32 @@ body {
 
   }
   
+  @media (max-width: 768px) {
+    .notification-list {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      padding: 2rem;
+      margin-bottom: 1rem;
+      
+      background: #fff;
+      -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+              box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: left;
+    }
+    .notification-list .notification-list_feature-img img {
+      height: 48px;
+      width: 48px;
+      border-radius: 5px;
+      margin-left: 0px;
+      margin-right: 10rem;
   
+    }
+
+
+  }
