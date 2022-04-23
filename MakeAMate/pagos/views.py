@@ -29,7 +29,7 @@ def paypal(request,pk):
             return redirect(homepage)
         template_name='pagos.html'
         suscripcion= get_object_or_404(Suscripcion, id=pk)
-        context={'notificaciones':notificaciones(request),'suscripcion': suscripcion}
+        context={'notificaciones':notificaciones(request),'suscripcion': suscripcion,'usuario':loggeado}
         return render(request, template_name, context)
 
 @csrf_protect

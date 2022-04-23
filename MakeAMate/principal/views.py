@@ -147,7 +147,7 @@ def payments(request):
 
     try :
         suscripcion=Suscripcion.objects.all()[0]  
-        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
+        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True,'usuario': loggeado}  
         return render(request,template,params) 
     except:
         params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False, 'usuario': loggeado}
@@ -166,7 +166,11 @@ def terminos2(request):
 
 def privacidad(request):
     template='loggeos/privacidad.html'
-    return render(request,template) 
+    notis=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    response={'notificaciones':notis, 'usuario': usuario}
+    return render(request,template,response) 
 
 def notificaciones_mates(request):
     lista_notificaciones=[]

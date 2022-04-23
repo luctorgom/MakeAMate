@@ -13,8 +13,16 @@
 <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
 
 <script>
+
     window.onload = esconder;
+    
     function esconder() {
+        var piso = '{{  form.piso_encontrado.value|yesno:"1,0" }}';
+        if(parseInt(piso)) {
+            $('.zona_piso').show();
+        } else {
+            $('.zona_piso').hide();
+        }
         $('#id_piso_encontrado').on('click', function() {
             if($(this).val() === 'False') {
                 $('.zona_piso').hide();
@@ -22,6 +30,7 @@
                 $('.zona_piso').show();
             }
      }); }
+
     
 </script>
 
