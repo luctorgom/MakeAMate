@@ -1,10 +1,12 @@
 from datetime import datetime,timedelta
+import math
+from random import randint
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
 from pagos.models import Suscripcion
 from principal.forms import UsuarioForm, SmsForm
-from .models import Piso, Usuario,Mate
+from .models import Foto, Piso, Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -466,12 +468,16 @@ def profile_view(request):
                 form_estudios = form.cleaned_data['estudios']
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
+                form_foto_piso = form.cleaned_data['foto_piso']
 
                 if form_zona_piso != "":
                     piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
                     Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
                     genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario,
                     estudios = form_estudios)
+                    print(form_foto_piso)
+                    if form_foto_piso != None:
+                        foto_piso=Foto.objects.get_or_create(titulo=randint(1,10000),foto=form_foto_piso, piso=piso_usuario)
 
                 else:
                     Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,

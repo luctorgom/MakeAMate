@@ -207,7 +207,15 @@ class UsuarioFormEdit(forms.Form):
     descripcion = forms.CharField(required = False,widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
     tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'}, queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
     aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
+    foto_piso= forms.ImageField(label="Foto")
 
+    '''def clean_foto_piso(self):
+        foto_piso = self.cleaned_data.get('foto_piso')
+
+        if foto_piso == None:
+            raise forms.ValidationError("Debe añadir una foto")
+        return foto_piso'''
+    
     def clean_estudios(self):
         estudios = self.cleaned_data.get('estudios')
         if any(chr.isdigit() for chr in estudios):
