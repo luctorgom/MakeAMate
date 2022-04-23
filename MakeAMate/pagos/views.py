@@ -22,27 +22,29 @@ from chat.models import Chat,ChatRoom,LastConnection
 def paypal(request,pk):
     if not request.user.is_authenticated:
         return redirect(login_view)
-    loggeado=get_object_or_404(Usuario, usuario=request.user)
-    premium=loggeado.es_premium()
-    if premium:
-        return redirect(homepage)
-    template_name='pagos.html'
-    suscripcion= get_object_or_404(Suscripcion, id=pk)
-    context={'notificaciones':notificaciones(request),'suscripcion': suscripcion}
-    return render(request, template_name, context)
+    else:
+        loggeado=get_object_or_404(Usuario, usuario=request.user)
+        premium=loggeado.es_premium()
+        if premium:
+            return redirect(homepage)
+        template_name='pagos.html'
+        suscripcion= get_object_or_404(Suscripcion, id=pk)
+        context={'notificaciones':notificaciones(request),'suscripcion': suscripcion,'usuario':loggeado}
+        return render(request, template_name, context)
 
 @csrf_protect
 def paymentComplete(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
-    loggeado=get_object_or_404(Usuario, usuario=request.user)
-    premium=loggeado.es_premium()
-    if premium:
         return redirect(homepage)
-    fecha_premium = timezone.now() + relativedelta(months=1)
-    loggeado.fecha_premium=fecha_premium
-    loggeado.save()
-    return redirect(homepage)
+    else:
+        loggeado=get_object_or_404(Usuario, usuario=request.user)
+        premium=loggeado.es_premium()
+        if premium:
+            return redirect(homepage)
+        fecha_premium = timezone.now() + relativedelta(months=1)
+        loggeado.fecha_premium=fecha_premium
+        loggeado.save()
+        return redirect(homepage)
 
 def homepageRedirect(request,pk):
     return redirect(homepage)

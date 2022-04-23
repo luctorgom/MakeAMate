@@ -14,19 +14,34 @@ from datetime import timedelta
 def index(request):
     if request.user.is_authenticated:
         lista_mates = notificaciones_mates(request)
+        user = request.user
+        
+        #form
+        form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
+        crear_grupo_form(request, form)
+
         if len(lista_mates)>0:
+
+            #lista chats
             lista_chat = []
+            lista_last_message = []
             chats = ChatRoom.objects.all()
             for c in chats:
                 if request.user in c.participants.all():
                     lista_chat.append(c)
+                    try:
+                        lista_last_message.append(Fernet(c.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+                    except IndexError:
+                        lista_last_message.append("No se ha enviado ningún mensaje")
             lista_usuarios = []
-            usuarios = Usuario.objects.filter(~Q(id=request.user.id))
+            usuarios = Usuario.objects.filter(~Q(usuario=request.user))
             for u in usuarios:
                 lista_usuarios.append(u)
-            return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios})
+            return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
+                                                    'usuario_actual': Usuario.objects.filter(usuario=request.user)[0], 'last_message':lista_last_message, 'form':form})
         else:
-            return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[]})
+            return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[], 'usuario_actual': Usuario.objects.filter(usuario=request.user)[0],
+                                                    'last_message':[], 'form':form})
     else:
         return redirect("/login")
 
@@ -52,12 +67,12 @@ def room(request, room_name):
             if request.user in c.participants.all():
                 lista_chat.append(c)
                 try:
-                    lista_last_message.append(Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+                    lista_last_message.append(Fernet(c.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
                 except IndexError:
                     lista_last_message.append("No se ha enviado ningún mensaje")
             
         lista_usuarios = []
-        usuarios = Usuario.objects.filter(~Q(id=request.user.id))
+        usuarios = Usuario.objects.filter(~Q(usuario=request.user))
         for u in usuarios:
             lista_usuarios.append(u)
 
@@ -73,15 +88,14 @@ def room(request, room_name):
 
         usuario_opuesto = ""
         if es_grupo== False:
-            usuario_opuesto = Usuario.objects.filter(id=chatroom.participants.all().filter(~Q(id=request.user.id))[0].id)[0]
-        # last_message_decoded = Fernet(chatroom.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = chatroom.last_message)[0].content,'utf-8')).decode()
+            usuario_opuesto = Usuario.objects.filter(usuario=chatroom.participants.all().filter(~Q(id=request.user.id))[0])[0]
 
         # Comprobación si el usuario pertenece a los participantes de ese grupo
         if request.user.username in lista_participantes :
 
             return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
                                                     'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo, 'last_message':lista_last_message,
-                                                    'usuario_actual':Usuario.objects.filter(id=request.user.id)[0], 'usuario_opuesto':usuario_opuesto})
+                                                    'usuario_actual':Usuario.objects.filter(usuario=request.user)[0], 'usuario_opuesto':usuario_opuesto})
         else:
             raise PermissionDenied
     else:

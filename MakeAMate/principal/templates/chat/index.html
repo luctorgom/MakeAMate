@@ -695,22 +695,6 @@
   outline: none;
 }
 </style></head><body>
-<script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
-
-<!-- 
-
-A concept for a chat interface. 
-
-Try writing a new message! :)
-
-
-Follow me here:
-Twitter: https://twitter.com/thatguyemil
-Codepen: https://codepen.io/emilcarlsson/
-Website: http://emilcarlsson.se/
-
--->
-
 <div id="frame">
 	<div id="sidepanel">
 		<div id="profile">
@@ -727,7 +711,7 @@ Website: http://emilcarlsson.se/
             <li class="contact">
             {% if c.group is not True %}
               {% for p in c.participants.all %}
-                {% if request.user != p%}
+                {% if request.user != p%}                
                   {% for n in nombrechats%}
                     {% if p.username == n.usuario.username %}
 
@@ -764,8 +748,8 @@ Website: http://emilcarlsson.se/
 			</ul>
 		</div>
 		<div id="bottom-bar">
-			<button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>
-			<button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
+			<button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Crear Grupo</span></button>
+			<button id="settings" onclick="window.location.href='/'" href="/chat/" ><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Inicio</span></button>
 		</div>
 	</div>
 	<div class="content">
@@ -775,22 +759,6 @@ Website: http://emilcarlsson.se/
                 <h1>¡Chatea con tus mates!</h1>
                 <style> </style>
             </div>
-			<ul>
-				<!-- <li class="sent">
-					<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-					<p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
-				</li> -->
-        <div class="messages-history" id="messages-history"></div>
-			</ul>
-		</div>
-		<!-- <div class="message-input">
-			<div class="wrap">
-			<input class="chat-message-input" id="chat-message-input" type="text" placeholder="Write your message..." />
-			<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-			<button class="chat-message-submit" id="chat-message-submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-			</div>
-		</div> -->
-
 	</div>
 </div>
 <div class="name" id="usuarioProv" hidden>{{request.user.username}}</div> 
@@ -820,60 +788,6 @@ Website: http://emilcarlsson.se/
         }
     }
     last_messages_for(last_messages, chatlist) 
-    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    const chatSocket = new ReconnectingWebSocket(
-        ws_scheme 
-        + '://' 
-        + window.location.host
-        + '/ws/chat/'
-        + roomName
-        + '/'
-    );
-
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        document.getElementById("usuarioProv").style.display = "none"
-        var micapa = document.getElementById('messages-history');
-        var usuarioProv= document.getElementById('usuarioProv').textContent;            
-
-
-
-        if(usuarioProv == data.name)
-            micapa.innerHTML += '<li class="sent" style="list-style:none"><p>'+data.message+'</p></li>';
-        else
-            if (document.getElementById('es_grupo').textContent=="True")
-            micapa.innerHTML += '<li class="replies"><p>'+data.name + ": "+data.message+'</p></li>';
-            else
-            micapa.innerHTML += '<li class="replies"><p>'+data.message+'</p></li>';
-        micapa.scrollTop = micapa.scrollHeight - micapa.clientHeight; 
-    
-    };
-    
-
-    // onclose - An event listener to be called when the connection is closed.
-    chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
-    };
-
-    document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-
-        // Send the msg object as a JSON-formatted string.
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
-
-        // Blank the text input element, ready to receive the next line of text from the user.
-        messageInputDom.value = '';
-    };
     function openForm() {
         document.getElementById("myForm").style.display = "block";
     }
