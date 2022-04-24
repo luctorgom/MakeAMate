@@ -50,6 +50,9 @@ def homepage(request):
             return render(request, 'loggeos/registerSMS.html', {'form': SmsForm})
         template = 'homepage.html'
 
+        if Usuario.objects.get(usuario = request.user).piso_encontrado == True:
+            return redirect("/profile")
+            
         registrado= get_object_or_404(Usuario, usuario=request.user)
         ciudad= registrado.lugar
         if(registrado.tiene_piso()):
@@ -443,8 +446,9 @@ def profile_view(request):
         'genero': usuario.genero,
         'estudios': usuario.estudios,
         'zona_piso': usuario.piso.zona if (usuario.piso)  else "",
+        'desactivar_perfil': usuario.piso_encontrado,
         'descripcion': usuario.descripcion,
-        'piso_encontrado': usuario.piso_encontrado,
+        'piso_encontrado': usuario.tiene_piso,
         'tags': usuario.tags.all(), 
         'aficiones': usuario.aficiones.all()
     }
@@ -467,8 +471,7 @@ def profile_view(request):
                 form_estudios = form.cleaned_data['estudios']
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
-
-                if form_zona_piso != "":
+                if form_piso_encontrado=="True":
                     piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
                     Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
                     genero = form_genero, piso_encontrado = form_desactivar_perfil, piso = piso_usuario,
@@ -477,7 +480,7 @@ def profile_view(request):
                 else:
                     Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
                         genero = form_genero, piso_encontrado = form_desactivar_perfil, estudios = form_estudios)
-                
+
                 perfil_updated_2 = Usuario.objects.get(usuario = user)
                 perfil_updated_2.tags.set(form_tags)
                 perfil_updated_2.aficiones.set(form_aficiones)
