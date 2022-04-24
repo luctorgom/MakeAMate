@@ -63,7 +63,7 @@ def homepage(request):
         set_rejected={mate.userEntrada.id for mate in usuarios_rejected}
 
         tags_authenticated = registrado.tags.all()
-        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected)]
+        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected) and u.sms_validado]
         us_sorted = sorted(us_filtered, key=lambda u: rs_score(registrado, u), reverse=True)
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
@@ -93,7 +93,7 @@ def accept_mate(request):
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
 
-    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso or not perfil_usuario.sms_validado:
         response = { 'success': False }
         return JsonResponse(response)
 
@@ -127,7 +127,7 @@ def reject_mate(request):
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
 
-    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso or not perfil_usuario.sms_validado:
         response = { 'success': False, }
         return JsonResponse(response)
     
