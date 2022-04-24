@@ -256,6 +256,11 @@
     display: none;
   }
 }
+.wrap{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 #frame #sidepanel #profile .wrap #status-options ul li#status-away span.status-circle {
   background: #f1c40f;
@@ -434,6 +439,9 @@
 #frame #sidepanel #contacts ul li.contact .wrap .meta .name {
   font-weight: 600;
   font-size: large;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #frame #sidepanel #contacts ul li.contact .wrap .meta .preview span {
@@ -697,20 +705,6 @@ a {
 }
 </style></head><body>
 <script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
-
-<!-- 
-
-A concept for a chat interface. 
-
-Try writing a new message! :)
-
-
-Follow me here:
-Twitter: https://twitter.com/thatguyemil
-Codepen: https://codepen.io/emilcarlsson/
-Website: http://emilcarlsson.se/
-
--->
 
 <div id="frame">
 	<div id="sidepanel">
