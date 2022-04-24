@@ -51,7 +51,10 @@ def homepage(request):
         template = 'homepage.html'
 
         if Usuario.objects.get(usuario = request.user).piso_encontrado == True:
-            return render(request, 'perfildesactivado.html')
+            lista_mates=notificaciones(request)
+            usuario = Usuario.objects.get(usuario = request.user)
+            params = {'notificaciones':lista_mates, 'usuario':usuario}
+            return render(request, 'perfildesactivado.html',params)
             
         registrado= get_object_or_404(Usuario, usuario=request.user)
         ciudad= registrado.lugar
