@@ -710,7 +710,7 @@ a {
 	<div id="sidepanel">
 		<div id="profile">
 			<div class="wrap">
-				<img id="profile-img" src="{{usuario_actual.url_perfil_relativa}}" class="online" alt="" />
+				<img id="profile-img" src="{{usuario_actual.url_perfil_relativa}}" class="online" alt="" style="width:3em; height:3em; border-radius:100%"/>
 				<p>{{usuario_actual}}</p>
 			</div>
 		</div>
@@ -728,7 +728,7 @@ a {
 
 					            <div class="wrap">
                       <div id="room_id" hidden>{{c.name}}</div> 
-			          			<img src="{{n.url_perfil_relativa}}" alt="" />
+			          			<img src="{{n.url_perfil_relativa}}" alt="" style="width:3em; height:3em; border-radius:100%"/>
 				          		<div class="meta">
 					        		<p class="name" >{{n.usuario}}</p>
 					        		<p class="preview" id="preview-{{c.name}}"></p>
@@ -742,7 +742,7 @@ a {
           {% else %}
                       <div class="wrap">
                       <div id="room_id" hidden>{{c.name}}</div> 
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png" alt="" />
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png" alt="" style="width:3em; height:3em; border-radius:100%"/>
                       <div class="meta">
                       <p class="name">{{c.room_name}}</p>
                       <p class="preview" id="preview-{{c.name}}"></p>
@@ -764,9 +764,9 @@ a {
 	<div class="content">
 		<div class="contact-profile" id="contact-profile">
       {% if es_grupo %}
-			<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png" alt="" />
+			<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png" alt="" style="width:3em; height:3em; border-radius:100%"/>
       {% else %}
-      <img src="{{usuario_opuesto.url_perfil_relativa}}" alt="" />
+      <img src="{{usuario_opuesto.url_perfil_relativa}}" alt="" style="width:3em; height:3em; border-radius:100%"/>
       {%endif%}
 			<p>{{nombre_sala}}</p>
 		</div>
