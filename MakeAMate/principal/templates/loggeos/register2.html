@@ -3,12 +3,29 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Register</title>
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+    <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+   
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
-     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
-     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+      <!--<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-<style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script> -->
+
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+ 
+    <!-- Include the plugin's CSS and JS: -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.css" type="text/css"/>
+    
+    <style>
 * {
     
     margin: 0;
@@ -30,10 +47,6 @@ p {
 
 
 
-.select2{
- width: 25% !important;
- height: 10% !important;
-}
 
 
 #heading {
@@ -47,6 +60,8 @@ p {
     position: relative;
     margin-top: 20px
 }
+
+
 
 #msform fieldset {
     background: white;
@@ -111,6 +126,13 @@ p {
 #msform .action-button:focus {
     background-color: #311B92
 }
+
+.form-check-input {
+    position: absolute;
+    margin-top: 0.3rem;
+    visibility: hidden;
+}
+
 
 #msform .action-button-previous {
     width: 100px;
@@ -253,20 +275,20 @@ p {
 
 {% block content %}
 <body  id = "all" oncontextmenu='return false' class='snippet-body'>
-   
+
 <div  class="container-fluid">
     <div  class="row justify-content-center">
         <div  class="col-11 col-sm-9 col-md-7 col-lg-6ii col-xl-5 text-center p-0 mt-3 mb-2">
             <div  class="card px-5 pt-4 pb-0 mt-3 mb-3">
 
                 <h2 id="heading">Registrate para ser usuario de MakeAMate</h2>
-                <form id="msform"  method="POST" onsubmit="return validateForm();" enctype="multipart/form-data">
+                <form id="msform"  method="POST" enctype="multipart/form-data">
 
                     {% csrf_token %}
                     <ul id="progressbar">
                         <li class="active" id="account"><strong>Cuenta</strong></li>
                         <li id="personal"><strong>Personal</strong></li>
-                        <li id="payment"><strong>Imagenes</strong></li>
+                        <li id="payment"><strong>Imágenes</strong></li>
                         <li id="confirm"><strong>Termina</strong></li>
                     </ul>
                     <div class="progress">
@@ -276,16 +298,25 @@ p {
                         <div  class="form-card">
                             <div class="row">
                                 <div class="col-5">
-                                    <h2 class="fs-title">Informacion de la cuenta:</h2>
+                                    <h2 class="fs-title">Información de la cuenta:</h2>
                                 </div>
+                              
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 1 - 4</h2>
                                 </div>
+                                <div>
+                                    {% if  form.errors.items %}
+                                        <span class = "errorlist"> 
+                                           Se han encontrado errores en el formulario, por favor, revise todos los campos.
+                                        </span>
+                                    {% endif %}
+                                </div>
                             </div> <label class="fieldlabels" >Email: * </label> <br>  <span class = "errorlist"> {{  form.correo.errors | striptags  }} </span>  {{  form.correo  }} <label class="fieldlabels">Usuario: *</label> <br>  <span class = "errorlist"> {{  form.username.errors | striptags  }} </span>  {{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> <br>  <span class = "errorlist"> {{  form.password.errors | striptags  }} </span>  {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label>  <br>  <span class = "errorlist"> {{  form.password2.errors | striptags  }} </span> {{  form.password2  }} 
 
-                            <label class="fieldlabels">Teléfono: *</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
+                            <label class="fieldlabels">Teléfono: (Debe empezar con el prefijo de tu pais, por ej +34)</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
 
-                        </div> <input type="button" name="next" class="next action-button" value="Siguiente" />
+                        </div><input type="button" name="next" id="next1" class="next action-button" value="Siguiente" />
+                        ¿Ya estas registrado? <a href="/login" class="text">Accede a tu cuenta </a>
                     </fieldset>
                     
                      <fieldset>
@@ -297,15 +328,16 @@ p {
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 2 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }}  <label class="fieldlabels">Fecha de Nacimiento</label>   <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label>  <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
+                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }} <div class="bootstrap-iso"> <label class="fieldlabels">Fecha de Nacimiento (Formato: dd-mm-yyyy , ej 02-03-1998)</label>  
+                               <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label> </div> <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
                             <label class="fieldlabels">Género</label>  <br>  <span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>   {{  form.genero  }}
                             <br>
                             
-                            <label class="fieldlabels">Tags</label>    {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
+                            <label class="fieldlabels">Elige al menos 3 Etiquetas que te definan</label>    <br> {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
                           
-                            <label class="fieldlabels">Aficiones</label>  {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
+                            <label class="fieldlabels">Elige al menos 3 Aficiones que te definan</label> <br> {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
                             <br>
-                        </div> <input type="button" name="next" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                        </div> <input type="button" name="next" id="next2" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
                     </fieldset>
                    
                     <fieldset>
@@ -320,12 +352,11 @@ p {
                             </div> <label class="fieldlabels">Nacionalidad </label>  <br>  <span class = "errorlist"> {{  form.nacionalidad.errors | striptags  }} </span>  {{  form.nacionalidad  }}     
                             <label class="fieldlabels">¿Tienes piso?</label>  <br>  <span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  {{  form.piso_encontrado  }} 
                             <div class = "zona_piso">
-                            <label class="fieldlabels">Zona: </label>  <br>  <span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  {{  form.zona_piso  }}
-                            
+                            <label class="fieldlabels">Zona: </label>  <br>  <span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  {{  form.zona_piso  }}    
                         </div>
                             <br>
                             <label class="fieldlabels">Adjunta foto de ti</label> <br>  <span class = "errorlist"> {{  form.foto_usuario.errors | striptags  }} </span>  {{  form.foto_usuario  }}  
-                        </div> <input type="button" name="next" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                        </div> <input type="button" name="next" id="next3" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
                     </fieldset>
                     <fieldset>
                         <div class="form-card">
@@ -344,7 +375,7 @@ p {
                                 
                             </div>                         
                         </div>
-                        <br> <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                        <br>  <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
 
                     </fieldset>
                 </form>
@@ -369,8 +400,9 @@ p {
 
     setProgressBar(current);
 
-    $(".next").click(function(){
-
+    $("#next1").click(function(){
+    valid1 = validar1();
+    if(valid1){
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
 
@@ -394,7 +426,73 @@ p {
     duration: 500
     });
     setProgressBar(++current);
+    }
+
+    
     });
+
+    $("#next2").click(function(){
+    valid2 = validar2();
+    if(valid2){
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+
+    //Add Class Active
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+    step: function(now) {
+    // for making fielset appear animation
+    opacity = 1 - now;
+
+    current_fs.css({
+    'display': 'none',
+    'position': 'relative'
+    });
+    next_fs.css({'opacity': opacity});
+    },
+    duration: 500
+    });
+    setProgressBar(++current);
+    }
+
+    
+    });
+
+    $("#next3").click(function(){
+    valid3 = validar3();
+    if(valid3){
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+
+    //Add Class Active
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+    step: function(now) {
+    // for making fielset appear animation
+    opacity = 1 - now;
+
+    current_fs.css({
+    'display': 'none',
+    'position': 'relative'
+    });
+    next_fs.css({'opacity': opacity});
+    },
+    duration: 500
+    });
+    setProgressBar(++current);
+    }
+
+    
+    });
+
 
     $(".previous").click(function(){
 
@@ -438,7 +536,7 @@ p {
     });
     
 </script>
-<script>
+<!--<script>
     function validateForm()
     {
         // Validate Title
@@ -469,6 +567,7 @@ p {
         if (telefono==="" || telefono===null) {
             alerta += "El teléfono no puede estar vacío \n"
         }
+     
         var nombre = $("#id_nombre").val();
         if (nombre==="" || nombre===null) {
             alerta += "El nombre no puede estar vacío \n"
@@ -500,16 +599,130 @@ p {
         }
       return true;
     }
+</script>-->
+
+<script>
+function validar1(){
+    var regexcorreo = /^([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+/;
+    var phoneno = /^\+?([0-9]{2})\)??([0-9]{9})$/;
+    var alerta = ""
+    var correo = $("#id_correo").val();
+        if (correo==="" || correo===null) {
+            //alert("El correo no puede estar vacío");
+            //return false;
+            alerta += "El correo no puede estar vacío \n"
+        }else if(!(correo.match(regexcorreo))){
+            alerta += "Inserte un correo electrónico válido \n"
+
+        }
+        var username = $("#id_username").val();
+        if (username==="" || username===null) {
+            //alert("El usuario no puede estar vacío");
+            //return false;
+            alerta += "El usuario no puede estar vacío \n"
+        }
+        var regexgpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        
+        var password = $("#id_password").val();
+        if (password==="" || password===null) {
+            alerta += "La contraseña no puede estar vacía \n"
+        }
+        var password2 = $("#id_password2").val();
+        if (password2==="" || password2===null) {
+            alerta += "La confirmación de la contraseña no puede estar vacía \n"
+        }else if(!(password.match(regexgpass))){
+            alerta += "La contraseña debe contener como mínimo 8 caracteres, entre ellos una letra y un número \n"
+        }else if(!(password2 === password)){
+            alerta += "La contraseña y su confirmación no coinciden \n"
+        }
+        var telefono = $("#id_telefono_usuario").val();
+        if (telefono==="" || telefono===null) {
+            alerta += "El teléfono no puede estar vacío \n"
+        }else if(!(telefono.match(phoneno))){
+            alerta += "El teléfono necesita el prefijo de tu pais y ademas no sigue el patron correcto \n"
+        }
+        if(!(alerta === "")){
+            alert(alerta)
+            return false;
+        }
+    return true;
+}
+
+function validar2(){
+    var alerta = ""
+        var nombre = $("#id_nombre").val();
+        if (nombre==="" || nombre===null) {
+            alerta += "El nombre no puede estar vacío \n"
+        }
+        var apellidos = $("#id_apellidos").val();
+        if (apellidos==="" || apellidos===null) {
+            alerta += "Los apellidos no pueden estar vacíos \n"
+        }
+        var fecha_nacimiento = $("#id_fecha_nacimiento").val();
+        if (fecha_nacimiento==="" || fecha_nacimiento===null) {
+            alerta += "La fecha de nacimiento no puede estar vacía \n"
+        }
+        var lugar = $("#id_lugar").val();
+        if (lugar==="" || lugar===null) {
+            alerta += "La ciudad dónde estudias no puede estar vacía \n"
+        }
+        if(!(alerta === "")){
+            alert(alerta)
+            return false;
+        }
+    return true;
+}
+function validar3(){
+    var alerta = ""
+        var nacionalidad = $("#id_nacionalidad").val();
+        if (nacionalidad==="" || nacionalidad===null) {
+            alerta += "La nacionalidad no puede estar vacía \n"
+        }
+        var piso_encontrado = $("#id_piso_encontrado").val();
+        var zona_piso = $("#id_zona_piso").val();
+        if (piso_encontrado === "True" && (zona_piso==="" || zona_piso===null)) {
+            alerta += "La zona del piso no puede estar vacía si tienes un piso \n"
+        }
+        if(!(alerta === "")){
+            alert(alerta)
+            return false;
+        }
+      return true;
+    
+}
+
 </script>
 <script>
-$('#id_piso_encontrado').on('change', function() {
-        if($(this).val() === 'False') {
+function ocultarZona() {
+        if($('#id_piso_encontrado').val() === 'False') {
             $('.zona_piso').hide();
         } else {
             $('.zona_piso').show();
         }
- });
+ }
+$('#id_piso_encontrado').on('change', ocultarZona);
+window.onload = ocultarZona;
 </script>
-<script>$('.select_field_class').select2( { placeholder: "Elige", maximumSelectionSize: 100 } );</script>
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="fecha_nacimiento"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'dd-mm-yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.select_field_class').multiselect();
+
+    });
+</script>
 {% endblock %}
+
+

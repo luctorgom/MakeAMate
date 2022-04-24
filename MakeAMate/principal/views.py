@@ -1,38 +1,25 @@
-from hashlib import new
-from tabnanny import check
 from datetime import datetime,timedelta
-from urllib import request
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
-from django.http import HttpResponseForbidden
 from pagos.models import Suscripcion
 from principal.forms import UsuarioForm, SmsForm
-from .models import Aficiones, Piso, Tag, Usuario,Mate, Foto
+from .models import Piso, Usuario,Mate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from django.http.response import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .recommendations import rs_score
 from chat.views import crear_sala
 from chat.models import Chat,ChatRoom,LastConnection
 from django.db.models import Q, Count
 from datetime import datetime
-from django.db.models import Q
 from .forms import ChangePasswordForm, ChangePhotoForm, UsuarioForm, SmsForm, UsuarioFormEdit
-from principal import models
 from .forms import UsuarioForm, SmsForm
 import os
-import secrets
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-import json
 from django.views.decorators.cache import never_cache
-from .recommendations import rs_score
 from django.contrib import messages
-import ctypes
 
 
 @never_cache
@@ -76,14 +63,17 @@ def homepage(request):
         set_rejected={mate.userEntrada.id for mate in usuarios_rejected}
 
         tags_authenticated = registrado.tags.all()
-        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected)]
+        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected) and u.sms_validado]
         us_sorted = sorted(us_filtered, key=lambda u: rs_score(registrado, u), reverse=True)
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
 
         lista_mates=notificaciones(request)
+
+        user = request.user
+        usuario = Usuario.objects.get(usuario = user)
         
-        params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado}
+        params = {'notificaciones':lista_mates,'usuarios': tags_usuarios, 'authenticated': registrado, 'usuario':usuario}
         return render(request,template,params)
 
     return login_view(request)
@@ -103,7 +93,7 @@ def accept_mate(request):
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
 
-    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso or not perfil_usuario.sms_validado:
         response = { 'success': False }
         return JsonResponse(response)
 
@@ -137,7 +127,7 @@ def reject_mate(request):
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
 
-    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso or not perfil_usuario.sms_validado:
         response = { 'success': False, }
         return JsonResponse(response)
     
@@ -150,17 +140,17 @@ def payments(request):
     if not request.user.is_authenticated:
         return redirect(login_view) 
 
-    template='payments.html'
+    template='payments2.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
     premium= loggeado.es_premium()
     lista_mates=notificaciones(request)
 
     try :
         suscripcion=Suscripcion.objects.all()[0]  
-        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
+        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True,'usuario': loggeado}  
         return render(request,template,params) 
     except:
-        params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False}
+        params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False, 'usuario': loggeado}
         return render(request,template,params) 
 
     
@@ -168,7 +158,20 @@ def payments(request):
 def terminos(request):
     template='loggeos/terminos_1.html'
     return render(request,template) 
+
+def terminos2(request):
+    template='loggeos/terminos_2.html'
+    return render(request,template) 
     
+
+def privacidad(request):
+    template='loggeos/privacidad.html'
+    notis=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    response={'notificaciones':notis, 'usuario': usuario}
+    return render(request,template,response) 
+
 def notificaciones_mates(request):
     lista_notificaciones=[]
     loggeado= request.user
@@ -224,14 +227,24 @@ def notificaciones(request):
     return notificaciones
 
 def notifications_list(request):
-    template='notifications.html'
-    notis=notificaciones(request)
-    response={'notificaciones':notis}
-    return render(request,template,response)
+    if not request.user.is_authenticated:
+        return redirect(login_view)
+    else:
+        template='notifications.html'
+        notis=notificaciones(request)
+        user = request.user
+        usuario = Usuario.objects.get(usuario = user)
+        response={'notificaciones':notis, 'usuario': usuario}
+        return render(request,template,response)
 
 def info(request):
-    lista_mates=notificaciones(request)
-    return render(request,'info.html',{'notificaciones':lista_mates})
+    if not request.user.is_authenticated:
+        return redirect(homepage)
+    else:
+        lista_mates=notificaciones(request)
+        user = request.user
+        usuario = Usuario.objects.get(usuario = user)
+        return render(request,'info.html',{'notificaciones':lista_mates, 'usuario': usuario})
 
 def error_403(request,exception):
     return render(request,'error403.html', status=403)
@@ -244,74 +257,77 @@ def error_500(request,*args, **argv):
 
 
 def estadisticas_mates(request):
-    loggeado= request.user
-    perfil=Usuario.objects.get(usuario=loggeado)
-    es_premium= perfil.es_premium()
-    lista_mates=notificaciones(request)
-
-    if(es_premium):
-        #NUMERO DE INTERACIONES
-        interacciones=Mate.objects.filter(userSalida=loggeado).count()
-        
-        #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
-        mesActual=datetime.now().month
-        listmates=[]
-        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
-        for mR in matesRecibidos:
-            listmates.append(mR.userEntrada)
-        matesDados=Mate.objects.filter(userEntrada=loggeado)
-        eliminados=0
-        for mD in matesDados:
-            #print(mD.userSalida)
-            if(mD.userSalida in listmates):
-                eliminados+=1
-                listmates.remove(mD.userSalida)
-        listperfiles=[]
-        for us in listmates:
-            listperfiles.append(Usuario.objects.get(usuario=us))
-
-        #INTERACCIONES POR DÍA PARA LA GRÁFICA
-        matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')).order_by()
-        listFecha=[]
-        listdcount=[]
-        for i in range(0,matesporFecha.count()):
-            listFecha.append(matesporFecha[i]['fecha_mate__date'].strftime("%d/%m/%Y"))
-            listdcount.append(matesporFecha[i]['dcount'])
-        dictGrafica=dict(zip(listFecha,listdcount))
-        
-        #TOP TAGS CON QUIEN TE HA DADO LIKE
-        listtags=[]
-        tagsloggeado=perfil.tags.all().values()
-        for tagl in tagsloggeado:
-            listtags.append(tagl['etiqueta'])
-        listTop=[]
-        for m in listmates:
-            tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
-            for tm in tagsMates:
-                if tm['etiqueta'] in listtags:
-                    listTop.append(tm['etiqueta'])
-        dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
-        sorted_tuples = sorted(dicTags.items(), key=lambda item: item[1], reverse=True)
-        sortedTags = {k: v for k, v in sorted_tuples}
-
-        #COMPARATIVA NO PREMIUM VS PREMIUM
-        fechaInicioPremium=perfil.fecha_premium - timedelta(days=30)
-        mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
-        mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
-
-        #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
-        listScore=[]
-        for i in listmates:
-            perfilU=Usuario.objects.get(usuario=i)
-            score = rs_score(perfil,perfilU)
-            listScore.append(round(score*100) if(score*100 < 100)  else 100)
-        dictScore=dict(zip(listmates,listScore))
-
-        params={"notificaciones":lista_mates,"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
-                "matesPremium":mRPremium, "scoreLikes":dictScore}
-        return render(request,'estadisticas.html',params)
+    if not request.user.is_authenticated:
+        return redirect(login_view)
     else:
-        return payments(request)
+        loggeado= request.user
+        perfil=Usuario.objects.get(usuario=loggeado)
+        es_premium= perfil.es_premium()
+        lista_mates=notificaciones(request)
+
+        if(es_premium):
+            #NUMERO DE INTERACIONES
+            interacciones=Mate.objects.filter(userSalida=loggeado).count()
+            
+            #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
+            mesActual=datetime.now().month
+            listmates=[]
+            matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
+            for mR in matesRecibidos:
+                listmates.append(mR.userEntrada)
+            matesDados=Mate.objects.filter(userEntrada=loggeado)
+            eliminados=0
+            for mD in matesDados:
+                #print(mD.userSalida)
+                if(mD.userSalida in listmates):
+                    eliminados+=1
+                    listmates.remove(mD.userSalida)
+            listperfiles=[]
+            for us in listmates:
+                listperfiles.append(Usuario.objects.get(usuario=us))
+
+            #INTERACCIONES POR DÍA PARA LA GRÁFICA
+            matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')).order_by()
+            listFecha=[]
+            listdcount=[]
+            for i in range(0,matesporFecha.count()):
+                listFecha.append(matesporFecha[i]['fecha_mate__date'].strftime("%d/%m/%Y"))
+                listdcount.append(matesporFecha[i]['dcount'])
+            dictGrafica=dict(zip(listFecha,listdcount))
+            
+            #TOP TAGS CON QUIEN TE HA DADO LIKE
+            listtags=[]
+            tagsloggeado=perfil.tags.all().values()
+            for tagl in tagsloggeado:
+                listtags.append(tagl['etiqueta'])
+            listTop=[]
+            for m in listmates:
+                tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
+                for tm in tagsMates:
+                    if tm['etiqueta'] in listtags:
+                        listTop.append(tm['etiqueta'])
+            dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
+            sorted_tuples = sorted(dicTags.items(), key=lambda item: item[1], reverse=True)
+            sortedTags = {k: v for k, v in sorted_tuples}
+
+            #COMPARATIVA NO PREMIUM VS PREMIUM
+            fechaInicioPremium=perfil.fecha_premium - timedelta(days=30)
+            mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
+            mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
+
+            #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
+            listScore=[]
+            for i in listmates:
+                perfilU=Usuario.objects.get(usuario=i)
+                score = rs_score(perfil,perfilU)
+                listScore.append(round(score*100) if(score*100 < 100)  else 100)
+            dictScore=dict(zip(listmates,listScore))
+
+            params={"notificaciones":lista_mates,"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
+                    "matesPremium":mRPremium, "scoreLikes":dictScore, 'usuario': perfil}
+            return render(request,'estadisticas.html',params)
+        else:
+            return payments(request)
 
 def registro(request):
     if request.user.is_authenticated:
@@ -329,7 +345,6 @@ def registro(request):
             form_foto = form.cleaned_data['foto_usuario']
             form_fecha_nacimiento = form.cleaned_data['fecha_nacimiento']
             form_lugar = form.cleaned_data['lugar']
-            form_nacionalidad = form.cleaned_data['nacionalidad']
             form_genero = form.cleaned_data['genero']
             form_tags = form.cleaned_data['tags']
             form_aficiones = form.cleaned_data['aficiones']
@@ -346,11 +361,12 @@ def registro(request):
             if form_zona_piso != "":
                 piso = Piso.objects.create(zona = form_zona_piso)
                 perfil = Usuario.objects.create(usuario = user, piso = piso,
-                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
+                
                 genero = form_genero,foto = form_foto,telefono=form_telefono_usuario)
             else:
                 perfil = Usuario.objects.create(usuario = user, 
-                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar, nacionalidad = form_nacionalidad,
+                fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
                 genero = form_genero, foto = form_foto, telefono=form_telefono_usuario) 
 
             perfil.tags.set(form_tags)
@@ -400,7 +416,7 @@ def twilio(request, user_id):
             # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
             # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
-        return render(request, 'loggeos/index.html', {'form': form})
+        return redirect("/login")
 
 
     verification = start_verification(telefono)
@@ -425,10 +441,10 @@ def profile_view(request):
         'foto_usuario': usuario.foto,
         'lugar': usuario.lugar,
         'genero': usuario.genero,
+        'estudios': usuario.estudios,
         'zona_piso': usuario.piso.zona if (usuario.piso)  else "",
         'descripcion': usuario.descripcion,
         'piso_encontrado': usuario.piso_encontrado,
-        # 'idiomas': usuario.idiomas.all(),
         'tags': usuario.tags.all(), 
         'aficiones': usuario.aficiones.all()
     }
@@ -447,35 +463,31 @@ def profile_view(request):
                 form_zona_piso = form.cleaned_data['zona_piso']
                 form_descripcion = form.cleaned_data['descripcion']
                 form_piso_encontrado = form.cleaned_data['piso_encontrado']
-
-                # form_idiomas = form.cleaned_data['idiomas']
+                form_estudios = form.cleaned_data['estudios']
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
 
-                user_actual = request.user
-                perfil = Usuario.objects.get(usuario = user_actual)
                 if form_zona_piso != "":
-                    piso_usuario, no_existe = Piso.objects.get_or_create(zona = form_zona_piso)
-                    if no_existe:
-                        piso_usuario.save()
-                    Usuario.objects.filter(usuario = user_actual).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, piso_encontrado = form_piso_encontrado,
-                    piso = piso_usuario)
-                else:
-                    Usuario.objects.filter(usuario = user_actual).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
-                        genero = form_genero, piso_encontrado = form_piso_encontrado)
+                    piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
+                    Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
+                    genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario,
+                    estudios = form_estudios)
 
-                perfil_updated_2 = Usuario.objects.get(usuario = user_actual)
-                # perfil_updated_2.idiomas.set(form_idiomas)
+                else:
+                    Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
+                        genero = form_genero, piso_encontrado = form_piso_encontrado, estudios = form_estudios)
+                
+                perfil_updated_2 = Usuario.objects.get(usuario = user)
                 perfil_updated_2.tags.set(form_tags)
                 perfil_updated_2.aficiones.set(form_aficiones)
                 perfil_updated_2.save() 
                 return redirect("/profile") 
+
             else:
                 form_change_password = ChangePasswordForm()
                 form_change_photo = ChangePhotoForm()
                 return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
-                'form_change_photo': form_change_photo,'piso_encontrado':usuario.piso_encontrado})
+                'form_change_photo': form_change_photo,'piso_encontrado':usuario.piso_encontrado,'usuario':usuario})
 
         if "actualizarContraseña" in request.POST:
             form_change_password = ChangePasswordForm(request.POST)
@@ -483,9 +495,8 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_password.is_valid():
                 form_password = form_change_password.cleaned_data['password']
-                usuario = request.user
-                usuario.set_password(form_password)
-                usuario.save()
+                user.set_password(form_password)
+                user.save()
                 return redirect("/profile") 
             else:
                 form_change_photo = ChangePhotoForm()
@@ -499,10 +510,10 @@ def profile_view(request):
             form_change_photo = ChangePhotoForm(request.POST, request.FILES)
             if form_change_photo.is_valid(): 
                 form_photo = form_change_photo.cleaned_data['foto_usuario']
-                user = request.user
 
-                Usuario.objects.filter(usuario=user.id).update(foto=form_photo)
- 
+                perfil_foto = Usuario.objects.get(usuario=user.id)
+                perfil_foto.foto = form_photo
+                perfil_foto.save()
                 return redirect("/profile")
             else:
                 form = UsuarioFormEdit(initial = initial_dict)
@@ -511,7 +522,7 @@ def profile_view(request):
 
 
     return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
-            'form_change_photo': form_change_photo})
+            'form_change_photo': form_change_photo,'usuario':usuario})
 
 
 

@@ -30,13 +30,15 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth', 
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pagos',
+    'cloudinary_storage',
+    'cloudinary',
     'channels',
+    'pagos',
     'chat',
     'principal',
 ]
@@ -142,10 +144,18 @@ STATICFILES_FINDERS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-'''NOSE_ARGS = ['--with-xunit']
-import django_heroku
-django_heroku.settings(locals(),test_runner=False)'''
-
+NOSE_ARGS = ['--with-xunit']
+#import django_heroku
+#django_heroku.settings(locals(),test_runner=False)
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
+# Image Storage
+
+CLOUDINARY_SECRET = os.getenv('CLOUDINARY_SECRET')
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'deqjxxfzm',
+    'API_KEY': '763857159616848',
+    'API_SECRET': CLOUDINARY_SECRET,
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
