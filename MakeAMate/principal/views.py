@@ -155,9 +155,13 @@ def payments(request):
 
     
 
-def terminos(request):
+def terminos1(request):
     template='loggeos/terminos_1.html'
-    return render(request,template) 
+    notis=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    response={'notificaciones':notis, 'usuario': usuario}
+    return render(request,template,response) 
 
 def terminos2(request):
     template='loggeos/terminos_2.html'
