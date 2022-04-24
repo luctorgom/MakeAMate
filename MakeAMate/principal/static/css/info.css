@@ -4,29 +4,27 @@
 ::selection { background: rgba(0,0,0,0.2); }
 
 /* Skip to line 40 for the hover code */
+.pcentro{
+  margin-top: 5%;
+}
+p{
 
+  margin-top: 2%;
+
+}
 .centrar {
-    margin:300;
-    position: fixed;
-    width: 100%;
+    margin-left: 7%;
+    margin-right: 7%;
     }
-h1 {
-  max-width: 49rem;
-  font-size: 3.5em;
-  line-height: 1em;
-  font-weight: 700;
-  margin: 0.25em auto;
+
+h1{
+  
+  margin-bottom: 3%;
 }
-h2 {
-  max-width: 49rem;
-  margin: 1.4em auto;
-}
-p {
-  line-height: 1.5em;
-  margin: 1.4em auto;
-  max-width: 49rem;
-  font-size: 1em;
-  font-weight: 300;
+
+h2{
+
+  margin-bottom: 3%;
 }
 a.dfn-hover {
 	color: #333;
