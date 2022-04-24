@@ -51,7 +51,7 @@ def homepage(request):
         template = 'homepage.html'
 
         if Usuario.objects.get(usuario = request.user).piso_encontrado == True:
-            return redirect("/profile")
+            return render(request, 'perfildesactivado.html')
             
         registrado= get_object_or_404(Usuario, usuario=request.user)
         ciudad= registrado.lugar

@@ -1,0 +1,21 @@
+{% include "base.html" %}
+{% block extrahead %}
+
+<script src="../../static/assets_base/js/bs-init.js"></script>
+<script src="../../static/assets_base/js/theme.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+<title>Make a Mate</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+{% endblock %}
+{% block content %}
+<body>
+    <div class="titulo">
+        <h1>Tienes desactivado tu perfil, por lo tanto no puedes buscar compañeros de piso. Si deseas encontrar al compañere de piso ideal, reactívalo.</h1>
+    </div>
+    <div class="botones"><button class="btn btn-primary" type="button" name="iralperfil" value="iralperfil"><a href="profile">Actualizar mi perfil</button></div>    
+</body>
+{% endblock %}
