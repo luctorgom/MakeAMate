@@ -463,6 +463,7 @@ def profile_view(request):
                 form_zona_piso = form.cleaned_data['zona_piso']
                 form_descripcion = form.cleaned_data['descripcion']
                 form_piso_encontrado = form.cleaned_data['piso_encontrado']
+                form_desactivar_perfil = form.cleaned_data['desactivar_perfil']
                 form_estudios = form.cleaned_data['estudios']
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
@@ -470,12 +471,12 @@ def profile_view(request):
                 if form_zona_piso != "":
                     piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
                     Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario,
+                    genero = form_genero, piso_encontrado = form_desactivar_perfil, piso = piso_usuario,
                     estudios = form_estudios)
 
                 else:
                     Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
-                        genero = form_genero, piso_encontrado = form_piso_encontrado, estudios = form_estudios)
+                        genero = form_genero, piso_encontrado = form_desactivar_perfil, estudios = form_estudios)
                 
                 perfil_updated_2 = Usuario.objects.get(usuario = user)
                 perfil_updated_2.tags.set(form_tags)

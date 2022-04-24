@@ -156,9 +156,13 @@
                     <div class="form-control piso_encontrado">{{  form.piso_encontrado  }}</div>
                     
                     <div class="zona_piso"name="zona_piso">
-                        <label class="form-label">Zona Piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
+                        <label class="form-label">Zona del piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
                         <div class="form-control zona_piso">{{  form.zona_piso  }}</div>
                     </div>
+
+                    <label class="form-label">Desactivar mi perfil</label><span class = "errorlist"> {{  form.desactivar_perfil.errors | striptags  }} </span>  
+                    <div class="form-control piso_encontrado">{{  form.desactivar_perfil  }}</div>
+
                 <div class="botones"><button class="btn btn-primary" name="actualizarPerfil" value="actualizarPerfil" type="submit">Actualizar perfil</button></div>
             </div>
         </form>
