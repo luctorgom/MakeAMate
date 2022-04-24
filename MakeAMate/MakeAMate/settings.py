@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%p)bjiwe#p6^ylzsqie+=!u@p1+%u(*pabb%b+v@9uc2+t@r+n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -145,8 +145,8 @@ STATICFILES_FINDERS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 NOSE_ARGS = ['--with-xunit']
-#import django_heroku
-#django_heroku.settings(locals(),test_runner=False)
+import django_heroku
+django_heroku.settings(locals(),test_runner=False)
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
