@@ -63,7 +63,7 @@ def homepage(request):
         set_rejected={mate.userEntrada.id for mate in usuarios_rejected}
 
         tags_authenticated = registrado.tags.all()
-        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected)]
+        us_filtered= [u for u in us if (not u.usuario.id in set_mates) and (not u.usuario.id in set_rejected) and u.sms_validado]
         us_sorted = sorted(us_filtered, key=lambda u: rs_score(registrado, u), reverse=True)
 
         tags_usuarios = {u:{tag:tag in tags_authenticated for tag in u.tags.all()} for u in us_sorted}
@@ -93,7 +93,7 @@ def accept_mate(request):
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
 
-    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso or not perfil_usuario.sms_validado:
         response = { 'success': False }
         return JsonResponse(response)
 
@@ -127,7 +127,7 @@ def reject_mate(request):
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
 
-    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso:
+    if usuario == request.user or not misma_ciudad or is_rejected or has_mated or tienen_piso or not perfil_usuario.sms_validado:
         response = { 'success': False, }
         return JsonResponse(response)
     
@@ -147,7 +147,7 @@ def payments(request):
 
     try :
         suscripcion=Suscripcion.objects.all()[0]  
-        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True}  
+        params={'notificaciones':lista_mates,'suscripcion':suscripcion, 'premium':premium,'hay_suscripciones':True,'usuario': loggeado}  
         return render(request,template,params) 
     except:
         params={'notificaciones':lista_mates,'premium':premium,'hay_suscripciones':False, 'usuario': loggeado}
@@ -155,9 +155,13 @@ def payments(request):
 
     
 
-def terminos(request):
+def terminos1(request):
     template='loggeos/terminos_1.html'
-    return render(request,template) 
+    notis=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    response={'notificaciones':notis, 'usuario': usuario}
+    return render(request,template,response) 
 
 def terminos2(request):
     template='loggeos/terminos_2.html'
@@ -166,7 +170,11 @@ def terminos2(request):
 
 def privacidad(request):
     template='loggeos/privacidad.html'
-    return render(request,template) 
+    notis=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    response={'notificaciones':notis, 'usuario': usuario}
+    return render(request,template,response) 
 
 def notificaciones_mates(request):
     lista_notificaciones=[]

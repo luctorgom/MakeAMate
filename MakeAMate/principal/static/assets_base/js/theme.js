@@ -1,20 +1,22 @@
 
 
-    function esconder2() {
-    var sidebar = document.querySelector('.sidebar');
-    let collection = document.getElementsByClassName("nav-link1");
-    let collection2 = document.getElementsByClassName("nav-item");
-    for (let i = 0; i < collection.length; i++) {
-        if(!sidebar.classList.contains('toggled')){
-            collection[i].style.display="none";
-            collection2[i].style.padding = "10px 0px";
-        }else{
-            collection[i].style.display="";
-            collection2[i].style.padding="";
-        }
-    }
-}
+     function esconder2() {
+       var sidebar = document.querySelector('.sidebar');
+       let collection = document.getElementsByClassName("nav-link1");
+       let collection2 = document.getElementsByClassName("nav-item");
+  
+       for (let i = 0; i < collection.length; i++) {
 
+             if(sidebar.classList.contains('toggled')){
+                collection[i].style.display="";
+                collection2[i].style.padding="";  
+             }else{
+                collection[i].style.display="none";
+                collection2[i].style.padding = "10px 0px";
+             }
+         }
+       }
+  
 
 (function() {
   "use strict"; // Start of use strict

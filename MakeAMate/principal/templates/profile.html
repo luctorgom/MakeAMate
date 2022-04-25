@@ -13,8 +13,16 @@
 <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
 
 <script>
+
     window.onload = esconder;
+    
     function esconder() {
+        var piso = '{{  form.piso_encontrado.value|yesno:"1,0" }}';
+        if(parseInt(piso)) {
+            $('.zona_piso').show();
+        } else {
+            $('.zona_piso').hide();
+        }
         $('#id_piso_encontrado').on('click', function() {
             if($(this).val() === 'False') {
                 $('.zona_piso').hide();
@@ -22,7 +30,9 @@
                 $('.zona_piso').show();
             }
      }); }
+
     
+
 </script>
 
 {% endblock %}
@@ -40,8 +50,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Si desea que sus datos sean eliminados del sistema envíe un correo electrónico a la siguiente dirección <a href="makeamate-soporte@gmail.com">makeamate-soporte@gmail.com</a>.</p>
-                    <p>Nota: Nos reservamos el derecho de conservar aquellos datos que entren en confrontación con nuestros derechos estipulados en los <a href="{% url 'terminos' %}">Términos y Condiciones</a> y en la <a href="{% url 'privacidad' %}">Política de Privacidad de la página</a>.</p>
+                    <p>Si desea que sus datos sean eliminados del sistema envíe un correo electrónico a la siguiente dirección <a href="mailto:makeamate.soporte@gmail.com?subject=Borrar%20datos">makeamate.soporte@gmail.com</a>.</p>
+                    <p>Nota: Nos reservamos el derecho de conservar aquellos datos que entren en confrontación con nuestros derechos estipulados en los <a href="{% url 'terminos1' %}">Términos y Condiciones</a> y en la <a href="{% url 'privacidad' %}">Política de Privacidad de la página</a>.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">De acuerdo</button>
@@ -59,7 +69,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                     <div class="modal-body">
-                        <p>Si desea recibir un archivo con sus datos recogidos en el sistema envíe un correo electrónico a la siguiente dirección <a href="makeamate-soporte@gmail.com">makeamate-soporte@gmail.com</a>.</p>
+                        <p>Si desea recibir un archivo con sus datos recogidos en el sistema envíe un correo electrónico a la siguiente dirección <a href="mailto:makeamate.soporte@gmail.com?subject=Extracci%C3%B3n%20de%20datos">makeamate.soporte@gmail.com</a>.</p>
                     </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">De acuerdo</button>
@@ -142,7 +152,7 @@
                     <label class="form-label">Estudios</label><span class = "errorlist"> {{  form.estudios.errors | striptags  }} </span>  
                     <div class="form-control estudios">{{  form.estudios  }}</div>
         
-                    <label class="form-label">Piso Encontrado</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
+                    <label class="form-label">¿Tienes piso?</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
                     <div class="form-control piso_encontrado">{{  form.piso_encontrado  }}</div>
                     
                     <div class="zona_piso"name="zona_piso">
