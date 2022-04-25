@@ -355,7 +355,7 @@ def registro(request):
 
 
             if form_zona_piso != "":
-                piso = Piso.objects.create(zona = form_zona_piso)
+                piso = Piso.objects.get_or_create(zona = form_zona_piso)[0]
                 perfil = Usuario.objects.create(usuario = user, piso = piso,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
                 
