@@ -11193,3 +11193,13 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+#pro {
+  border: 1px solid #9600c4;
+  padding: 0.5%;
+  margin:0.5%;
+  border-radius: 25px;
+  color: #9600c4;
+  font-family: fantasy;
+  font-size: 80%;
+}
