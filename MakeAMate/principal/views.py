@@ -529,4 +529,19 @@ def profile_view(request):
             'form_change_photo': form_change_photo,'usuario':usuario})
 
 
+def detalles_perfil(request, profile_id):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
+    
+    filter_user_entrada =  Q(userEntrada = profile_id)
+    filter_user_salida = Q(userSalida = request.user.id)
+    mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).count()
+
+    if mate == 0:
+        return redirect(homepage)
+
+    perfil = Usuario.objects.get(id=profile_id)
+    return render(request, 'user_profile.html', {'perfil':perfil})
+
+
 
