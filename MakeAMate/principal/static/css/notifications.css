@@ -32,7 +32,6 @@
     -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
     flex-direction: row;
-    justify-content: space-between;
     align-items: left;
   }
   
@@ -45,6 +44,7 @@
   .notification-list_img{
     left: 0px;
     
+    
   }
   .notification-list .notification-list_img img {
     height: 48px;
@@ -53,10 +53,14 @@
     margin-right: 20px;
     border: 2px rgb(136, 24, 158) solid;
   }
+  .notification-list_detail{
+    flex-grow: 2;
+  }
   
   .notification-list .notification-list_content .notification-list_detail p {
     margin-bottom: 5px;
     line-height: 1.2;
+    
    }
    .me-3{
      margin-top: auto;
@@ -74,8 +78,9 @@
     width: 48px;
     border-radius: 5px;
     margin-left: 20px;
-    margin-right: 10rem;
+    margin-right: 14rem;
 
+    
   }
   
   @media (max-width: 768px) {
