@@ -4,10 +4,13 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
-     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
-     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap.min.css">
 <style>
     * {
     
@@ -252,23 +255,47 @@
                 <div  class="card px-5 pt-4 pb-0 mt-3 mb-3">
     
                     <h2 id="heading">Verifica tu cuenta</h2>
-                <form id="msform" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
-                    {% endif %}
-                    <fieldset>
-                        <div  class="form-card">
-                            <div class="row">
-                                <label class="fieldlabels">Escribe el codigo: </label>  {{ form.codigo }}
+                    <form id="msform" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        {% endif %}
+                        <fieldset>
+                            <div  class="form-card">
+                                <div class="row">
+                                    <label class="fieldlabels">Escribe el código: </label>  {{ form.codigo }}
+                                </div>
+                                <div class="row">
+                                    <label class="fieldlabels">¿No te llega el SMS? ¿Quieres modificar tu número de teléfono?</label><span class = "errorlist"> {{  form.modificar_telefono.errors | striptags  }} </span>  
+                                    <div class="modificar_telefono">{{  form.modificar_telefono  }}</div>
+                                </div>
+                                
+                                <div class="row telefono_usuario"name="telefono_usuario">
+                                    <label class="fieldlabels">Nuevo número de teléfono: </label><span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  
+                                    <div class="telefono_usuario">{{  form.telefono_usuario  }}</div>
+                                </div>
+                                <br>
                             </div>
-                            <br>
-                        </div>
-                          <button type="submit" class="btn btn-outline-success" value="Submit">Registrarme</button>
-                    </fieldset>
-                </form>
+                            <button type="submit" class="btn btn-outline-success" value="Submit">Registrarme</button>
+                        </fieldset>
+                    </form>
                 </div>
-                </body>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function ocultarTelefono() {
+        if($('#id_modificar_telefono').val() === 'False') {
+            $('.telefono_usuario').hide();
+        } else {
+            $('.telefono_usuario').show();
+        }
+    }
+    $('#id_modificar_telefono').on('change', ocultarTelefono);
+    window.onload = ocultarTelefono;
+</script>
 {% endblock %}

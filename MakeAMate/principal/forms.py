@@ -8,7 +8,31 @@ from .models import Tag,Aficiones
 
 
 class SmsForm(forms.Form):
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
     codigo = forms.CharField(required=True)
+
+    def clean_modificar_telefono(self):
+        modificar_telefono = self.cleaned_data.get('modificar_telefono')
+        valores = ['True', 'False']
+        if modificar_telefono not in valores:
+            raise forms.ValidationError('El valor debe ser Sí o No')
+
+        return modificar_telefono
+
+    def clean_telefono_usuario(self):
+        telefono_usuario = self.cleaned_data.get('telefono_usuario')
+        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+
+        if not re.fullmatch(regex, telefono_usuario):
+            raise forms.ValidationError('Inserte un teléfono válido')
+
+        existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
+        modificar_telefono = self.cleaned_data.get('modificar_telefono')
+        if existe_telefono and modificar_telefono:
+            raise forms.ValidationError('El teléfono ya está en uso')
+
+        return telefono_usuario
 
     def clean_codigo(self):
         codigo = self.cleaned_data["codigo"]
