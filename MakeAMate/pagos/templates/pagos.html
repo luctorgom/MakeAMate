@@ -71,7 +71,7 @@
                             orderID: data.orderID,
                             authorizationID: authorizationID
                         })
-                    }).then(response => window.location.href="home");
+                    }).then(response => window.location.href="");
                 });
                 alert('Se ha completado el pago correctamente.');
             }
@@ -80,18 +80,49 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">            
-    <div class="col-md-12 col-sm-12">
-        <div class="paypalTable">
-            <h3 class="title fw-bold" style="border-right-style: none; color: black">Selecciona tu método de pago</h3>
-            <div id="paypal-button-container"></div> 
 
-           
+<div class = "container"           
+    <div class="card text-center">
+        <div class="card-header">
+        <img class="responsive_img" src="/static/banner_pagos.png" width="400" height="200"> 
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">Resumen del pedido</h5>
+        <div class="row item">
+            <div class="col-8">
+                <div class="row"><b>{{suscripcion.price}} €</b></div>
+                <div class="row text-muted">Suscripción premium</div>
+            </div>
+        </div>
+        <hr>
+        <div class="row lower">
+            <div class="col text-left">Subtotal</div>
+            <div class="col text-right">{{suscripcion.price}} €</div>
+        </div>
+        <div class="row lower">
+            <div class="col text-left">Gastos de gestión</div>
+            <div class="col text-right">Gratuitos</div>
+        </div>
+        <div class="row lower">
+            <div class="col text-left"><b>Total a pagar</b></div>
+            <div class="col text-right"><b>{{suscripcion.price}} €</b></div>
+        </div>
+        <br>
+        <div class="row">            
+            <div class="col-md-12 col-sm-12">
+                <div class="paypalTable">
+                    <div id="paypal-button-container"></div>       
+                </div>
+            </div>
+        </div>
     </div>
-    
+</div>
 
-</div>
-</div>
+
+
+
+
+
 
 
 {% endblock %}

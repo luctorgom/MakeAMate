@@ -5,7 +5,8 @@
     <title>Register</title>
     
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
     <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
 
@@ -14,9 +15,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
    
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
-      <!--<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script> -->
 
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
  
@@ -53,6 +51,7 @@ p {
     text-transform: uppercase;
     color: #673AB7;
     font-weight: normal
+    font-family: Nunito;
 }
 
 #msform {
@@ -93,7 +92,7 @@ p {
     margin-top: 2px;
     width: 100%;
     box-sizing: border-box;
-    font-family: montserrat;
+    font-family: Nunito;
     color: #2C3E50;
     background-color: #ECEFF1;
     font-size: 16px;
@@ -287,10 +286,10 @@ p {
 
                     {% csrf_token %}
                     <ul id="progressbar">
-                        <li class="active" id="account"><strong>Cuenta</strong></li>
-                        <li id="personal"><strong>Personal</strong></li>
-                        <li id="payment"><strong>Imágenes</strong></li>
-                        <li id="confirm"><strong>Termina</strong></li>
+                        <li class="active" id="account"  ><strong>Cuenta</strong></li>
+                        <li id="personal"  ><strong>Personal</strong></li>
+                        <li id="payment" ><strong>Imágenes</strong></li>
+                        <li id="confirm"  ><strong>Termina</strong></li>
                     </ul>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -299,11 +298,11 @@ p {
                         <div  class="form-card">
                             <div class="row">
                                 <div class="col-5">
-                                    <h2 class="fs-title">Información de la cuenta:</h2>
+                                    <h2 class="fs-title " style="font-family: Nunito" >Información de la cuenta:</h2>
                                 </div>
                               
                                 <div class="col-5">
-                                    <h2 class="steps">Pasos 1 - 4</h2>
+                                    <h2 class="steps ">Pasos 1 - 4</h2>
                                 </div>
                                 <div>
                                     {% if  form.errors.items %}
@@ -312,11 +311,11 @@ p {
                                         </span>
                                     {% endif %}
                                 </div>
-                            </div> <label class="fieldlabels" >Email: * </label> <br>  <span class = "errorlist"> {{  form.correo.errors | striptags  }} </span>  {{  form.correo  }} <label class="fieldlabels">Usuario: *</label> <br>  <span class = "errorlist"> {{  form.username.errors | striptags  }} </span>  {{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> <br>  <span class = "errorlist"> {{  form.password.errors | striptags  }} </span>  {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label>  <br>  <span class = "errorlist"> {{  form.password2.errors | striptags  }} </span> {{  form.password2  }} 
+                            </div> <label class="fieldlabels " style="font-family: Nunito"  >Email: * </label> <br>  <span class = "errorlist"> {{  form.correo.errors | striptags  }} </span>  {{  form.correo  }} <label class="fieldlabels">Usuario: *</label> <br>  <span class = "errorlist"> {{  form.username.errors | striptags  }} </span>  {{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> <br>  <span class = "errorlist"> {{  form.password.errors | striptags  }} </span>  {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label>  <br>  <span class = "errorlist"> {{  form.password2.errors | striptags  }} </span> {{  form.password2  }} 
 
-                            <label class="fieldlabels">Teléfono: (Debe empezar con el prefijo de tu pais, por ej +34)</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
+                            <label class="fieldlabels" style="font-family: Nunito" >Teléfono: * (Debe empezar con el prefijo de tu pais, por ej +34)</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
 
-                        </div><input type="button" name="next" id="next1" class="next action-button" value="Siguiente" />
+                        </div><input type="button" style="font-family: Nunito"  name="next" id="next1" class="next action-button" value="Siguiente" />
                         ¿Ya estas registrado? <a href="/login" class="text">Accede a tu cuenta </a>
                     </fieldset>
                     
@@ -329,54 +328,55 @@ p {
                                 <div class="col-5">
                                     <h2 class="steps">Pasos 2 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels">Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }} <div class="bootstrap-iso"> <label class="fieldlabels">Fecha de Nacimiento (Formato: dd-mm-yyyy , ej 02-03-1998)</label>  
-                               <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels">Ciudad donde estudias</label> </div> <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
-                            <label class="fieldlabels">Género</label>  <br>  <span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>   {{  form.genero  }}
+                            </div> <label class="fieldlabels" style="font-family: Nunito">Nombre: *</label> <br>  <span class = "errorlist"> {{  form.nombre.errors | striptags  }} </span> {{  form.nombre  }}  <label class="fieldlabels" style="font-family: Nunito" >Apellidos: *</label>  <br>  <span class = "errorlist"> {{  form.apellidos.errors | striptags  }} </span> {{  form.apellidos  }} <div class="bootstrap-iso"> <label class="fieldlabels" style="font-family: Nunito">Fecha de Nacimiento: *(Formato: dd-mm-yyyy , ej 02-03-1998)</label>  
+                               <br>  <span class = "errorlist"> {{  form.fecha_nacimiento.errors | striptags  }} </span> {{  form.fecha_nacimiento  }} <label class="fieldlabels" style="font-family: Nunito">Ciudad donde estudias: *</label> </div> <br>  <span class = "errorlist"> {{  form.lugar.errors | striptags  }} </span>  {{  form.lugar  }}  
+                            <label class="fieldlabels" style="font-family: Nunito">Género: *</label>  <br>  <span class = "errorlist"> {{  form.genero.errors | striptags  }} </span>   {{  form.genero  }}
                             <br>
                             
-                            <label class="fieldlabels">Elige al menos 3 Etiquetas que te definan</label>    <br> {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
+                            <label class="fieldlabels" style="font-family: Nunito">Elige al menos 3 Etiquetas que te definan *</label>    <br> {{  form.tags  }} <br><span class = "errorlist"> {{  form.tags.errors | striptags  }} </span> <br>
                           
-                            <label class="fieldlabels">Elige al menos 3 Aficiones que te definan</label> <br> {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
+                            <label class="fieldlabels" style="font-family: Nunito">Elige al menos 3 Aficiones que te definan *</label> <br> {{  form.aficiones  }}  <br>  <span class = "errorlist"> {{  form.aficiones.errors | striptags  }} </span> 
                             <br>
-                        </div> <input type="button" name="next" id="next2" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                        </div> <input type="button" name="next" id="next2" class="next action-button" style="font-family: Nunito" value="Siguiente" /> <input type="button" name="previous" style="font-family: Nunito" class="previous action-button-previous" value="Atras" />
                     </fieldset>
                    
                     <fieldset>
                         <div class="form-card">
                             <div class="row">
                                 <div class="col-5">
-                                    <h2 class="fs-title">Ya queda menos !</h2>
+                                    <h2 class="fs-title" style="font-family: Nunito">Ya queda menos !</h2>
                                 </div>
                                 <div class="col-5">
-                                    <h2 class="steps">Pasos 3 - 4</h2>
+                                    <h2 class="steps" style="font-family: Nunito">Pasos 3 - 4</h2>
                                 </div>
-                            </div>      
-                            <label class="fieldlabels">¿Tienes piso?</label>  <br>  <span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  {{  form.piso_encontrado  }} 
+                            </div>  
+                            <label class="fieldlabels" style="font-family: Nunito">¿Tienes piso?</label>  <br>  <span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  {{  form.piso_encontrado  }} 
                             <div class = "zona_piso">
-                            <label class="fieldlabels">Zona: </label>  <br>  <span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  {{  form.zona_piso  }}    
+                            <label class="fieldlabels" style="font-family: Nunito">Zona: *</label>  <br>  <span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  {{  form.zona_piso  }}
+                         
                         </div>
                             <br>
-                            <label class="fieldlabels">Adjunta foto de ti</label> <br>  <span class = "errorlist"> {{  form.foto_usuario.errors | striptags  }} </span>  {{  form.foto_usuario  }}  
-                        </div> <input type="button" name="next" id="next3" class="next action-button" value="Siguiente" /> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                            <label class="fieldlabels" style="font-family: Nunito">Adjunta foto de ti *</label> <br>  <span class = "errorlist"> {{  form.foto_usuario.errors | striptags  }} </span>  {{  form.foto_usuario  }}  
+                        </div> <input type="button" name="next" id="next3" class="next action-button" style="font-family: Nunito" value="Siguiente" /> <input type="button" name="previous" style="font-family: Nunito" class="previous action-button-previous" value="Atras" />
                     </fieldset>
                     <fieldset>
                         <div class="form-card">
                             <div class="row">
                                 <div class="col-5">
-                                    <h2 class="fs-title">Termina con :</h2>
+                                    <h2 class="fs-title" style="font-family: Nunito">Termina con:</h2>
                                 </div>
                                 <div class="col-5">
-                                    <h2 class="steps">Paso 4 - 4</h2>
+                                    <h2 class="steps" style="font-family: Nunito">Paso 4 - 4</h2>
                                 </div>
                             </div> <br><br>
                             <div class="" style ="display:flex;flex-direction:row">
                                
-                                <label for="id_checkbox"> Acepto <a href="terminos2" target="_blank" class="text">los terminos y condiciones de este sitio. </a> {{ form.terminos }} </label>
+                                <label for="id_checkbox" style="font-family: Nunito"> Acepto <a href="terminos" target="_blank" class="text">los terminos y condiciones de este sitio. </a> {{ form.terminos }} </label>
 
                                 
                             </div>                         
                         </div>
-                        <br>  <button type="submit" class="btn btn-outline-success" value="Registrarme">Registrarme</button> <input type="button" name="previous" class="previous action-button-previous" value="Atras" />
+                        <br>  <button type="submit" class="btn btn-outline-success" style="font-family: Nunito" value="Registrarme">Registrarme</button> <input type="button" style="font-family: Nunito" name="previous" class="previous action-button-previous" value="Atras" />
 
                     </fieldset>
                 </form>
@@ -537,70 +537,7 @@ p {
     });
     
 </script>
-<!--<script>
-    function validateForm()
-    {
-        // Validate Title
-        var alerta = ""
-        var correo = $("#id_correo").val();
-        if (correo==="" || correo===null) {
-            //alert("El correo no puede estar vacío");
-            //return false;
-            alerta += "El correo no puede estar vacío \n"
-        }
-        var username = $("#id_username").val();
-        if (username==="" || username===null) {
-            //alert("El usuario no puede estar vacío");
-            //return false;
-            alerta += "El usuario no puede estar vacío \n"
-        }
-        var password = $("#id_password").val();
-        if (password==="" || password===null) {
-            alerta += "La contraseña no puede estar vacía \n"
-        }
-        var password2 = $("#id_password2").val();
-        if (password2==="" || password2===null) {
-            alerta += "La confirmación de la contraseña no puede estar vacía \n"
-        }else if(!(password2 === password)){
-            alerta += "La contraseña y su confirmación no coinciden \n"
-        }
-        var telefono = $("#id_telefono_usuario").val();
-        if (telefono==="" || telefono===null) {
-            alerta += "El teléfono no puede estar vacío \n"
-        }
-     
-        var nombre = $("#id_nombre").val();
-        if (nombre==="" || nombre===null) {
-            alerta += "El nombre no puede estar vacío \n"
-        }
-        var apellidos = $("#id_apellidos").val();
-        if (apellidos==="" || apellidos===null) {
-            alerta += "Los apellidos no pueden estar vacíos \n"
-        }
-        var fecha_nacimiento = $("#id_fecha_nacimiento").val();
-        if (fecha_nacimiento==="" || fecha_nacimiento===null) {
-            alerta += "La fecha de nacimiento no puede estar vacía \n"
-        }
-        var lugar = $("#id_lugar").val();
-        if (lugar==="" || lugar===null) {
-            alerta += "La ciudad dónde estudias no puede estar vacía \n"
-        }
-        var nacionalidad = $("#id_nacionalidad").val();
-        if (nacionalidad==="" || nacionalidad===null) {
-            alerta += "La nacionalidad no puede estar vacía \n"
-        }
-        var piso_encontrado = $("#id_piso_encontrado").val();
-        var zona_piso = $("#id_zona_piso").val();
-        if (piso_encontrado === "True" && (zona_piso==="" || zona_piso===null)) {
-            alerta += "La zona del piso no puede estar vacía si tienes un piso \n"
-        }
-        if(!(alerta === "")){
-            alert(alerta)
-            return false;
-        }
-      return true;
-    }
-</script>-->
+
 
 <script>
 function validar1(){
@@ -673,12 +610,8 @@ function validar2(){
         }
     return true;
 }
-/*function validar3(){
+function validar3(){
     var alerta = ""
-        var nacionalidad = $("#id_nacionalidad").val();
-        if (nacionalidad==="" || nacionalidad===null) {
-            alerta += "La nacionalidad no puede estar vacía \n"
-        }
         var piso_encontrado = $("#id_piso_encontrado").val();
         var zona_piso = $("#id_zona_piso").val();
         if (piso_encontrado === "True" && (zona_piso==="" || zona_piso===null)) {
@@ -690,7 +623,7 @@ function validar2(){
         }
       return true;
     
-}*/
+}
 
 </script>
 <script>
