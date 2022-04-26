@@ -974,6 +974,7 @@ class DetallesPerfil(TestCase):
 
         #Pepe le da like a Maria
         mate12 = Mate.objects.create(mate=True,userEntrada=userPepe, userSalida=userMaria)
+        mate12.save()
 
     #María entra en Make A Mate y ve el perfil de Pepe
     def test_positive_detalles(self):
