@@ -1,3 +1,4 @@
+
 {% include "base.html" %}
 {% block extrahead %}
 
@@ -45,7 +46,7 @@
                 if(data.success){
                     if(data.mate_achieved){
                         // TO-DO: Animación de mate conseguido.
-                        setTimeout(function() {$(".animacion").fadeIn(0).fadeOut(2000)});
+                        setTimeout(function() {$(".animacion").fadeIn(500).fadeOut(5000)});
 
                     }
                 }
@@ -78,54 +79,35 @@
 
 {% block content %}
   <!--<div class="content">-->
-    <img class="animacion" src="../../static/animacion2.gif">
+    {% comment %} <img class="animacion" src="../../static/animacion2.gif"> {% endcomment %}
     <div class="container">
-      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <div class="card mb-3">
-              <div class="card-body">
-                <div class="row justify-content-center">
-                  <div>
-                    <div>
-                      <a href="#carouselExampleControls" role="button" data-slide="next">
-                      <img src="../../static/images/icons/desliza.png" class="img-fluid" alt="Responsive image">
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% for i,tags_i in usuarios.items %}
-          <div class="carousel-item">
             <div class="card mb-3">
               <div class="card-body">
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:7em; height:7em; border-radius:100%">
+                      <img src="{{perfil.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%">
                       <div>
                         <!--<p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>-->
-                        {% if i.genero == "M" %}
+                        {% if perfil.genero == "M" %}
                           <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género:<img class="alineadoTextoImagenCentro" src="../../static/images/icons/male.png"</p>
-                        {% elif i.genero == "F" %}
-                          <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/female.png"></p>
-                        {% elif i.genero == "O" %}  
-                          <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/agender.png"></p>
+                        {% elif perfil.genero == "F" %}
+                          <p class="info">&nbsp;&nbsp;{{perfil.usuario.first_name}}, {{perfil.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/female.png"></p>
+                        {% elif perfil.genero == "O" %}  
+                          <p class="info">&nbsp;&nbsp;{{perfil.usuario.first_name}}, {{perfil.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/agender.png"></p>
                         {% endif %}
-                        <p class="location"><img class="alineadoTextoImagenCentro" src="../../static/images/icons/location.png">{{i.lugar}}</p>
+                        <p class="location"><img class="alineadoTextoImagenCentro" src="../../static/images/icons/location.png">{{perfil.lugar}}</p>
                       </div>
                     </div>
                   </div>
                   <!--<hr class="sm">-->
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
-                      {% if i.piso != null %}
+                      {% if perfil.piso != null %}
                         <h5 class="card-title">Con piso</h5>
                         <!--<img src="../static/images/fotosPiso.png" class="img-fluid float-left">-->
                         <img src="../../static/images/icons/Home-Logo-Transparent-File.png" class="mx-auto d-block">
-                      {% elif i.piso == null %}
+                      {% elif perfil.piso == null %}
                         <h5 class="card-title">Sin piso</h5>
                         <img src="../../static/images/icons/sinpiso.png" class="mx-auto d-block">
                       {% endif %}
@@ -138,17 +120,21 @@
                 <div class="row justify-content-center  special-card">
                   <div class="col-sm-8 align-self-center">
                     <div class="card-body">
-                      {% if i.descripcion == null %}
-                        <p class="card-text text-center description">Soy {{i.usuario.username}} estudio {{i.estudios}} en {{i.lugar}}</p>
-                      {% elif i.descripcion != null %}
-                        <p class="card-text text-center description">{{i.descripcion}}</p>
+                      {% if perfil.descripcion == null %}
+                        <p class="card-text text-center description">Soy {{perfil.usuario.username}} estudio {{perfil.estudios}} en {{perfil.lugar}}</p>
+                      {% elif perfil.descripcion != null %}
+                        <p class="card-text text-center description">{{perfil.descripcion}}</p>
                       {% endif %}
                     </div>
                   </div>
                   <div class="col-sm-4 align-self-center">
                     <div class="card-body">
-                      <button class="accept-mate btn btn-light" href="#carouselExampleControls" data-slide="next" id={{i.usuario.id}} type="button"><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
-                      <button class="reject-mate btn btn-danger" href="#carouselExampleControls" data-slide="next" id={{i.usuario.id}} type="button"><img src="../../static/images/icons/cruz.png" height ="40" width="40"/></button>
+                      {% if mate == True %}
+                        <button class="btn btn-success" ><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
+                      {% else %}
+                        <button class="accept-mate btn btn-light" id={{perfil.usuario.id}} type="button"><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
+                        <button class="reject-mate btn btn-danger" id={{perfil.usuario.id}} type="button"><img src="../../static/images/icons/cruz.png" height ="40" width="40"/></button>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -156,12 +142,11 @@
                   <div class="card-text text-center">
                     <div class="row">
                       <div class="col-md-8 offset-md-2" id="tagsContainer">
-                        {% for t,compartido in tags_i.items %}
-                          {% if compartido %}
-                            <span><img class="alineadoTextoImagenCentro" src="../../static/images/icons/greenTag.png"/>{{t}}</span>
-                          {% else %}
-                            <span><img class="alineadoTextoImagenCentro" src="../../static/images/icons/greyTag.png"/>{{t}}</span>
-                          {% endif %}
+                        {% for t in tags_relacionadas%}
+                          <span><img class="alineadoTextoImagenCentro" src="../../static/images/icons/greenTag.png"/>{{t}}</span>
+                        {% endfor %}
+                        {% for f in tags_no_relacionadas%}
+                          <span><img class="alineadoTextoImagenCentro" src="../../static/images/icons/greyTag.png"/>{{f}}</span>
                         {% endfor %}
                       </div>
                     </div>
@@ -170,33 +155,7 @@
                 </div>
               </div>
             </div>
-          </div>
-          {% endfor %}
-          <div class="carousel-item">
-            <div class="card mb-3">
-              <div class="card-body">
-                <div class="row justify-content-center">
-                  <div>
-                    <div>
-                      <img src="../../static/images/icons/fin.png" class="img-fluid" alt="Responsive image">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-        <!-- Controles
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>-->
-        <!--<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-          <span class="" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a> -->
-      </div>
     </div>
-  <!--</div>-->
 {% endblock %}
 {% include "footer.html" %}

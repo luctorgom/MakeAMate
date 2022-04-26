@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <link rel="icon" type="image/png" href="/static/images/favicon.ico"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
@@ -64,7 +65,7 @@
                                                             <div class="bg-primary icon-circle" style="--bs-primary: #cb4edf;--bs-primary-rgb: 203,78,223;"><i class="fas fa-crown text-white"></i></div>
                                                         </div>
                                                         <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
-                                                            <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
+                                                            <p>El usuario <b>{{i.0.userEntrada}}</b> te ha dado like.</p>
                                                         </div>
                                                     {% endif %}
                                                     {%if i.2 == "Chat" %}
@@ -82,7 +83,7 @@
                                                                 <div class="bg-warning icon-circle"><i class="fas fa-user-friends text-white"></i></div>
                                                             </div>
                                                             <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
-                                                                <p>Has hecho mate con {{i.0.userSalida}}.</p>
+                                                                <p>Has hecho mate con <b>{{i.0.userSalida}}</b>.</p>
                                                             </div>
                                                     {% endif %}
                                                 {% endif %}
@@ -95,8 +96,14 @@
   
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">{{request.user.username}}</span><img class="border rounded-circle img-profile" src="{{ usuario.url_perfil_relativa }}" alt="{{usuario}}" ></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" href="{% url 'notifications' %}"><i class="far fa-bell fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Notificaciones</a>
+                                <div class="nav-item dropdown no-arrow">
+                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">{{request.user.username}}</span><img class="border rounded-circle img-profile" src="{{ usuario.url_perfil_relativa }}" alt="{{usuario}}" ></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                        {% if usuario.es_premium %}
+                                            <a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Perfil <span id="pro">PRO</span></a><a class="dropdown-item" href="{% url 'notifications' %}"><i class="far fa-bell fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Notificaciones</a>
+                                        {% else %}
+                                            <a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" href="{% url 'notifications' %}"><i class="far fa-bell fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Notificaciones</a>
+                                        {% endif %}
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Cerrar sesión</a>
                                     </div>
                                 </div>

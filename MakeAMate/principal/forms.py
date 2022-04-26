@@ -8,7 +8,31 @@ from .models import Tag,Aficiones
 
 
 class SmsForm(forms.Form):
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
     codigo = forms.CharField(required=True)
+
+    def clean_modificar_telefono(self):
+        modificar_telefono = self.cleaned_data.get('modificar_telefono')
+        valores = ['True', 'False']
+        if modificar_telefono not in valores:
+            raise forms.ValidationError('El valor debe ser Sí o No')
+
+        return modificar_telefono
+
+    def clean_telefono_usuario(self):
+        telefono_usuario = self.cleaned_data.get('telefono_usuario')
+        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+
+        if not re.fullmatch(regex, telefono_usuario):
+            raise forms.ValidationError('Inserte un teléfono válido')
+
+        existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
+        modificar_telefono = self.cleaned_data.get('modificar_telefono')
+        if existe_telefono and modificar_telefono:
+            raise forms.ValidationError('El teléfono ya está en uso')
+
+        return telefono_usuario
 
     def clean_codigo(self):
         codigo = self.cleaned_data["codigo"]
@@ -162,7 +186,7 @@ class UsuarioForm(forms.Form):
         if tags.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
         if tags.count() > 5:
-            raise forms.ValidationError('Por favor, elige menos de cinco etiquetas que te definan')
+            raise forms.ValidationError('Por favor, elige como máximo cinco etiquetas que te definan')
 
         return tags
 
@@ -199,10 +223,11 @@ class UsuarioForm(forms.Form):
 
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
+    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Sí'),(False,'No')))
     zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
     lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
-    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Si'),(False,'No')))
+    desactivar_perfil = forms.ChoiceField(choices=((True, 'Sí'),(False,'No')))
     estudios = forms.CharField(required = False, max_length = 100,widget=forms.TextInput(attrs={'placeholder': 'Ingeniería Informática'}))
     descripcion = forms.CharField(required = False,widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
     tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'}, queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
@@ -214,10 +239,21 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('Los estudios no deben contener números')       
         return estudios
 
+    def clean_piso_encontrado(self):
+        piso_encontrado = self.cleaned_data.get('piso_encontrado')
+        valores = ['True', 'False']
+        if piso_encontrado not in valores:
+            raise forms.ValidationError('El valor debe ser Sí o No')
+
+        return piso_encontrado
+
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')
         caracteres = len(piso)
-        
+        piso_encontrado = self.cleaned_data.get('piso_encontrado')
+        if piso_encontrado == "True":
+            if caracteres == 0:
+                raise forms.ValidationError("La zona del piso no puede estar vacía si tienes un piso")
         if caracteres > 100:
             raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
         if any(chr.isdigit() for chr in piso):
@@ -228,6 +264,8 @@ class UsuarioFormEdit(forms.Form):
         tags = self.cleaned_data.get('tags')
         if tags.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
+        if tags.count() > 5:
+            raise forms.ValidationError('Por favor, elige como máximo cinco etiquetas que te definan')
 
         return tags
 
@@ -262,14 +300,6 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('El lugar no debe contener números')
         return lugar
 
-
-    def clean_piso_encontrado(self):
-        piso_encontrado = self.cleaned_data.get('piso_encontrado')
-        valores = ['True', 'False']
-        if piso_encontrado not in valores:
-            raise forms.ValidationError('El valor debe ser Sí o No')
-
-        return piso_encontrado
 
 class ChangePasswordForm(forms.Form):
     password = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},widget=forms.PasswordInput(attrs={'placeholder': 'Nueva contraseña'}))
