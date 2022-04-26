@@ -186,7 +186,7 @@ class UsuarioForm(forms.Form):
         if tags.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
         if tags.count() > 5:
-            raise forms.ValidationError('Por favor, elige menos de cinco etiquetas que te definan')
+            raise forms.ValidationError('Por favor, elige como máximo cinco etiquetas que te definan')
 
         return tags
 
@@ -264,6 +264,8 @@ class UsuarioFormEdit(forms.Form):
         tags = self.cleaned_data.get('tags')
         if tags.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres etiquetas que te definan')
+        if tags.count() > 5:
+            raise forms.ValidationError('Por favor, elige como máximo cinco etiquetas que te definan')
 
         return tags
 
