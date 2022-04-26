@@ -6,7 +6,6 @@ import re
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 
-from principal.views import homepage, login_view, twilio
 from django.views.decorators.csrf import csrf_protect
 from principal.models import Usuario
 from dateutil.relativedelta import relativedelta
@@ -21,9 +20,9 @@ from chat.models import Chat,ChatRoom,LastConnection
 @csrf_protect
 def paypal(request,pk):
     if not request.user.is_authenticated:
-        return redirect(login_view)
+        return redirect("/login")
     elif Usuario.objects.get(usuario = request.user).sms_validado == False:
-        return redirect(twilio)
+        return redirect("registerSMS")
     else:
         loggeado=get_object_or_404(Usuario, usuario=request.user)
         premium=loggeado.es_premium()
@@ -37,25 +36,25 @@ def paypal(request,pk):
 @csrf_protect
 def paymentComplete(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
+        return redirect("/login")
     elif Usuario.objects.get(usuario = request.user).sms_validado == False:
-        return redirect(twilio)
+        return redirect("registerSMS")
     else:
         loggeado=get_object_or_404(Usuario, usuario=request.user)
         premium=loggeado.es_premium()
         if premium:
-            return redirect(login_view)
+            return redirect("/login")
         fecha_premium = timezone.now() + relativedelta(months=1)
         loggeado.fecha_premium=fecha_premium
         loggeado.save()
-        return redirect(login_view)
+        return redirect("/login")
 
 
 def notificaciones_mates(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
+        return redirect("/login")
     elif Usuario.objects.get(usuario = request.user).sms_validado == False:
-        return redirect(twilio)
+        return redirect("registerSMS")
     lista_notificaciones=[]
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
@@ -83,9 +82,9 @@ def notificaciones_mates(request):
 
 def notificaciones_chat(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
+        return redirect("/login")
     elif Usuario.objects.get(usuario = request.user).sms_validado == False:
-        return redirect(twilio)
+        return redirect("registerSMS")
     user = request.user
     notificaciones_chat=[]
     chats = ChatRoom.objects.filter(participants=user)
@@ -108,9 +107,9 @@ def notificaciones_chat(request):
 
 def notificaciones(request):
     if not request.user.is_authenticated:
-        return redirect(login_view)
+        return redirect("/login")
     elif Usuario.objects.get(usuario = request.user).sms_validado == False:
-        return redirect(twilio)
+        return redirect("registerSMS")
     notificaciones=notificaciones_mates(request)
     lista_chat=notificaciones_chat(request)
     notificaciones.extend(lista_chat)
