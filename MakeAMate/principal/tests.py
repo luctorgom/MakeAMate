@@ -682,11 +682,12 @@ class EdicionTest(TestCase):
 
         self.data = {
             'actualizarPerfil': 'actualizarPerfil',
+            'piso_encontrado': True,
             'zona_piso':'Ejemplo de zona',
             'lugar':'Ejemplo de lugar',
             'genero':'M',
-            'piso_encontrado': True,
             'descripcion': 'Ejemplo de descripción',
+            'desactivar_perfil': False,
             'tags': [t.id for t in Tag.objects.all()],
             'aficiones': [a.id for a in Aficiones.objects.all()],
         }
@@ -747,6 +748,8 @@ class EdicionTest(TestCase):
         response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
         response = c.post('/profile/', self.data)
         usuario_update = Usuario.objects.get(telefono="+34666777111")
+        print(usuario_update.piso.zona)
+        print(self.data['zona_piso'])
         self.assertTrue(usuario_update.piso.zona == self.data['zona_piso'])
         self.assertTrue(response.status_code == 302)
 
