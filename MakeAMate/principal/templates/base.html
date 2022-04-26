@@ -65,7 +65,7 @@
                                                             <div class="bg-primary icon-circle" style="--bs-primary: #cb4edf;--bs-primary-rgb: 203,78,223;"><i class="fas fa-crown text-white"></i></div>
                                                         </div>
                                                         <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
-                                                            <p>El usuario {{i.0.userEntrada}} te ha dado like.</p>
+                                                            <p>El usuario <b><a href="/details-profile/{{i.0.userEntrada.id}}">{{i.0.userEntrada}}</a></b> te ha dado like.</p>
                                                         </div>
                                                     {% endif %}
                                                     {%if i.2 == "Chat" %}
@@ -83,7 +83,7 @@
                                                                 <div class="bg-warning icon-circle"><i class="fas fa-user-friends text-white"></i></div>
                                                             </div>
                                                             <div><span class="small text-gray-500">{{i.0.fecha_mate}}</span>
-                                                                <p>Has hecho mate con {{i.0.userSalida}}.</p>
+                                                                <p>Has hecho mate con <b><a href="/details-profile/{{i.0.userSalida.id}}">{{i.0.userSalida}}</a></b>.</p>
                                                             </div>
                                                     {% endif %}
                                                 {% endif %}

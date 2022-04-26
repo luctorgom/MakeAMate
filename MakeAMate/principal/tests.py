@@ -1,3 +1,4 @@
+from re import S
 from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta, datetime
 import json
@@ -941,4 +942,74 @@ class InfoTest(TestCase):
         c.post('/login/', {'username': 'Maria', 'pass': 'asdfg'})
         response = c.get('/info/')
         self.assertTrue(response.status_code == 200)
+
+class DetallesPerfil(TestCase):
+    def setUp(self):
+
+        userMaria=User(username="Maria")
+        userMaria.set_password("asdfg")
+        userMaria.save()
+
+        piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
+    
+        maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria, telefono="+34666777222", sms_validado=True)
+        maria.save()
+
+        userPepe = User(username='usuario2')
+        userPepe.set_password('qwery')
+        userPepe.save()
+
+        pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333', sms_validado=True)
+        pepe.save()
+
+        user_no_sms = User(username='noSMS')
+        user_no_sms.set_password('qwery')
+        user_no_sms.save()
+
+        noSMS = Usuario.objects.create(usuario=user_no_sms, fecha_nacimiento=date(2000,12,31), lugar="Sevilla", telefono="+34666555444", sms_validado=False)
+        noSMS.save()
+
+        #Pepe le da like a Maria
+        mate12 = Mate.objects.create(mate=True,userEntrada=userPepe, userSalida=userMaria)
+
+    #María entra en Make A Mate y ve el perfil de Pepe
+    def test_positive_detalles(self):
+        c = Client()
+        c.post('/login/', {'username': 'Maria', 'pass': 'asdfg'})
+        id_user_pepe = str(Usuario.objects.get(telefono="+34111222333").id)
+        url = "/details-profile/" + id_user_pepe
+        response = c.get(url)
+
+        self.assertTrue(response.status_code == 200)
+
+    #Pepe entra en Make A Mate y no puede ver el perfil de María
+    def test_negative_detalles_no_mate(self):
+        c = Client()
+        c.post('/login/', {'username': 'usuario2', 'pass': 'qwery'})
+        id_user_maria = str(Usuario.objects.get(telefono="+34666777222").id)
+        url = "/details-profile/" + id_user_maria
+        response = c.get(url)
+
+        #Como maría no le ha dado like a pepe, entonces este no puede acceder a su perfil y es redirigido a homepage
+        self.assertTrue(response.status_code == 302)
+
+    def test_negative_detalles_no_login(self):
+        c = Client()
+        id_user_maria = str(Usuario.objects.get(telefono="+34666777222").id)
+        url = "/details-profile/" + id_user_maria
+        response = c.get(url)
+
+        #Como el usuario no está loggeado, no se puede acceder al perfil y es redirigido a homepage
+        self.assertTrue(response.status_code == 302)
+
+    def test_negative_detalles_sms_no_validado(self):
+        c = Client()
+        id_user_no_sms = str(Usuario.objects.get(telefono="+34666555444").id)
+        url = "/details-profile/" + id_user_no_sms
+        response = c.get(url)
+        self.assertTrue(response.status_code == 302)
+
+
+
+
 

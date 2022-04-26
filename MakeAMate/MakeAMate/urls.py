@@ -44,6 +44,7 @@ urlpatterns = [
     path('estadisticas/',views.estadisticas_mates, name="estadisticas"),
     path('chat/',include('chat.urls')),
     path('privacidad/',views.privacidad,name='privacidad'),
+    path('details-profile/<int:profile_id>', views.detalles_perfil, name="details-profile")
 
 ]
 

@@ -536,4 +536,34 @@ def profile_view(request):
             'form_change_photo': form_change_photo,'usuario':usuario})
 
 
+def detalles_perfil(request, profile_id):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
+    
+    filter_user_entrada =  Q(userEntrada = profile_id)
+    filter_user_salida = Q(userSalida = request.user.id)
+
+    filter_user_entrada2 = Q(userEntrada = request.user.id)
+    filter_user_salida2 = Q(userSalida = profile_id)
+    existe_mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).exists()
+    existe_mate2 = Mate.objects.filter(filter_user_entrada2 & filter_user_salida2).exists()
+
+    mate_mutuo = existe_mate and existe_mate2
+
+    if not existe_mate:
+        return redirect(homepage)
+
+    perfil = Usuario.objects.get(id=profile_id)
+    if not perfil.sms_validado:
+        return redirect(homepage)
+
+    
+    lista_notificaciones = notificaciones(request)
+    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
+
+    tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
+    return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
+     'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'mate_mutuo':mate_mutuo})
+
+
 

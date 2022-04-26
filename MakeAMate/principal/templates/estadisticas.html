@@ -152,7 +152,7 @@
                                                 <div class="col me-2">
                                                     <h6 class="mb-0"><strong>{{us.usuario.first_name}}, {{us.get_edad}} años</strong></h6>
                                                 </div>
-                                                <div class="col-auto"><img src="{{us.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%"></div>
+                                                <div class="col-auto"><a href="/details-profile/{{us.id}}"><img src="{{us.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%"></a></div>
                                             </div>
                                         </li>
                                     {% endfor %}
