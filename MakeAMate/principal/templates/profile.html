@@ -2,23 +2,27 @@
 {% block extrahead %}
 
 <link rel="stylesheet" href="/static/css/profile.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
 <script src="../../static/assets_base/js/bs-init.js"></script>
 <script src="../../static/assets_base/js/theme.js"></script>
-<meta content="width=device-width, initial-scale=1" name="viewport" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-<title>edit_profile</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="../../static/assets_base/bootstrap/js/bootstrap.min.js"></script>
+<title>Editar Perfil - Make a Mate</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
 
 <script>
 
     window.onload = esconder;
     
     function esconder() {
+        var piso = '{{  form.piso_encontrado.value|yesno:"1,0" }}';
+        if(parseInt(piso)) {
+            $('.zona_piso').show();
+        } else {
+            $('.zona_piso').hide();
+        }
         $('#id_piso_encontrado').on('click', function() {
             if($(this).val() === 'False') {
                 $('.zona_piso').hide();
@@ -26,29 +30,9 @@
                 $('.zona_piso').show();
             }
      }); }
-    
-</script>
-<script>
-    $(document).ready(function () {
-        $("#myModal1").click(function () {
-            $("#myModal1").css("display", 'none');
-        });
-        $("#boton1").click(function () {
-            $("#myModal1").css("display", 'block');
-        });
 
-        $("#myModal2").click(function () {
-            $("#myModal2").css("display", 'none');
-        });
-        $("#boton2").click(function () {
-            $("#myModal2").css("display", 'block');
-        });
-        $(".close").click(function () {
-            if (event.target == $("#myModal")) {
-                $("#myModal").css("display", 'none');
-            }
-        });
-    });
+    
+
 </script>
 
 {% endblock %}
@@ -56,15 +40,53 @@
 <body>
     <div class="titulo">
         <h1>Mi perfil</h1>
+    </div>    
+    <div class="modal fade" id="myModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img class="logo" src="/static/logotipo.png">
+                    <h5 class="modal-title" id="exampleModalLabel">Borrar mi cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Si desea que sus datos sean eliminados del sistema envíe un correo electrónico a la siguiente dirección <a href="mailto:makeamate.soporte@gmail.com?subject=Borrar%20datos">makeamate.soporte@gmail.com</a>.</p>
+                    <p>Nota: Nos reservamos el derecho de conservar aquellos datos que entren en confrontación con nuestros derechos estipulados en los <a href="{% url 'terminos1' %}">Términos y Condiciones</a> y en la <a href="{% url 'privacidad' %}">Política de Privacidad de la página</a>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">De acuerdo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img class="logo" src="/static/logotipo.png">
+                    <h5 class="modal-title" id="exampleModalLabel">Extraer mis datos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                        <p>Si desea recibir un archivo con sus datos recogidos en el sistema envíe un correo electrónico a la siguiente dirección <a href="mailto:makeamate.soporte@gmail.com?subject=Extracci%C3%B3n%20de%20datos">makeamate.soporte@gmail.com</a>.</p>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">De acuerdo</button>
+                </div>
+        </div>
+        </div>
     </div>
     <div class="parte-izqda">
+        
+        
         <form class="p-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
             <div class="form-foto">
                 <div class="head-form">
                     <img class="head-form-img" src="/static/logotipo.png" />
                     <div class="subtitulo"><h3>{{request.user.username}}<br /></h3></div>   
                 </div>
-                <img class="foto-perfil" src="../static/images/users/{{ usuario.foto }}" alt="{{usuario.foto}}" />
+                <img class="foto-perfil" src="{{ usuario.url_perfil_relativa }}" alt="{{usuario.foto}}" />
                 <div class="form-control">{{  form_change_photo.foto_usuario  }}</div><span class = "errorlist"> {{  form_change_photo.foto_usuario.errors | striptags  }} </span>  
                 <div class="botones"><button class="btn btn-primary" type="submit" name="actualizarFoto" value="actualizarFoto">Actualizar foto</button></div>
             </div>
@@ -75,42 +97,24 @@
                     <div class="subtitulo">
                         <h4>Cambiar contraseña</h4>
                     </div>
-                </div class="form-control">
+                </div>
                 
-                <label class="form-label">Nueva contraseña*</label>
-                <div class="form-control">
-                    <input class="form-control" name="password" type="password" placeholder="Escriba aquí su contraseña" />
-                </div>
+                <label class="form-label">Nueva contraseña* </label><span class = "errorlist"> {{  form_change_password.password.errors | striptags  }} </span>
+                <div class="form-control">{{  form_change_password.password  }}</div>
 
-                <label class="form-label">Confirmar contraseña*</label>
-                <div class="form-control">
-                    <input class="form-control" name="password2" type="password" placeholder="Vuelva a introducir su contraseña" />
-                </div>
+                <label class="form-label">Confirmar contraseña* </label><span class = "errorlist"> {{  form_change_password.password2.errors | striptags  }} </span>
+                <div class="form-control">{{  form_change_password.password2  }}</div> 
+               
+
                 <div class="botones">
                     <button class="btn btn-primary" name="actualizarContraseña" value="actualizarContraseña" type="submit">Actualizar contraseña</button>
                 </div>
             </div>
         </form>
         <div class="container d-flex align-items-center justify-content-center">
-            <button type="button" class="btn btn-danger" id="boton1">Borrar mi cuenta</button>
-            <button type="button" class="btn btn-primary" id="boton2">Datos almacenados en la página</button>
-        </div>
-        <div id="myModal1" class="modal">
-            <div class="ventanaEmergente">
-                <span class="close">&times;</span>
-                <img class="logoCentrado" src="/static/logotipo.png"><br>
-                <p>Si desea que sus datos sean eliminados del sistema envíe un correo electrónico a la siguiente dirección <a href="makeamate-soporte@gmail.com">makeamate-soporte@gmail.com</a></p>
-                <p>Nota: Nos reservamos el derecho de conservar aquellos datos que entren en confrontación con nuestros derechos estipulados en los Términos y Condiciones y en la Política de Privacidad de la página.</p>
-            </div>
-        </div>
-        
-        <div id="myModal2" class="modal">
-            <div class="ventanaEmergente">
-                <span class="close">&times;</span>
-                <img class="logoCentrado" src="/static/logotipo.png"><br>
-                <p>Si desea recibir un archivo con sus datos recogidos en el sistema envíe un correo electrónico a la siguiente dirección <a href="makeamate-soporte@gmail.com">makeamate-soporte@gmail.com</a></p>
-            </div>
-        </div>    
+            <button type="button" class="btn btn-danger" id="boton1" data-bs-toggle="modal" data-bs-target="#myModal1">Borrar mi cuenta</button>
+            <button type="button" class="btn btn-primary" id="boton2" data-bs-toggle="modal" data-bs-target="#myModal2">Extraer mis datos</button>
+        </div>  
     </div>
     <div class="parte-dcha">
         <form class="p-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
@@ -144,13 +148,16 @@
 
                     <label class="form-label">Descripción</label><span class = "errorlist"> {{  form.descripcion.errors | striptags  }} </span>  
                     <div class="form-control descripcion">{{  form.descripcion  }}</div>
+
+                    <label class="form-label">Estudios</label><span class = "errorlist"> {{  form.estudios.errors | striptags  }} </span>  
+                    <div class="form-control estudios">{{  form.estudios  }}</div>
         
-                    <label class="form-label">Piso Encontrado</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
-                    <div class="form-control">{{  form.piso_encontrado  }}</div>
+                    <label class="form-label">¿Tienes piso?</label><span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  
+                    <div class="form-control piso_encontrado">{{  form.piso_encontrado  }}</div>
                     
                     <div class="zona_piso"name="zona_piso">
                         <label class="form-label">Zona Piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
-                        <div class="form-control">{{  form.zona_piso  }}</div>
+                        <div class="form-control zona_piso">{{  form.zona_piso  }}</div>
                     </div>
                 <div class="botones"><button class="btn btn-primary" name="actualizarPerfil" value="actualizarPerfil" type="submit">Actualizar perfil</button></div>
             </div>

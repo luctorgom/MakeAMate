@@ -19,6 +19,7 @@
 
 }
 
+
 .paypalTable .title {
     padding: 40px 20px 170px;
     margin: 0 0 30px;
@@ -198,3 +199,8 @@
     }
 
 }
+
+.responsive_img {
+    width: 100%;
+    height: auto;
+  }

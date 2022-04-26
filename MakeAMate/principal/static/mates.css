@@ -65,6 +65,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 575px) {
+    .animacion {  
+        height: 10rem;
+        width: 10rem;     
+    }
   .border-top {
       border-top: 1px solid #e0e0e0;
   }
@@ -92,6 +96,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (min-width: 576px) {
+    .animacion {  
+        height: 10rem;
+        width: 10rem;     
+    }
   .border-sm-top {
       border-top: 1px solid #e0e0e0;
   }
@@ -119,6 +127,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (min-width: 768px) {
+    .animacion {  
+        height: 10rem;
+        width: 10rem;  
+    }
   .border-md-top {
       border-top: 1px solid #e0e0e0;
   }
@@ -146,6 +158,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (min-width: 992px) {
+    .animacion {  
+        height: 10rem;
+        width: 10rem;     
+    }
   .border-lg-top {
       border-top: 1px solid #e0e0e0;
   }
@@ -173,6 +189,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (min-width: 1200px) {
+    .animacion {  
+        height: 10rem;
+        width: 10rem; 
+    }
   .border-xl-top {
       border-top: 1px solid #e0e0e0;
   }
@@ -252,9 +272,9 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .animacion {  
-    display: none;
-    height: 500px;
-    width: 500px;
+    display:none;
+    height: 22rem;
+    width: 22rem;
     border-radius: 50%;
     margin:auto;
     position: absolute;
@@ -294,6 +314,7 @@ img.alineadoTextoImagenArriba{
 
 .info {
     font: 150% nunito;
+    color:rgb(0, 0, 0);
 }
 
 .description {

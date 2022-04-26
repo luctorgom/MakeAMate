@@ -30,11 +30,11 @@ class RecommendationTestCase(TestCase):
 
         premium_fin = timezone.now()+ relativedelta(months=1)
         self.perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=datetime.now(),lugar="Sevilla",telefono="+34655444333",
-                            nacionalidad="Española", genero='F',estudios="Informática",fecha_premium=premium_fin,sms_validado=True)
+                            genero='F',estudios="Informática",fecha_premium=premium_fin,sms_validado=True)
         self.perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=datetime.now(),lugar="Sevilla",telefono="+34655444334",
-                            nacionalidad="Española", genero='F',estudios="Informática",sms_validado=True)
+                            genero='F',estudios="Informática",sms_validado=True)
         self.perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=datetime.now(),lugar="Sevilla",telefono="+34655444335",
-                            nacionalidad="Española", genero='F',estudios="Informática",sms_validado=True)
+                            genero='F',estudios="Informática",sms_validado=True)
         
         tag1 = Tag(etiqueta="No fumador")
         tag2 = Tag(etiqueta="Mascotas")
@@ -102,20 +102,24 @@ class MateTestCase(TestCase):
         self.user4.set_password('123')
         self.user5 = User(id=4,username="us5")
         self.user5.set_password('123')
+        self.user6 = User(id=5,username="us6")
+        self.user6.set_password('123')
 
         piso1 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
         piso2 = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
 
-        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",telefono="+34655444333",sms_validado=True)
-        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",telefono="+34655444334",sms_validado=True)
-        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",piso=piso1,telefono="+34655444335",sms_validado=True)
-        perfil4 = Usuario(usuario=self.user4,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",nacionalidad="Española",
+        perfil4 = Usuario(usuario=self.user4,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='M',estudios="Informática",piso=piso2,telefono="+34655444336",sms_validado=True)
-        perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",nacionalidad="Española",
+        perfil5 = Usuario(usuario=self.user5,fecha_nacimiento=date(2000,12,31),lugar="Murcia",
                             genero='M',estudios="Informática",telefono="+34655444337",sms_validado=True)
+        perfil6 = Usuario(usuario=self.user6,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
+                            genero='M',estudios="Informática",telefono="+34655444369",sms_validado=False)
         
         mate1 = Mate(userEntrada=self.user3, userSalida=self.user1, mate=True)
         mate2 = Mate(userEntrada=self.user4, userSalida=self.user1, mate=False)
@@ -125,6 +129,7 @@ class MateTestCase(TestCase):
         self.user3.save()
         self.user4.save()
         self.user5.save()
+        self.user6.save()
         piso1.save()
         piso2.save()
         perfil1.save()
@@ -132,8 +137,27 @@ class MateTestCase(TestCase):
         perfil3.save()
         perfil4.save()
         perfil5.save()
+        perfil6.save()
         mate1.save()
         mate2.save()
+
+    def test_accept_no_sms(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 5}
+        response = self.client.post('/accept-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
+
+    def test_reject_no_sms(self):
+        self.client.login(username='us1', password='123')
+
+        data = {'id_us': 5}
+        response = self.client.post('/reject-mate/', data, format='json')
+        json_resp = json.loads(response.content)
+
+        self.assertFalse(json_resp['success'])
 
     def test_accept_mate(self):
         self.client.login(username='us1', password='123')
@@ -388,7 +412,7 @@ class LoginTest(TestCase):
         user.set_password('qwery')
         tfn = "+34666777444"
         piso = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
-        perfil = Usuario(usuario=user,piso=piso,fecha_nacimiento="2000-1-1",lugar="Sevilla",nacionalidad="Española",
+        perfil = Usuario(usuario=user,piso=piso,fecha_nacimiento="2000-1-1",lugar="Sevilla",
                 genero='F',estudios="Informática", telefono=tfn, sms_validado=True)
         user.save()
         perfil.save()
@@ -529,7 +553,6 @@ class RegistroTest(TestCase):
             'foto_usuario': avatar_file,
             'fecha_nacimiento':'01-01-2000',
             'lugar':'Ejemplo de lugar',
-            'nacionalidad':'Ejemplo',
             'genero':'M',
             'tags': [t.id for t in Tag.objects.all()],
             'aficiones': [a.id for a in Aficiones.objects.all()],
@@ -627,7 +650,7 @@ class RegistroTest(TestCase):
         response = c.get('/register/terminos/')
         self.assertTrue(response.status_code == 200)
 
-
+'''
 class EdicionTest(TestCase):
     def setUp(self):
         user_pepe= User(username="pepe")
@@ -777,7 +800,7 @@ class EdicionTest(TestCase):
         usuario_update = Usuario.objects.get(telefono="+34666777111")
         self.assertFalse(usuario_update.foto==self.data_photo['foto_usuario'])
         self.assertTrue(response.status_code == 200)
-
+'''
 class EstadisticasTest(TestCase):
     
     def setUp(self):

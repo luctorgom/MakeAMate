@@ -45,10 +45,6 @@ p {
 
 
 
-.select2{
- width: 25% !important;
- height: 10% !important;
-}
 
 
 #heading {
@@ -277,6 +273,7 @@ p {
 {% endblock %}
 
 {% block content %}
+<link rel="icon" type="image/png" href="/static/images/favicon.ico"/>
 <body  id = "all" oncontextmenu='return false' class='snippet-body'>
 
 <div  class="container-fluid">
@@ -356,7 +353,7 @@ p {
                             <label class="fieldlabels" style="font-family: Nunito">¿Tienes piso?</label>  <br>  <span class = "errorlist"> {{  form.piso_encontrado.errors | striptags  }} </span>  {{  form.piso_encontrado  }} 
                             <div class = "zona_piso">
                             <label class="fieldlabels" style="font-family: Nunito">Zona: *</label>  <br>  <span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  {{  form.zona_piso  }}
-                            
+                         
                         </div>
                             <br>
                             <label class="fieldlabels" style="font-family: Nunito">Adjunta foto de ti *</label> <br>  <span class = "errorlist"> {{  form.foto_usuario.errors | striptags  }} </span>  {{  form.foto_usuario  }}  

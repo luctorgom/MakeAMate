@@ -19,7 +19,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <script src="../../static/assets_base/js/bs-init.js"></script>
     <script src="../../static/assets_base/js/theme.js"></script>
-  
+    <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/assets_base/fonts/fontawesome-all.min.css">
+
   <script>
 /*     $(document).ready(function() {
     setTimeout(function() {
@@ -43,7 +45,7 @@
                 if(data.success){
                     if(data.mate_achieved){
                         // TO-DO: Animación de mate conseguido.
-                        setTimeout(function() {$(".animacion").fadeIn(500).fadeOut(5000)});
+                        setTimeout(function() {$(".animacion").fadeIn(0).fadeOut(2000)});
 
                     }
                 }
@@ -76,7 +78,7 @@
 
 {% block content %}
   <!--<div class="content">-->
-    {% comment %} <img class="animacion" src="../../static/animacion2.gif"> {% endcomment %}
+    <img class="animacion" src="../../static/animacion2.gif">
     <div class="container">
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
@@ -102,7 +104,7 @@
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%">
+                      <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:7em; height:7em; border-radius:100%">
                       <div>
                         <!--<p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>-->
                         {% if i.genero == "M" %}

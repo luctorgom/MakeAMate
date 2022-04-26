@@ -26,12 +26,11 @@ class UsuarioForm(forms.Form):
     apellidos = forms.CharField(required=False, min_length= 1, max_length = 150,widget=forms.TextInput(attrs={'placeholder': 'Apellidos'}))
     correo = forms.EmailField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}),error_messages={'invalid': 'Inserta un correo electrónico válido'})
     piso_encontrado = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
-    zona_piso = forms.CharField(required=False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class'}))
+    zona_piso = forms.CharField(required=False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class2'}))
     telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
     foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
     fecha_nacimiento = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS, error_messages={'invalid': 'Inserta una fecha válida'})
     lugar = forms.CharField(required=False, max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
-    nacionalidad = forms.CharField(required=False, max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Nacionalidad'}))
     genero = forms.ChoiceField(required=False, choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')))
     tags = forms.ModelMultipleChoiceField(required=False, label='¿Qué etiquetas te definen?',queryset=Tag.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'select_field_class' }))
     aficiones = forms.ModelMultipleChoiceField(required=False, label='¿Qué aficiones tienes?',queryset=Aficiones.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'select_field_class' }))
@@ -41,8 +40,6 @@ class UsuarioForm(forms.Form):
 
     # Validación del formulario
     def clean_username(self):
-        #Se obtienen los datos del formulario
-        #super(UsuarioForm, self).clean()
 
         username = self.cleaned_data.get('username')
 
@@ -85,6 +82,10 @@ class UsuarioForm(forms.Form):
 
         if len(nombre) > 150:
             raise forms.ValidationError('El nombre debe tener menos de 150 caracteres')
+        
+        if any(chr.isdigit() for chr in nombre):
+            raise forms.ValidationError('El nombre no debe contener números')
+        
         return nombre
 
     def clean_apellidos(self):
@@ -94,6 +95,9 @@ class UsuarioForm(forms.Form):
 
         if len(apellidos) > 150:
             raise forms.ValidationError('Los apellidos deben tener menos de 150 caracteres')
+
+        if any(chr.isdigit() for chr in apellidos):
+            raise forms.ValidationError('Los apellidos no deben contener números')
 
         return apellidos
 
@@ -140,18 +144,10 @@ class UsuarioForm(forms.Form):
             raise forms.ValidationError('El lugar no debe estar vacío')
         if len(lugar) > 40:
             raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
+        if any(chr.isdigit() for chr in lugar):
+            raise forms.ValidationError('El lugar no debe contener números')
 
         return lugar
-
-    def clean_nacionalidad(self):
-        nacionalidad = self.cleaned_data.get('nacionalidad')
-
-        if len(nacionalidad) == 0:
-            raise forms.ValidationError('La nacionalidad no debe estar vacía')
-        if len(nacionalidad) > 20:
-            raise forms.ValidationError('La nacionalidad debe contener menos de 20 caracteres')
-
-        return nacionalidad
 
     def clean_genero(self):
         genero = self.cleaned_data.get('genero')
@@ -196,29 +192,36 @@ class UsuarioForm(forms.Form):
         caracteres = len(piso)
 
         if caracteres > 100:
-            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")       
+            raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
+        if any(chr.isdigit() for chr in piso):
+            raise forms.ValidationError('El piso no debe contener números')       
         return piso
 
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
     zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
-    #foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
     lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
     piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Si'),(False,'No')))
-    descripcion = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
-
-    # idiomas = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Idioma.objects.all(), widget=forms.CheckboxSelectMultiple)
+    estudios = forms.CharField(required = False, max_length = 100,widget=forms.TextInput(attrs={'placeholder': 'Ingeniería Informática'}))
+    descripcion = forms.CharField(required = False,widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
     tags = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'}, queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
     aficiones = forms.ModelMultipleChoiceField(error_messages={'required': 'El campo es obligatorio'},queryset=Aficiones.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'btn-check'}))
+
+    def clean_estudios(self):
+        estudios = self.cleaned_data.get('estudios')
+        if any(chr.isdigit() for chr in estudios):
+            raise forms.ValidationError('Los estudios no deben contener números')       
+        return estudios
 
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')
         caracteres = len(piso)
-
+        
         if caracteres > 100:
             raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
-        
+        if any(chr.isdigit() for chr in piso):
+            raise forms.ValidationError('El piso no debe contener números')       
         return piso
 
     def clean_tags(self):
@@ -234,13 +237,6 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
 
         return aficiones
-
-    # def clean_idiomas(self):
-    #     idiomas = self.cleaned_data.get('idiomas')
-    #     if idiomas.count() < 1:
-    #         raise forms.ValidationError('Por favor, elige al menos un idioma')
-
-    #     return idiomas
 
     def clean_genero(self):
         genero = self.cleaned_data.get('genero')
@@ -259,8 +255,11 @@ class UsuarioFormEdit(forms.Form):
 
     def clean_lugar(self):
         lugar = self.cleaned_data.get('lugar')
+
         if len(lugar) > 40:
             raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
+        if any(chr.isdigit() for chr in lugar):
+            raise forms.ValidationError('El lugar no debe contener números')
         return lugar
 
 
@@ -287,6 +286,7 @@ class ChangePasswordForm(forms.Form):
 
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
+        print(password2)
 
         if not password2:
             raise forms.ValidationError('Por favor, confirma tu contraseña')
@@ -303,6 +303,6 @@ class ChangePhotoForm(forms.Form):
     def clean_foto_usuario(self):
         foto_usuario = self.cleaned_data.get('foto_usuario')
 
-        '''if foto_usuario == None:
-            raise forms.ValidationError("Debe añadir una foto")'''
+        if foto_usuario == None:
+            raise forms.ValidationError("Debe añadir una foto")
         return foto_usuario
