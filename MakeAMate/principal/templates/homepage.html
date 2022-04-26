@@ -45,7 +45,7 @@
                 if(data.success){
                     if(data.mate_achieved){
                         // TO-DO: Animación de mate conseguido.
-                        setTimeout(function() {$(".animacion").fadeIn(500).fadeOut(5000)});
+                        setTimeout(function() {$(".animacion").fadeIn(0).fadeOut(2000)});
 
                     }
                 }
@@ -78,7 +78,7 @@
 
 {% block content %}
   <!--<div class="content">-->
-    {% comment %} <img class="animacion" src="../../static/animacion2.gif"> {% endcomment %}
+    <img class="animacion" src="../../static/animacion2.gif">
     <div class="container">
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
@@ -104,7 +104,7 @@
                 <div class="row justify-content-center">
                   <div class="col-sm-8 align-self-center border-sm-right border-md-right border-xl-right border-lg-right">
                     <div class="card-body">
-                      <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%">
+                      <img src="{{i.url_perfil_relativa}}" class="img-fluid float-left" style="width:7em; height:7em; border-radius:100%">
                       <div>
                         <!--<p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>-->
                         {% if i.genero == "M" %}
