@@ -1,0 +1,36 @@
+.texto {
+    margin-top: 3%;
+    text-align: center;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: large;
+}
+
+.bloque {
+    width: 70%;
+    margin-left: 15%;
+    justify-content: center;
+    background: rgb(242,233,254);
+    margin-bottom: 2%;
+}
+
+.botones {
+    text-align: center;
+    padding: 2%;
+}
+
+.enlace {
+    color: rgb(255, 255, 255);
+}
+
+.enlace:hover {
+    color: rgb(255, 255, 255);
+}
+
+@media (max-width: 768px) {
+    .bloque {
+        width: 95%;
+        margin: 2%;
+    }
+}
