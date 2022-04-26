@@ -274,11 +274,6 @@
 
                     <form id="msform" class="modificar_telefono" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% if messages %}
-                            {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-                        {% endif %}
                         <fieldset>
                             <div class="row telefono_usuario form-card"name="telefono_usuario">
                                 <label class="fieldlabels">Nuevo número de teléfono: </label><span class = "errorlist"> {{  form_tfno.telefono_usuario.errors | striptags  }} </span>  

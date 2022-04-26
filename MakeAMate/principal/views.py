@@ -47,7 +47,7 @@ def logout_view(request):
 def homepage(request):
     if request.user.is_authenticated:
         if Usuario.objects.get(usuario = request.user).sms_validado == False:
-            return redirect('register/registerSMS/')
+            return redirect(twilio)
         template = 'homepage.html'
 
         if Usuario.objects.get(usuario = request.user).piso_encontrado == True:
@@ -87,7 +87,8 @@ def homepage(request):
 def accept_mate(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
-
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
     id_us = request.POST['id_us']
     usuario = get_object_or_404(User, pk=id_us)
     
@@ -121,7 +122,8 @@ def accept_mate(request):
 def reject_mate(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
-
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
     id_us = request.POST['id_us']
     usuario = get_object_or_404(User, pk=id_us)  
     
@@ -145,6 +147,8 @@ def reject_mate(request):
 def payments(request):
     if not request.user.is_authenticated:
         return redirect(login_view) 
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
 
     template='payments2.html'
     loggeado=get_object_or_404(Usuario, usuario=request.user)
@@ -183,6 +187,10 @@ def privacidad(request):
     return render(request,template,response) 
 
 def notificaciones_mates(request):
+    if not request.user.is_authenticated:
+        return redirect(login_view) 
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
     lista_notificaciones=[]
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
@@ -209,6 +217,10 @@ def notificaciones_mates(request):
     return lista_notificaciones
 
 def notificaciones_chat(request):
+    if not request.user.is_authenticated:
+        return redirect(login_view) 
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
     user = request.user
     notificaciones_chat=[]
     chats = ChatRoom.objects.filter(participants=user)
@@ -230,6 +242,10 @@ def notificaciones_chat(request):
     return notificaciones_chat
 
 def notificaciones(request):
+    if not request.user.is_authenticated:
+        return redirect(login_view) 
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
     notificaciones=notificaciones_mates(request)
     lista_chat=notificaciones_chat(request)
     notificaciones.extend(lista_chat)
@@ -239,22 +255,24 @@ def notificaciones(request):
 def notifications_list(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
-    else:
-        template='notifications.html'
-        notis=notificaciones(request)
-        user = request.user
-        usuario = Usuario.objects.get(usuario = user)
-        response={'notificaciones':notis, 'usuario': usuario}
-        return render(request,template,response)
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
+    template='notifications.html'
+    notis=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    response={'notificaciones':notis, 'usuario': usuario}
+    return render(request,template,response)
 
 def info(request):
     if not request.user.is_authenticated:
         return redirect(homepage)
-    else:
-        lista_mates=notificaciones(request)
-        user = request.user
-        usuario = Usuario.objects.get(usuario = user)
-        return render(request,'info.html',{'notificaciones':lista_mates, 'usuario': usuario})
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
+    lista_mates=notificaciones(request)
+    user = request.user
+    usuario = Usuario.objects.get(usuario = user)
+    return render(request,'info.html',{'notificaciones':lista_mates, 'usuario': usuario})
 
 def error_403(request,exception):
     return render(request,'error403.html', status=403)
@@ -269,78 +287,81 @@ def error_500(request,*args, **argv):
 def estadisticas_mates(request):
     if not request.user.is_authenticated:
         return redirect(login_view)
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
+    loggeado= request.user
+    perfil=Usuario.objects.get(usuario=loggeado)
+    es_premium= perfil.es_premium()
+    lista_mates=notificaciones(request)
+
+    if(es_premium):
+        #NUMERO DE INTERACIONES
+        interacciones=Mate.objects.filter(userSalida=loggeado).count()
+        
+        #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
+        mesActual=datetime.now().month
+        listmates=[]
+        matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
+        for mR in matesRecibidos:
+            listmates.append(mR.userEntrada)
+        matesDados=Mate.objects.filter(userEntrada=loggeado)
+        eliminados=0
+        for mD in matesDados:
+            #print(mD.userSalida)
+            if(mD.userSalida in listmates):
+                eliminados+=1
+                listmates.remove(mD.userSalida)
+        listperfiles=[]
+        for us in listmates:
+            listperfiles.append(Usuario.objects.get(usuario=us))
+
+        #INTERACCIONES POR DÍA PARA LA GRÁFICA
+        matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')).order_by()
+        listFecha=[]
+        listdcount=[]
+        for i in range(0,matesporFecha.count()):
+            listFecha.append(matesporFecha[i]['fecha_mate__date'].strftime("%d/%m/%Y"))
+            listdcount.append(matesporFecha[i]['dcount'])
+        dictGrafica=dict(zip(listFecha,listdcount))
+        
+        #TOP TAGS CON QUIEN TE HA DADO LIKE
+        listtags=[]
+        tagsloggeado=perfil.tags.all().values()
+        for tagl in tagsloggeado:
+            listtags.append(tagl['etiqueta'])
+        listTop=[]
+        for m in listmates:
+            tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
+            for tm in tagsMates:
+                if tm['etiqueta'] in listtags:
+                    listTop.append(tm['etiqueta'])
+        dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
+        sorted_tuples = sorted(dicTags.items(), key=lambda item: item[1], reverse=True)
+        sortedTags = {k: v for k, v in sorted_tuples}
+
+        #COMPARATIVA NO PREMIUM VS PREMIUM
+        fechaInicioPremium=perfil.fecha_premium - timedelta(days=30)
+        mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
+        mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
+
+        #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
+        listScore=[]
+        for i in listmates:
+            perfilU=Usuario.objects.get(usuario=i)
+            score = rs_score(perfil,perfilU)
+            listScore.append(round(score*100) if(score*100 < 100)  else 100)
+        dictScore=dict(zip(listmates,listScore))
+
+        params={"notificaciones":lista_mates,"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
+                "matesPremium":mRPremium, "scoreLikes":dictScore, 'usuario': perfil}
+        return render(request,'estadisticas.html',params)
     else:
-        loggeado= request.user
-        perfil=Usuario.objects.get(usuario=loggeado)
-        es_premium= perfil.es_premium()
-        lista_mates=notificaciones(request)
-
-        if(es_premium):
-            #NUMERO DE INTERACIONES
-            interacciones=Mate.objects.filter(userSalida=loggeado).count()
-            
-            #QUIEN TE HA DADO LIKE EN EL ÚLTIMO MES
-            mesActual=datetime.now().month
-            listmates=[]
-            matesRecibidos=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__month=mesActual)
-            for mR in matesRecibidos:
-                listmates.append(mR.userEntrada)
-            matesDados=Mate.objects.filter(userEntrada=loggeado)
-            eliminados=0
-            for mD in matesDados:
-                #print(mD.userSalida)
-                if(mD.userSalida in listmates):
-                    eliminados+=1
-                    listmates.remove(mD.userSalida)
-            listperfiles=[]
-            for us in listmates:
-                listperfiles.append(Usuario.objects.get(usuario=us))
-
-            #INTERACCIONES POR DÍA PARA LA GRÁFICA
-            matesporFecha=matesRecibidos.values('fecha_mate__date').annotate(dcount=Count('fecha_mate__date')).order_by()
-            listFecha=[]
-            listdcount=[]
-            for i in range(0,matesporFecha.count()):
-                listFecha.append(matesporFecha[i]['fecha_mate__date'].strftime("%d/%m/%Y"))
-                listdcount.append(matesporFecha[i]['dcount'])
-            dictGrafica=dict(zip(listFecha,listdcount))
-            
-            #TOP TAGS CON QUIEN TE HA DADO LIKE
-            listtags=[]
-            tagsloggeado=perfil.tags.all().values()
-            for tagl in tagsloggeado:
-                listtags.append(tagl['etiqueta'])
-            listTop=[]
-            for m in listmates:
-                tagsMates=Usuario.objects.get(usuario=m).tags.all().values()
-                for tm in tagsMates:
-                    if tm['etiqueta'] in listtags:
-                        listTop.append(tm['etiqueta'])
-            dicTags=dict(zip(listTop,map(lambda x: listTop.count(x),listTop)))
-            sorted_tuples = sorted(dicTags.items(), key=lambda item: item[1], reverse=True)
-            sortedTags = {k: v for k, v in sorted_tuples}
-
-            #COMPARATIVA NO PREMIUM VS PREMIUM
-            fechaInicioPremium=perfil.fecha_premium - timedelta(days=30)
-            mRNoPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__lt=fechaInicioPremium).count()
-            mRPremium=Mate.objects.filter(mate=True,userSalida=loggeado, fecha_mate__gt=fechaInicioPremium).count()
-
-            #SCORE CON LAS PERSONAS QUE TE HAN DADO LIKE
-            listScore=[]
-            for i in listmates:
-                perfilU=Usuario.objects.get(usuario=i)
-                score = rs_score(perfil,perfilU)
-                listScore.append(round(score*100) if(score*100 < 100)  else 100)
-            dictScore=dict(zip(listmates,listScore))
-
-            params={"notificaciones":lista_mates,"interacciones":interacciones,"lista":listperfiles, "topTags":sortedTags, "matesGrafica":dictGrafica, "matesNPremium":mRNoPremium,
-                    "matesPremium":mRPremium, "scoreLikes":dictScore, 'usuario': perfil}
-            return render(request,'estadisticas.html',params)
-        else:
-            return payments(request)
+        return payments(request)
 
 def registro(request):
     if request.user.is_authenticated:
+        if Usuario.objects.get(usuario = request.user).sms_validado == False:
+            return redirect(twilio)
         return redirect(homepage)
     form = UsuarioForm()
     if request.method == 'POST':
@@ -383,14 +404,17 @@ def registro(request):
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
             perfil.save()
-            perfil = authenticate(username=user, password=form_password)
-            print("autenticado")
+            autenticado = authenticate(username=user, password=form_password)
+            login(request, user)
+            print(autenticado)
             return redirect('registerSMS/')
 
     return render(request, 'loggeos/register2.html', {'form': form})
 
 
 def twilio(request):
+    if not request.user.is_authenticated:
+        redirect(homepage)
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
@@ -400,6 +424,21 @@ def twilio(request):
     piso = perfil.piso
     telefono = perfil.telefono
     
+    def validaciones(code):
+        if 20429 == code:
+            messages.error(request, message="Demasiadas peticiones en el servidor, inténtelo de nuevo más adelante.")
+        elif 60200 == code:
+            messages.error(request, message="Número de teléfono no válido, compruebe que el teléfono que ha introducido es correcto.")
+        elif 60202 == code:
+            messages.error(request, message="Por su seguridad se ha bloqueado el número de teléfono introducido, inténtelo de nuevo más adelante")
+        elif 60203 == code:
+            messages.error(request, message="Por su seguridad se ha bloqueado el número de teléfono introducido, inténtelo de nuevo más adelante")
+        elif 60207 == code:
+            messages.error(request, message="Demasiadas peticiones en el servicio, inténtelo de nuevo más adelante.")
+        elif 60212 == code:
+            messages.error(request, message="Demasiadas solicitudes simultáneas del número de teléfono, inténtelo de nuevo más adelante.")
+        else:
+            messages.error(request, message="Error validando el código: " + str(code))
     
     def start_verification(telefono):
         try:
@@ -408,8 +447,8 @@ def twilio(request):
                 .verifications \
                 .create(to=telefono, channel="sms")
             return verification
-        except TwilioRestException as e:
-            messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
+        except TwilioRestException as e:            
+            validaciones(e.code)
         
 
     def check_verification(telefono, codigo, verification):
@@ -427,13 +466,11 @@ def twilio(request):
                 else:
                     messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
         except TwilioRestException as e:
-            # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
-            # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
-            messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
+            validaciones(e.code)
+
         return redirect("/")
 
-
-    # verification = start_verification(telefono)
+    verification = start_verification(telefono)
     form_sms = SmsForm(initial = {'modificar_telefono': 'No'})
     form_tfno = CambiarTelefonoForm()
     if request.method == 'POST':
@@ -453,14 +490,15 @@ def twilio(request):
             form_sms = SmsForm(request.POST, request.FILES)
             if form_sms.is_valid():
                 codigo = form_sms.cleaned_data["codigo"]                
-                # return check_verification(telefono, codigo, verification)
+                return check_verification(telefono, codigo, verification)
 
     return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
 
 def profile_view(request):
     if not request.user.is_authenticated:
         return redirect(homepage)
-
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
     user = request.user
     usuario = Usuario.objects.get(usuario = user)
     lista_mates=notificaciones(request)
@@ -558,7 +596,9 @@ def profile_view(request):
 def detalles_perfil(request, profile_id):
     if not request.user.is_authenticated:
         return redirect(login_view)
-    
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect(twilio)
+
     filter_user_entrada =  Q(userEntrada = profile_id)
     filter_user_salida = Q(userSalida = request.user.id)
 
@@ -583,6 +623,3 @@ def detalles_perfil(request, profile_id):
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
     return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
      'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'mate_mutuo':mate_mutuo})
-
-
-
