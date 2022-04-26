@@ -39,6 +39,7 @@ urlpatterns = [
     path('terminos1/',views.terminos1,name='terminos1'),
     path("register/registerSMS/",views.twilio,name="registerSMS"),
     path("profile/",views.profile_view,name="profile"),
+    path('index/', views.index,name="index"),
     path('', views.homepage,name="home"),
     path('favicon.ico/', RedirectView.as_view(url=staticfiles_storage.url('principal/images/'))),
     path('estadisticas/',views.estadisticas_mates, name="estadisticas"),

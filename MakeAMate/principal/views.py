@@ -22,6 +22,10 @@ from django.views.decorators.cache import never_cache
 from django.contrib import messages
 
 
+
+def index(request):
+    return render(request, "index.html")
+
 @never_cache
 def login_view(request):
     if request.user.is_authenticated:
