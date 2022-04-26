@@ -963,6 +963,13 @@ class DetallesPerfil(TestCase):
         pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333', sms_validado=True)
         pepe.save()
 
+        user_no_sms = User(username='noSMS')
+        user_no_sms.set_password('qwery')
+        user_no_sms.save()
+
+        noSMS = Usuario.objects.create(usuario=user_no_sms, fecha_nacimiento=date(2000,12,31), lugar="Sevilla", telefono="+34666555444", sms_validado=False)
+        noSMS.save()
+
         #Pepe le da like a Maria
         mate12 = Mate.objects.create(mate=True,userEntrada=userPepe, userSalida=userMaria)
 
@@ -995,6 +1002,14 @@ class DetallesPerfil(TestCase):
 
         #Como el usuario no está loggeado, no se puede acceder al perfil y es redirigido a homepage
         self.assertTrue(response.status_code == 302)
+
+    def test_negative_detalles_sms_no_validado(self):
+        c = Client()
+        id_user_no_sms = str(Usuario.objects.get(telefono="+34666555444").id)
+        url = "/details-profile/" + id_user_no_sms
+        response = c.get(url)
+        self.assertTrue(response.status_code == 302)
+
 
 
 
