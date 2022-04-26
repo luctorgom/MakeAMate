@@ -548,9 +548,9 @@ def detalles_perfil(request, profile_id):
         return redirect(login_view)
     
     filter_user_entrada =  Q(userEntrada = profile_id)
-    filter_user_salida = Q(userSalida = Usuario.objects.get(id=request.user.id).id)
+    filter_user_salida = Q(userSalida = Usuario.objects.get(usuario=request.user).id)
 
-    filter_user_entrada2 = Q(userEntrada = Usuario.objects.get(id=request.user.id).id)
+    filter_user_entrada2 = Q(userEntrada = Usuario.objects.get(usuario=request.user).id)
     filter_user_salida2 = Q(userSalida = profile_id)
     existe_mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).exists()
     existe_mate2 = Mate.objects.filter(filter_user_entrada2 & filter_user_salida2).exists()
