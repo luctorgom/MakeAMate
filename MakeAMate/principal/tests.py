@@ -960,7 +960,7 @@ class DetallesPerfil(TestCase):
         userPepe.set_password('qwery')
         userPepe.save()
 
-        pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333')
+        pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333', sms_validado=True)
         pepe.save()
 
         #Pepe le da like a Maria
