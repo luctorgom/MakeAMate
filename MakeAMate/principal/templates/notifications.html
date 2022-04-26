@@ -26,7 +26,7 @@
                 </div>
                     <div class="notification-list_detail">
                         <p>Nuevo Mate</p>
-                        <p class="text-muted">¡Enhorabuena! Has hecho mate con {{i.0.userSalida}}.<br> ¡Ahora disponéis de un chat donde conoceros!</p>
+                        <p class="text-muted">¡Enhorabuena! Has hecho mate con <b><a href="/details-profile/{{i.0.userSalida.id}}">{{i.0.userSalida}}</a></b>.<br> ¡Ahora disponéis de un chat donde conoceros!</p>
                         <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
                     </div>
 
@@ -43,7 +43,7 @@
                     <img src="..\static\logotipo.png" alt="Feature image">
                 </div>
                     <div class="notification-list_detail">
-                        <p>Nuevo like  de {{i.0.userEntrada}}👑</p>
+                        <p>Nuevo like  de </b><a href="/details-profile/{{i.0.userEntrada.id}}">{{i.0.userEntrada}}</a></b>👑</p>
                         <p class="text-muted">Gracias a premium puedes conocer qué perfiles te han dado like.</p>
                         <p class="text-muted"><small>{{i.0.fecha_mate}}</small></p>
                     </div>

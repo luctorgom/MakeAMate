@@ -50,6 +50,12 @@ def homepage(request):
             return redirect('register/registerSMS/')
         template = 'homepage.html'
 
+        if Usuario.objects.get(usuario = request.user).piso_encontrado == True:
+            lista_mates=notificaciones(request)
+            usuario = Usuario.objects.get(usuario = request.user)
+            params = {'notificaciones':lista_mates, 'usuario':usuario}
+            return render(request, 'perfildesactivado.html',params)
+            
         registrado= get_object_or_404(Usuario, usuario=request.user)
         ciudad= registrado.lugar
         if(registrado.tiene_piso()):
@@ -454,8 +460,9 @@ def profile_view(request):
         'genero': usuario.genero,
         'estudios': usuario.estudios,
         'zona_piso': usuario.piso.zona if (usuario.piso)  else "",
+        'desactivar_perfil': usuario.piso_encontrado,
         'descripcion': usuario.descripcion,
-        'piso_encontrado': usuario.piso_encontrado,
+        'piso_encontrado': usuario.tiene_piso,
         'tags': usuario.tags.all(), 
         'aficiones': usuario.aficiones.all()
     }
@@ -471,23 +478,23 @@ def profile_view(request):
             if form.is_valid():
                 form_lugar = form.cleaned_data['lugar']
                 form_genero = form.cleaned_data['genero']
+                form_piso_encontrado = form.cleaned_data['piso_encontrado']
                 form_zona_piso = form.cleaned_data['zona_piso']
                 form_descripcion = form.cleaned_data['descripcion']
-                form_piso_encontrado = form.cleaned_data['piso_encontrado']
+                form_desactivar_perfil = form.cleaned_data['desactivar_perfil']
                 form_estudios = form.cleaned_data['estudios']
                 form_tags = form.cleaned_data['tags']
                 form_aficiones = form.cleaned_data['aficiones']
-
-                if form_zona_piso != "":
+                if form_piso_encontrado=="True":
                     piso_usuario = Piso.objects.get_or_create(zona = form_zona_piso)[0]
                     Usuario.objects.filter(usuario = user).update(lugar = form_lugar, descripcion = form_descripcion,
-                    genero = form_genero, piso_encontrado = form_piso_encontrado, piso = piso_usuario,
+                    genero = form_genero, piso_encontrado = form_desactivar_perfil, piso = piso_usuario,
                     estudios = form_estudios)
 
                 else:
                     Usuario.objects.filter(usuario = user).update(piso = None, lugar = form_lugar, descripcion = form_descripcion,
-                        genero = form_genero, piso_encontrado = form_piso_encontrado, estudios = form_estudios)
-                
+                        genero = form_genero, piso_encontrado = form_desactivar_perfil, estudios = form_estudios)
+
                 perfil_updated_2 = Usuario.objects.get(usuario = user)
                 perfil_updated_2.tags.set(form_tags)
                 perfil_updated_2.aficiones.set(form_aficiones)
@@ -534,6 +541,36 @@ def profile_view(request):
 
     return render(request, 'profile.html', {'notificaciones':lista_mates,'form': form, 'form_change_password':form_change_password,
             'form_change_photo': form_change_photo,'usuario':usuario})
+
+
+def detalles_perfil(request, profile_id):
+    if not request.user.is_authenticated:
+        return redirect(login_view)
+    
+    filter_user_entrada =  Q(userEntrada = profile_id)
+    filter_user_salida = Q(userSalida = request.user.id)
+
+    filter_user_entrada2 = Q(userEntrada = request.user.id)
+    filter_user_salida2 = Q(userSalida = profile_id)
+    existe_mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).exists()
+    existe_mate2 = Mate.objects.filter(filter_user_entrada2 & filter_user_salida2).exists()
+
+    mate_mutuo = existe_mate and existe_mate2
+
+    if not existe_mate:
+        return redirect(homepage)
+
+    perfil = Usuario.objects.get(id=profile_id)
+    if not perfil.sms_validado:
+        return redirect(homepage)
+
+    
+    lista_notificaciones = notificaciones(request)
+    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
+
+    tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
+    return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
+     'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'mate_mutuo':mate_mutuo})
 
 
 

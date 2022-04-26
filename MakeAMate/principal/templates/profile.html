@@ -9,8 +9,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 <title>Editar Perfil - Make a Mate</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+
+
+<script>
+
+    window.onload = esconder;
+    
+    function esconder() {
+        var piso = '{{  form.piso_encontrado.value|yesno:"1,0" }}';
+        if(parseInt(piso)) {
+            $('.zona_piso').show();
+        } else {
+            $('.zona_piso').hide();
+        }
+        $('#id_piso_encontrado').on('click', function() {
+            if($(this).val() === 'False') {
+                $('.zona_piso').hide();
+            } else {
+                $('.zona_piso').show();
+            }
+     }); }
+  
+</script>
 
 {% endblock %}
 {% block content %}
@@ -133,9 +154,13 @@
                     <div class="form-control piso_encontrado">{{  form.piso_encontrado  }}</div>
                     
                     <div class="zona_piso"name="zona_piso">
-                        <label class="form-label">Zona Piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
+                        <label class="form-label">Zona del piso</label><span class = "errorlist"> {{  form.zona_piso.errors | striptags  }} </span>  
                         <div class="form-control zona_piso">{{  form.zona_piso  }}</div>
                     </div>
+
+                    <label class="form-label">Desactivar mi perfil</label><span class = "errorlist"> {{  form.desactivar_perfil.errors | striptags  }} </span>  
+                    <div class="form-control piso_encontrado">{{  form.desactivar_perfil  }}</div>
+
                 <div class="botones"><button class="btn btn-primary" name="actualizarPerfil" value="actualizarPerfil" type="submit">Actualizar perfil</button></div>
             </div>
         </form>
@@ -143,7 +168,7 @@
 </body>
 {% endblock %}
 {% block extrabody %}
-<script>
+<!-- <script>
     function ocultarZona() {
             if($('#id_piso_encontrado').val() === 'False') {
                 $('.zona_piso').hide();
@@ -151,8 +176,9 @@
                 $('.zona_piso').show();
             }
      }
-    $('#id_piso_encontrado').on('change', ocultarZona);
+    $('#id_piso_encontrado').on('change', 
+);
     window.onload = ocultarZona;
-    </script>
+    </script> -->
 {% endblock %}
 {% include "footer.html" %}
