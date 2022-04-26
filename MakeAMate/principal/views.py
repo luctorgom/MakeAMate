@@ -47,7 +47,7 @@ def logout_view(request):
 def homepage(request):
     if request.user.is_authenticated:
         if Usuario.objects.get(usuario = request.user).sms_validado == False:
-            return render(request, 'loggeos/registerSMS.html', {'form': SmsForm})
+            return redirect('register/registerSMS/')
         template = 'homepage.html'
 
         if Usuario.objects.get(usuario = request.user).piso_encontrado == True:
@@ -382,20 +382,21 @@ def registro(request):
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
             perfil.save()
-            return redirect('registerSMS/'+str(user.id), {'user_id': user.id})
+            return redirect('registerSMS/')
 
     return render(request, 'loggeos/register2.html', {'form': form})
 
 
-def twilio(request, user_id):
+def twilio(request):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
     servicio = "VAfd6998ee6818ae4ec6d0344f5a25c96d"
-    user = User.objects.get(id = user_id)
+    user = request.user
     perfil = Usuario.objects.get(usuario = user)
     piso = perfil.piso
     telefono = perfil.telefono
+    
     
     def start_verification(telefono):
         try:
@@ -411,7 +412,7 @@ def twilio(request, user_id):
     def check_verification(telefono, codigo, verification):
         try:
             if(verification.status=="pending"):
-    
+                    
                 verification_check = client.verify \
                                     .services(servicio) \
                                     .verification_checks \
@@ -430,11 +431,17 @@ def twilio(request, user_id):
 
 
     verification = start_verification(telefono)
-    form = SmsForm()
+    form = SmsForm(initial = {'modificar_telefono': 'No'})
     if request.method == 'POST':
         form = SmsForm(request.POST, request.FILES)
         if form.is_valid():
             codigo = form.cleaned_data["codigo"]
+            telefono_nuevo = form.cleaned_data["telefono_usuario"]
+            modificar_telefono = form.cleaned_data["modificar_telefono"]
+            if(modificar_telefono):                
+                perfil.telefono = telefono_nuevo
+                perfil.save()
+                telefono = telefono_nuevo
             return check_verification(telefono, codigo, verification)
 
     return render(request, 'loggeos/registerSMS.html', {'form': form})
