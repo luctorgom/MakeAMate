@@ -199,10 +199,10 @@ class UsuarioForm(forms.Form):
 
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
+    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Sí'),(False,'No')))
     zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
     lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
-    piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Sí'),(False,'No')))
     desactivar_perfil = forms.ChoiceField(choices=((True, 'Sí'),(False,'No')))
     estudios = forms.CharField(required = False, max_length = 100,widget=forms.TextInput(attrs={'placeholder': 'Ingeniería Informática'}))
     descripcion = forms.CharField(required = False,widget=forms.TextInput(attrs={'placeholder': 'Escriba aquí su descripción'}))
@@ -215,10 +215,21 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('Los estudios no deben contener números')       
         return estudios
 
+    def clean_piso_encontrado(self):
+        piso_encontrado = self.cleaned_data.get('piso_encontrado')
+        valores = ['True', 'False']
+        if piso_encontrado not in valores:
+            raise forms.ValidationError('El valor debe ser Sí o No')
+
+        return piso_encontrado
+
     def clean_zona_piso(self):
         piso = self.cleaned_data.get('zona_piso')
         caracteres = len(piso)
-        
+        piso_encontrado = self.cleaned_data.get('piso_encontrado')
+        if piso_encontrado == "True":
+            if caracteres == 0:
+                raise forms.ValidationError("La zona del piso no puede estar vacía si tienes un piso")
         if caracteres > 100:
             raise forms.ValidationError("La zona debe tener menos de 100 caracteres")
         if any(chr.isdigit() for chr in piso):
@@ -263,14 +274,6 @@ class UsuarioFormEdit(forms.Form):
             raise forms.ValidationError('El lugar no debe contener números')
         return lugar
 
-
-    def clean_piso_encontrado(self):
-        piso_encontrado = self.cleaned_data.get('piso_encontrado')
-        valores = ['True', 'False']
-        if piso_encontrado not in valores:
-            raise forms.ValidationError('El valor debe ser Sí o No')
-
-        return piso_encontrado
 
 class ChangePasswordForm(forms.Form):
     password = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},widget=forms.PasswordInput(attrs={'placeholder': 'Nueva contraseña'}))
