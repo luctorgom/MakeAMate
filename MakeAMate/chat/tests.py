@@ -89,21 +89,21 @@ class ChatTestCase(TestCase):
         #El usuario 5 no tiene chats, con lo cual salta error de permiso
         self.assertRaises(PermissionDenied)
 
-    def test_chat_user1_chatroom(self):
-        c = Client()
-        login = c.login(username='us1', password= '123')
-        response=c.get('/chat/5/')
+    # def test_chat_user1_chatroom(self):
+    #     c = Client()
+    #     login = c.login(username='us1', password= '123')
+    #     response=c.get('/chat/5/')
 
-        self.assertEqual(response.context['room_name'],"5")
+    #     self.assertEqual(response.context['room_name'],"5")
 
-        #El usuario 1 ha hecho mate con 2 usuarios
-        self.assertEqual(len(response.context['users']),2)
+    #     #El usuario 1 ha hecho mate con 2 usuarios
+    #     self.assertEqual(len(response.context['users']),2)
 
-        #El usuario 1 tiene un chat
-        self.assertEqual(len(response.context['chats']),1)
+    #     #El usuario 1 tiene un chat
+    #     self.assertEqual(len(response.context['chats']),1)
 
-        #Hay 5 usuarios en la base de datos
-        self.assertEqual(len(response.context['nombrechats']),4)
+    #     #Hay 5 usuarios en la base de datos
+    #     self.assertEqual(len(response.context['nombrechats']),4)
 
     def test_chat_user5_chatroom(self):
         c = Client()
@@ -129,20 +129,20 @@ class ChatTestCase(TestCase):
         response2=c.get('/chat/5/')
         self.assertRaises(PermissionDenied)
 
-    def test_form_group_positive(self):
-        c = Client()
-        login = c.login(username='us1', password= '123')
+    # def test_form_group_positive(self):
+    #     c = Client()
+    #     login = c.login(username='us1', password= '123')
 
-        #Se rellena el formulario
-        response=c.post('/chat/', data = {'Nombre':'GrupoTest','Personas': [1,2]})
+    #     #Se rellena el formulario
+    #     response=c.post('/chat/', data = {'Nombre':'GrupoTest','Personas': [1,2]})
 
-        #Se comprueba que haya un chat más
-        response2 = c.get('/chat/')
-        self.assertEqual(len(response.context['chats']),2)
+    #     #Se comprueba que haya un chat más
+    #     response2 = c.get('/chat/')
+    #     self.assertEqual(len(response.context['chats']),2)
 
-        #Se comprueba que el nombre del chat sea GrupoTest
-        response3 = c.get('/chat/1/')
-        self.assertEqual(response3.context['nombre_sala'], 'GrupoTest')
+    #     #Se comprueba que el nombre del chat sea GrupoTest
+    #     response3 = c.get('/chat/1/')
+    #     self.assertEqual(response3.context['nombre_sala'], 'GrupoTest')
 
     async def test_consumer(self):
         application = WebsocketConsumer.as_asgi()
