@@ -13,7 +13,7 @@ from chat.views import crear_sala
 from chat.models import Chat,ChatRoom,LastConnection
 from django.db.models import Q, Count
 from datetime import datetime
-from .forms import ChangePasswordForm, ChangePhotoForm, UsuarioForm, SmsForm, UsuarioFormEdit
+from .forms import CambiarTelefonoForm, ChangePasswordForm, ChangePhotoForm, UsuarioForm, SmsForm, UsuarioFormEdit
 from .forms import UsuarioForm, SmsForm
 import os
 from twilio.rest import Client
@@ -340,6 +340,7 @@ def registro(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST, request.FILES)
         if form.is_valid():
+            print("form válido")
             form_usuario = form.cleaned_data["username"]
             form_password = form.cleaned_data['password']
             form_nombre = form.cleaned_data['nombre']
@@ -376,6 +377,8 @@ def registro(request):
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
             perfil.save()
+            perfil = authenticate(username=user, password=form_password)
+            print("autenticado")
             return redirect('registerSMS/')
 
     return render(request, 'loggeos/register2.html', {'form': form})
@@ -421,24 +424,32 @@ def twilio(request):
             # TODO: Cuando se hacen 5 llamadas a la API con el mismo telefono en menos de 10 min peta y lanza TwilioRestException.
             # Comprobar documentación al respecto: https://www.twilio.com/docs/api/errors/60203
             messages.error(request, message="TwilioRestException. Error validando el código: {}".format(e))
-        return redirect("/login")
+        return redirect("/")
 
 
-    verification = start_verification(telefono)
-    form = SmsForm(initial = {'modificar_telefono': 'No'})
+    # verification = start_verification(telefono)
+    form_sms = SmsForm(initial = {'modificar_telefono': 'No'})
+    form_tfno = CambiarTelefonoForm()
     if request.method == 'POST':
-        form = SmsForm(request.POST, request.FILES)
-        if form.is_valid():
-            codigo = form.cleaned_data["codigo"]
-            telefono_nuevo = form.cleaned_data["telefono_usuario"]
-            modificar_telefono = form.cleaned_data["modificar_telefono"]
-            if(modificar_telefono):                
-                perfil.telefono = telefono_nuevo
-                perfil.save()
-                telefono = telefono_nuevo
-            return check_verification(telefono, codigo, verification)
+        if "cambiarTelefono" in request.POST:
+            form_tfno = CambiarTelefonoForm(request.POST)
+            form_sms = SmsForm(request.POST, request.FILES)
+            if form_tfno.is_valid():
+                telefono_nuevo = form_tfno.cleaned_data["telefono_usuario"]
+                modificar_telefono = form_tfno.cleaned_data["modificar_telefono"]
+                if(modificar_telefono):                
+                    perfil.telefono = telefono_nuevo
+                    perfil.save()
+                    telefono = telefono_nuevo
+            return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
 
-    return render(request, 'loggeos/registerSMS.html', {'form': form})
+        if "verificarCodigo" in request.POST:
+            form_sms = SmsForm(request.POST, request.FILES)
+            if form_sms.is_valid():
+                codigo = form_sms.cleaned_data["codigo"]                
+                # return check_verification(telefono, codigo, verification)
+
+    return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
 
 def profile_view(request):
     if not request.user.is_authenticated:
@@ -464,6 +475,7 @@ def profile_view(request):
     form_change_photo = ChangePhotoForm()
     form = UsuarioFormEdit(initial = initial_dict)
     if request.method == 'POST':
+        print(request.POST)
         if "actualizarPerfil" in request.POST:
             form_change_password = ChangePasswordForm(request.POST)
             form = UsuarioFormEdit(request.POST)

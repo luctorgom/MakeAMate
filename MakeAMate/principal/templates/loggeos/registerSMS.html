@@ -255,7 +255,7 @@
                 <div  class="card px-5 pt-4 pb-0 mt-3 mb-3">
     
                     <h2 id="heading">Verifica tu cuenta</h2>
-                    <form id="msform" method="POST" enctype="multipart/form-data">
+                    <form id="msform" class="codigo" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% if messages %}
                             {% for message in messages %}
@@ -263,22 +263,34 @@
                             {% endfor %}
                         {% endif %}
                         <fieldset>
-                            <div  class="form-card">
-                                <div class="row">
-                                    <label class="fieldlabels">Escribe el código: </label>  {{ form.codigo }}
+                            <div class="form-card">
+                                <div class="row codigo">
+                                    <label class="fieldlabels ">Escribe el código: </label>{{ form_sms.codigo }}
                                 </div>
-                                <div class="row">
-                                    <label class="fieldlabels">¿No te llega el SMS? ¿Quieres modificar tu número de teléfono?</label><span class = "errorlist"> {{  form.modificar_telefono.errors | striptags  }} </span>  
-                                    <div class="modificar_telefono">{{  form.modificar_telefono  }}</div>
-                                </div>
-                                
-                                <div class="row telefono_usuario"name="telefono_usuario">
-                                    <label class="fieldlabels">Nuevo número de teléfono: </label><span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  
-                                    <div class="telefono_usuario">{{  form.telefono_usuario  }}</div>
-                                </div>
-                                <br>
                             </div>
-                            <button type="submit" class="btn btn-outline-success" value="Submit">Registrarme</button>
+                            <button type="submit" class="btn btn-outline-success codigo" value="verificarCodigo" name="verificarCodigo">Verificar teléfono</button>
+                        </fieldset>
+                    </form>
+
+                    <form id="msform" class="modificar_telefono" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        {% endif %}
+                        <fieldset>
+                            <div class="row telefono_usuario form-card"name="telefono_usuario">
+                                <label class="fieldlabels">Nuevo número de teléfono: </label><span class = "errorlist"> {{  form_tfno.telefono_usuario.errors | striptags  }} </span>  
+                                <div class="telefono_usuario">{{  form_tfno.telefono_usuario  }}</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-success telefono_usuario" value="cambiarTelefono" name="cambiarTelefono">Modificar teléfono</button>
+
+                            <div class="row">
+                                <label class="fieldlabels select_telefono">¿Quieres modificar tu número de teléfono?</label><span class = "errorlist"> {{  form_tfno.modificar_telefono.errors | striptags  }} </span>  
+                                <div class="">{{  form_tfno.modificar_telefono  }}</div>
+                            </div>
                         </fieldset>
                     </form>
                 </div>
@@ -291,8 +303,10 @@
     function ocultarTelefono() {
         if($('#id_modificar_telefono').val() === 'False') {
             $('.telefono_usuario').hide();
+            $('.codigo').show();
         } else {
             $('.telefono_usuario').show();
+            $('.codigo').hide();
         }
     }
     $('#id_modificar_telefono').on('change', ocultarTelefono);
