@@ -535,13 +535,22 @@ def detalles_perfil(request, profile_id):
     
     filter_user_entrada =  Q(userEntrada = profile_id)
     filter_user_salida = Q(userSalida = request.user.id)
-    mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).count()
+    existe_mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).exists()
 
-    if mate == 0:
+    if not existe_mate:
         return redirect(homepage)
 
+    if Usuario.objects.get(id=profile_id).sms_validado == False:
+        return redirect(homepage)
+
+    
+    lista_notificaciones = notificaciones(request)
     perfil = Usuario.objects.get(id=profile_id)
-    return render(request, 'user_profile.html', {'perfil':perfil})
+    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
+
+    tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
+    print(tags_relacionadas)
+    return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil, 'notificaciones':notificaciones, 'tags_relacionadas':tags_relacionadas})
 
 
 
