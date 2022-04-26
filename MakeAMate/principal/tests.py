@@ -748,8 +748,6 @@ class EdicionTest(TestCase):
         response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
         response = c.post('/profile/', self.data)
         usuario_update = Usuario.objects.get(telefono="+34666777111")
-        print(usuario_update.piso.zona)
-        print(self.data['zona_piso'])
         self.assertTrue(usuario_update.piso.zona == self.data['zona_piso'])
         self.assertTrue(response.status_code == 302)
 
@@ -962,7 +960,7 @@ class DetallesPerfil(TestCase):
         userPepe.set_password('qwery')
         userPepe.save()
 
-        pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333', sms_validado=True)
+        pepe= Usuario.objects.create(id=11, usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333', sms_validado=True)
         pepe.save()
 
         user_no_sms = User(username='noSMS')
@@ -980,6 +978,10 @@ class DetallesPerfil(TestCase):
         c = Client()
         c.post('/login/', {'username': 'Maria', 'pass': 'asdfg'})
         id_user_pepe = str(Usuario.objects.get(telefono="+34111222333").id)
+        print("///////////////////////////////////////////////////////////////////////////////////")
+        print(id_user_pepe)
+        print("///////////////////////////////////////////////////////////////////////////////////")
+
         url = "/details-profile/" + id_user_pepe
         response = c.get(url)
 
