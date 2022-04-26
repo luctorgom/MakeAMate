@@ -552,6 +552,7 @@ def detalles_perfil(request, profile_id):
 
     filter_user_entrada2 = Q(userEntrada = Usuario.objects.get(usuario=request.user).id)
     filter_user_salida2 = Q(userSalida = profile_id)
+
     existe_mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).exists()
     existe_mate2 = Mate.objects.filter(filter_user_entrada2 & filter_user_salida2).exists()
 
@@ -571,7 +572,6 @@ def detalles_perfil(request, profile_id):
 
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
     tags_no_relacionadas = [t for t in usuario_loggeado.tags.all() if (t not in tags_relacionadas)]
-    print(tags_no_relacionadas)
     return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
      'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'tags_no_relacionadas':tags_no_relacionadas, 'mate':mate_mutuo})
 

@@ -983,7 +983,7 @@ class DetallesPerfil(TestCase):
         id_user_pepe = str(Usuario.objects.get(telefono="+34111222333").id)
         url = "/details-profile/" + id_user_pepe
         response = c.get(url)
-
+        print(response)
         self.assertTrue(response.status_code == 200)
 
     #Pepe entra en Make A Mate y no puede ver el perfil de María
