@@ -26,7 +26,7 @@ def paypal(request,pk):
         loggeado=get_object_or_404(Usuario, usuario=request.user)
         premium=loggeado.es_premium()
         if premium:
-            return redirect(homepage)
+            return redirect("/")
         template_name='pagos.html'
         suscripcion= get_object_or_404(Suscripcion, id=pk)
         context={'notificaciones':notificaciones(request),'suscripcion': suscripcion,'usuario':loggeado}
@@ -35,19 +35,17 @@ def paypal(request,pk):
 @csrf_protect
 def paymentComplete(request):
     if not request.user.is_authenticated:
-        return redirect(homepage)
+        return redirect('/')
     else:
         loggeado=get_object_or_404(Usuario, usuario=request.user)
         premium=loggeado.es_premium()
         if premium:
-            return redirect(homepage)
+            return redirect('/')
         fecha_premium = timezone.now() + relativedelta(months=1)
         loggeado.fecha_premium=fecha_premium
         loggeado.save()
-        return redirect(homepage)
+        return redirect('/')
 
-def homepageRedirect(request,pk):
-    return redirect(homepage)
 
 def notificaciones_mates(request):
     lista_notificaciones=[]
