@@ -8,7 +8,7 @@ from channels.testing import WebsocketCommunicator
 from django.core.exceptions import PermissionDenied
 # Create your tests here.
 
-class ChatTest(TestCase):
+class ChatTestCase(TestCase):
     def setUp(self):
         user1 = User(id=0,username="us1")
         user1.set_password('123')
@@ -103,7 +103,7 @@ class ChatTest(TestCase):
         self.assertEqual(len(response.context['chats']),1)
 
         #Hay 5 usuarios en la base de datos
-        self.assertEqual(len(response.context['nombrechats']),5)
+        self.assertEqual(len(response.context['nombrechats']),4)
 
     def test_chat_user5_chatroom(self):
         c = Client()
