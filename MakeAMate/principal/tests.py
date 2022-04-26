@@ -949,27 +949,22 @@ class InfoTest(TestCase):
 class DetallesPerfil(TestCase):
     def setUp(self):
 
-        userMaria=User(username="Maria")
+        userMaria=User(id=100,username="Maria")
         userMaria.set_password("asdfg")
         userMaria.save()
-
-        piso_maria = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
-    
-        maria=Usuario.objects.create(usuario=userMaria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla", piso=piso_maria, telefono="+34666777222", sms_validado=True)
+        maria=Usuario.objects.create(id=100,usuario=userMaria, fecha_nacimiento="2000-1-1",lugar="Sevilla", telefono="+34666777222",genero='F',estudios="Informática", sms_validado=True)
         maria.save()
 
-        userPepe = User(username='usuario2')
+        userPepe = User(id=101,username='usuario2')
         userPepe.set_password('qwery')
         userPepe.save()
-
-        pepe= Usuario.objects.create(usuario=userPepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono='+34111222333', sms_validado=True)
+        pepe= Usuario.objects.create(id=101,usuario=userPepe, fecha_nacimiento="2000-1-1",lugar="Sevilla", telefono='+34111222333',genero='F',estudios="Informática", sms_validado=True)
         pepe.save()
 
-        user_no_sms = User(username='noSMS')
+        user_no_sms = User(id=102,username='noSMS')
         user_no_sms.set_password('qwery')
         user_no_sms.save()
-
-        noSMS = Usuario.objects.create(usuario=user_no_sms, fecha_nacimiento=date(2000,12,31), lugar="Sevilla", telefono="+34666555444", sms_validado=False)
+        noSMS = Usuario.objects.create(id=102,usuario=user_no_sms, fecha_nacimiento="2000-1-1", lugar="Sevilla", telefono="+34666555444",genero='F',estudios="Informática", sms_validado=False)
         noSMS.save()
 
         #Pepe le da like a Maria
