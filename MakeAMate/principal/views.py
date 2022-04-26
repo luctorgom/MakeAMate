@@ -560,7 +560,8 @@ def detalles_perfil(request, profile_id):
     if not existe_mate:
         return redirect(homepage)
 
-    perfil = Usuario.objects.get(id=profile_id)
+    us = User.objects.get(id=profile_id)
+    perfil = Usuario.objects.get(usuario=us)
     if not perfil.sms_validado:
         return redirect(homepage)
 
@@ -569,8 +570,10 @@ def detalles_perfil(request, profile_id):
     usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
 
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
+    tags_no_relacionadas = [t for t in usuario_loggeado.tags.all() if (t not in tags_relacionadas)]
+    print(tags_no_relacionadas)
     return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
-     'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'mate_mutuo':mate_mutuo})
+     'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'tags_no_relacionadas':tags_no_relacionadas, 'mate':mate_mutuo})
 
 
 
