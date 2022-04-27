@@ -57,11 +57,11 @@ def homepage(request):
             return render(request, 'perfildesactivado.html',params)
             
         registrado= get_object_or_404(Usuario, usuario=request.user)
-        ciudad= registrado.lugar
+        ciudad= registrado.lugar.lower()
         if(registrado.tiene_piso()):
-            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso=None).filter(piso_encontrado=False)
+            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__iexact=ciudad).filter(piso=None).filter(piso_encontrado=False)
         else:
-            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso_encontrado=False)
+            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__iexact=ciudad).filter(piso_encontrado=False)
 
         usuarios_mate=Mate.objects.filter(userEntrada=request.user)
         set_mates={mate.userSalida.id for mate in usuarios_mate}
@@ -95,7 +95,7 @@ def accept_mate(request):
     perfil_usuario = get_object_or_404(Usuario, usuario=usuario)
     perfil_logeado = get_object_or_404(Usuario, usuario=request.user)
 
-    misma_ciudad = perfil_usuario.lugar == perfil_logeado.lugar
+    misma_ciudad = perfil_usuario.lugar.lower() == perfil_logeado.lugar.lower()
     tienen_piso = perfil_usuario.tiene_piso() and perfil_logeado.tiene_piso()
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
@@ -130,7 +130,7 @@ def reject_mate(request):
     perfil_usuario = get_object_or_404(Usuario, usuario=usuario)
     perfil_logeado = get_object_or_404(Usuario, usuario=request.user)
 
-    misma_ciudad = perfil_usuario.lugar == perfil_logeado.lugar
+    misma_ciudad = perfil_usuario.lugar.lower() == perfil_logeado.lugar.lower()
     tienen_piso = perfil_usuario.tiene_piso() and perfil_logeado.tiene_piso()
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
@@ -604,24 +604,26 @@ def detalles_perfil(request, profile_id):
     if Usuario.objects.get(usuario = request.user).sms_validado == False:
         return redirect(twilio)
 
+    
+    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
+
     existe_mate = Mate.objects.filter(userEntrada=profile_id, userSalida=request.user.id, mate=True).exists()
     existe_mate2 = Mate.objects.filter(userEntrada=request.user.id, userSalida=profile_id, mate=True).exists()
 
     mate_mutuo = existe_mate and existe_mate2
 
-    if not existe_mate:
+    if not (mate_mutuo or (existe_mate and usuario_loggeado.es_premium()) ):
         return redirect(homepage)
 
     us = User.objects.get(id=profile_id)
     perfil = get_object_or_404(Usuario, usuario=us)
-    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
 
     lista_notificaciones = notificaciones(request)
 
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
     tags_no_relacionadas = [t for t in usuario_loggeado.tags.all() if (t not in tags_relacionadas)]
-    
-    return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
+
+    return render(request, 'user_profile.html', {'usuario': usuario_loggeado, 'perfil':perfil,
      'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'tags_no_relacionadas':tags_no_relacionadas, 'mate':mate_mutuo})
 
 
