@@ -595,17 +595,19 @@ def detalles_perfil(request, profile_id):
     if Usuario.objects.get(usuario = request.user).sms_validado == False:
         return redirect(twilio)
 
+    
+    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
+
     existe_mate = Mate.objects.filter(userEntrada=profile_id, userSalida=request.user.id, mate=True).exists()
     existe_mate2 = Mate.objects.filter(userEntrada=request.user.id, userSalida=profile_id, mate=True).exists()
 
     mate_mutuo = existe_mate and existe_mate2
 
-    if not existe_mate:
+    if not (mate_mutuo or (existe_mate and usuario_loggeado.es_premium()) ):
         return redirect(homepage)
 
     us = User.objects.get(id=profile_id)
     perfil = get_object_or_404(Usuario, usuario=us)
-    usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
 
     lista_notificaciones = notificaciones(request)
 
