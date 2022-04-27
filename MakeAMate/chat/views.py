@@ -7,18 +7,22 @@ from chat.forms import CrearGrupo
 from django.core.exceptions import PermissionDenied
 from cryptography.fernet import Fernet
 from chat.models import Chat,ChatRoom,LastConnection
+from django.views.decorators.cache import never_cache
 from datetime import timedelta
 
 
-
+@never_cache
 def index(request):
     if request.user.is_authenticated:
+        if Usuario.objects.get(usuario = request.user).sms_validado == False:
+            return redirect("registerSMS")
         lista_mates = notificaciones_mates(request)
         user = request.user
         
         #form
-        form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
-        crear_grupo_form(request, form)
+        form, mensaje_grupo = crear_grupo_form(request)
+        if form is None:
+            return redirect(index)
 
         if len(lista_mates)>0:
 
@@ -38,15 +42,19 @@ def index(request):
             for u in usuarios:
                 lista_usuarios.append(u)
             return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
-                                                    'usuario_actual': Usuario.objects.filter(usuario=request.user)[0], 'last_message':lista_last_message, 'form':form})
+                                                    'usuario_actual': Usuario.objects.filter(usuario=request.user)[0], 'last_message':lista_last_message, 'form':form,
+                                                    'error_grupo':mensaje_grupo})
         else:
             return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[], 'usuario_actual': Usuario.objects.filter(usuario=request.user)[0],
-                                                    'last_message':[], 'form':form})
+                                                    'last_message':[], 'form':form,'error_grupo':mensaje_grupo})
     else:
         return redirect("/login")
 
+@never_cache
 def room(request, room_name):
     if request.user.is_authenticated:
+        if Usuario.objects.get(usuario = request.user).sms_validado == False:
+            return redirect("registerSMS")
         #Comprobación para que no se fuerce la URL
         try:
             chatroom = ChatRoom.objects.filter(name = room_name)[0]
@@ -55,8 +63,9 @@ def room(request, room_name):
             raise PermissionDenied
 
         #form
-        form = CrearGrupo(notificaciones_mates(request), request.GET,request.FILES)
-        crear_grupo_form(request, form)
+        form, mensaje_grupo = crear_grupo_form(request)
+        if form is None:
+            return redirect(index)
 
         #lista chats
         lista_mates = notificaciones_mates(request)
@@ -95,14 +104,19 @@ def room(request, room_name):
 
             return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
                                                     'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo, 'last_message':lista_last_message,
-                                                    'usuario_actual':Usuario.objects.filter(usuario=request.user)[0], 'usuario_opuesto':usuario_opuesto})
+                                                    'usuario_actual':Usuario.objects.filter(usuario=request.user)[0], 'usuario_opuesto':usuario_opuesto,
+                                                    'error_grupo':mensaje_grupo})
         else:
             raise PermissionDenied
     else:
         return redirect("/login")
 
 
-def crear_grupo_form(request, form):
+def crear_grupo_form(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     if request.method=='POST':
         form = CrearGrupo(notificaciones_mates(request), request.POST)
         if form.is_valid():
@@ -111,6 +125,10 @@ def crear_grupo_form(request, form):
                 nombre = form.cleaned_data['Nombre']
                 lista.append(request.user.id)
                 crear_sala_grupo(nombre, lista)
+                return None, None
+            else: return form,  "Debe seleccionar al menos 2 usuarios"
+        else: return form, "Debe seleccionar al menos 2 usuarios"
+    return CrearGrupo(notificaciones_mates(request)),None
 
 
 
@@ -126,6 +144,10 @@ def crear_sala_grupo(group_name, room_participants):
     room.participants.set(room_participants)
 
 def notificaciones_mates(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
@@ -139,6 +161,10 @@ def notificaciones_mates(request):
     return lista_mates
 
 def notificaciones_mates2(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     lista_notificaciones=[]
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
@@ -165,6 +191,10 @@ def notificaciones_mates2(request):
     return lista_notificaciones
 
 def notificaciones_chat(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     user = request.user
     notificaciones_chat=[]
     chats = ChatRoom.objects.filter(participants=user)
@@ -186,6 +216,10 @@ def notificaciones_chat(request):
     return notificaciones_chat
 
 def notificaciones(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     notificaciones=notificaciones_mates2(request)
     lista_chat=notificaciones_chat(request)
     notificaciones.extend(lista_chat)

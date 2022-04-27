@@ -6,11 +6,9 @@ import re
 from datetime import *
 from .models import Tag,Aficiones
 
-
-class SmsForm(forms.Form):
+class CambiarTelefonoForm(forms.Form):
     telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
     modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
-    codigo = forms.CharField(required=True)
 
     def clean_modificar_telefono(self):
         modificar_telefono = self.cleaned_data.get('modificar_telefono')
@@ -28,11 +26,13 @@ class SmsForm(forms.Form):
             raise forms.ValidationError('Inserte un teléfono válido')
 
         existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
-        modificar_telefono = self.cleaned_data.get('modificar_telefono')
-        if existe_telefono and modificar_telefono:
+        if existe_telefono:
             raise forms.ValidationError('El teléfono ya está en uso')
 
         return telefono_usuario
+        
+class SmsForm(forms.Form):
+    codigo = forms.CharField(required=True)
 
     def clean_codigo(self):
         codigo = self.cleaned_data["codigo"]
@@ -146,7 +146,6 @@ class UsuarioForm(forms.Form):
         hoy = datetime.now().date()
         
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
-        print(fecha_nacimiento)
 
         if fecha_nacimiento == None:
             raise forms.ValidationError('La fecha de nacimiento no debe estar vacía')
@@ -316,7 +315,7 @@ class ChangePasswordForm(forms.Form):
 
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
-        print(password2)
+
 
         if not password2:
             raise forms.ValidationError('Por favor, confirma tu contraseña')
