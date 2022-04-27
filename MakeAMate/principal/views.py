@@ -410,7 +410,7 @@ def registro(request):
 
 
 def twilio(request):
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated or Usuario.objects.get(usuario = request.user).sms_validado:
         redirect(homepage)
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
