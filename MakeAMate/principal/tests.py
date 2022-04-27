@@ -111,7 +111,7 @@ class MateTestCase(TestCase):
 
         perfil1 = Usuario(usuario=self.user1,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",telefono="+34655444333",sms_validado=True)
-        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
+        perfil2 = Usuario(usuario=self.user2,fecha_nacimiento=date(2000,12,31),lugar="sevilla",
                             genero='F',estudios="Informática",telefono="+34655444334",sms_validado=True)
         perfil3 = Usuario(usuario=self.user3,fecha_nacimiento=date(2000,12,31),lugar="Sevilla",
                             genero='F',estudios="Informática",piso=piso1,telefono="+34655444335",sms_validado=True)

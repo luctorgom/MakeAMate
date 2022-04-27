@@ -57,11 +57,11 @@ def homepage(request):
             return render(request, 'perfildesactivado.html',params)
             
         registrado= get_object_or_404(Usuario, usuario=request.user)
-        ciudad= registrado.lugar
+        ciudad= registrado.lugar.lower()
         if(registrado.tiene_piso()):
-            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso=None).filter(piso_encontrado=False)
+            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__iexact=ciudad).filter(piso=None).filter(piso_encontrado=False)
         else:
-            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__contains=ciudad).filter(piso_encontrado=False)
+            us= Usuario.objects.exclude(usuario=request.user).filter(lugar__iexact=ciudad).filter(piso_encontrado=False)
 
         usuarios_mate=Mate.objects.filter(userEntrada=request.user)
         set_mates={mate.userSalida.id for mate in usuarios_mate}
@@ -95,7 +95,7 @@ def accept_mate(request):
     perfil_usuario = get_object_or_404(Usuario, usuario=usuario)
     perfil_logeado = get_object_or_404(Usuario, usuario=request.user)
 
-    misma_ciudad = perfil_usuario.lugar == perfil_logeado.lugar
+    misma_ciudad = perfil_usuario.lugar.lower() == perfil_logeado.lugar.lower()
     tienen_piso = perfil_usuario.tiene_piso() and perfil_logeado.tiene_piso()
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
@@ -130,7 +130,7 @@ def reject_mate(request):
     perfil_usuario = get_object_or_404(Usuario, usuario=usuario)
     perfil_logeado = get_object_or_404(Usuario, usuario=request.user)
 
-    misma_ciudad = perfil_usuario.lugar == perfil_logeado.lugar
+    misma_ciudad = perfil_usuario.lugar.lower() == perfil_logeado.lugar.lower()
     tienen_piso = perfil_usuario.tiene_piso() and perfil_logeado.tiene_piso()
     is_rejected = Mate.objects.filter(userEntrada=usuario,userSalida=request.user,mate=False).exists()
     has_mated = Mate.objects.filter(userEntrada=request.user,userSalida=usuario).exists()
