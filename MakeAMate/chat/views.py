@@ -13,6 +13,8 @@ from datetime import timedelta
 
 def index(request):
     if request.user.is_authenticated:
+        if Usuario.objects.get(usuario = request.user).sms_validado == False:
+            return redirect("registerSMS")
         lista_mates = notificaciones_mates(request)
         user = request.user
         
@@ -47,6 +49,8 @@ def index(request):
 
 def room(request, room_name):
     if request.user.is_authenticated:
+        if Usuario.objects.get(usuario = request.user).sms_validado == False:
+            return redirect("registerSMS")
         #Comprobación para que no se fuerce la URL
         try:
             chatroom = ChatRoom.objects.filter(name = room_name)[0]
@@ -103,6 +107,10 @@ def room(request, room_name):
 
 
 def crear_grupo_form(request, form):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     if request.method=='POST':
         form = CrearGrupo(notificaciones_mates(request), request.POST)
         if form.is_valid():
@@ -126,6 +134,10 @@ def crear_sala_grupo(group_name, room_participants):
     room.participants.set(room_participants)
 
 def notificaciones_mates(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     loggeado= request.user
     lista_usuarios=User.objects.filter(~Q(id=loggeado.id))
     lista_mates=[]
@@ -139,6 +151,10 @@ def notificaciones_mates(request):
     return lista_mates
 
 def notificaciones_mates2(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     lista_notificaciones=[]
     loggeado= request.user
     perfil=Usuario.objects.get(usuario=loggeado)
@@ -165,6 +181,10 @@ def notificaciones_mates2(request):
     return lista_notificaciones
 
 def notificaciones_chat(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     user = request.user
     notificaciones_chat=[]
     chats = ChatRoom.objects.filter(participants=user)
@@ -186,6 +206,10 @@ def notificaciones_chat(request):
     return notificaciones_chat
 
 def notificaciones(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if Usuario.objects.get(usuario = request.user).sms_validado == False:
+        return redirect("registerSMS")
     notificaciones=notificaciones_mates2(request)
     lista_chat=notificaciones_chat(request)
     notificaciones.extend(lista_chat)

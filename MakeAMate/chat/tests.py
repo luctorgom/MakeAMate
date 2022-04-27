@@ -138,7 +138,7 @@ class ChatTestCase(TestCase):
 
         #Se comprueba que haya un chat más
         response2 = c.get('/chat/')
-        self.assertEqual(len(response.context['chats']),2)
+        self.assertEqual(len(response2.context['chats']),2)
 
         #Se comprueba que el nombre del chat sea GrupoTest
         response3 = c.get('/chat/1/')

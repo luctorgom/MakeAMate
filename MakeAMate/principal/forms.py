@@ -6,11 +6,9 @@ import re
 from datetime import *
 from .models import Tag,Aficiones
 
-
-class SmsForm(forms.Form):
+class CambiarTelefonoForm(forms.Form):
     telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
     modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
-    codigo = forms.CharField(required=True)
 
     def clean_modificar_telefono(self):
         modificar_telefono = self.cleaned_data.get('modificar_telefono')
@@ -33,6 +31,9 @@ class SmsForm(forms.Form):
             raise forms.ValidationError('El teléfono ya está en uso')
 
         return telefono_usuario
+        
+class SmsForm(forms.Form):
+    codigo = forms.CharField(required=True)
 
     def clean_codigo(self):
         codigo = self.cleaned_data["codigo"]
