@@ -457,7 +457,9 @@ def twilio(request):
 
     def check_verification(telefono, codigo, verification):
         try:
-            if(verification.status=="pending"):
+            print("VERIFICATION")
+            print(verification)
+            if(verification.status=="pending"):#AQUI REVIENTA
                     
                 verification_check = client.verify \
                                     .services(servicio) \
