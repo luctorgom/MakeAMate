@@ -595,13 +595,8 @@ def detalles_perfil(request, profile_id):
     if Usuario.objects.get(usuario = request.user).sms_validado == False:
         return redirect(twilio)
 
-    filter_user_entrada =  Q(userEntrada = profile_id)
-    filter_user_salida = Q(userSalida = Usuario.objects.get(id=request.user.id).id)
-
-    filter_user_entrada2 = Q(userEntrada = Usuario.objects.get(id=request.user.id).id)
-    filter_user_salida2 = Q(userSalida = profile_id)
-    existe_mate = Mate.objects.filter(filter_user_entrada & filter_user_salida).exists()
-    existe_mate2 = Mate.objects.filter(filter_user_entrada2 & filter_user_salida2).exists()
+    existe_mate = Mate.objects.filter(userEntrada=profile_id, userSalida=request.user.id, mate=True).exists()
+    existe_mate2 = Mate.objects.filter(userEntrada=request.user.id, userSalida=profile_id, mate=True).exists()
 
     mate_mutuo = existe_mate and existe_mate2
 
@@ -609,16 +604,14 @@ def detalles_perfil(request, profile_id):
         return redirect(homepage)
 
     us = User.objects.get(id=profile_id)
-    perfil = Usuario.objects.get(usuario=us)
-    if not perfil.sms_validado:
-        return redirect(homepage)
-
-    
-    lista_notificaciones = notificaciones(request)
+    perfil = get_object_or_404(Usuario, usuario=us)
     usuario_loggeado = get_object_or_404(Usuario, usuario=request.user)
+
+    lista_notificaciones = notificaciones(request)
 
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
     tags_no_relacionadas = [t for t in usuario_loggeado.tags.all() if (t not in tags_relacionadas)]
+    
     return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
      'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'tags_no_relacionadas':tags_no_relacionadas, 'mate':mate_mutuo})
 
