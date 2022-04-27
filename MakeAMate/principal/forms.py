@@ -147,7 +147,6 @@ class UsuarioForm(forms.Form):
         hoy = datetime.now().date()
         
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
-        print(fecha_nacimiento)
 
         if fecha_nacimiento == None:
             raise forms.ValidationError('La fecha de nacimiento no debe estar vacía')
@@ -317,7 +316,7 @@ class ChangePasswordForm(forms.Form):
 
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
-        print(password2)
+
 
         if not password2:
             raise forms.ValidationError('Por favor, confirma tu contraseña')

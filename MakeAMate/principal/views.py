@@ -307,7 +307,6 @@ def estadisticas_mates(request):
         matesDados=Mate.objects.filter(userEntrada=loggeado)
         eliminados=0
         for mD in matesDados:
-            #print(mD.userSalida)
             if(mD.userSalida in listmates):
                 eliminados+=1
                 listmates.remove(mD.userSalida)
@@ -367,7 +366,6 @@ def registro(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST, request.FILES)
         if form.is_valid():
-            print("form válido")
             form_usuario = form.cleaned_data["username"]
             form_password = form.cleaned_data['password']
             form_nombre = form.cleaned_data['nombre']
@@ -406,7 +404,6 @@ def registro(request):
             perfil.save()
             autenticado = authenticate(username=user, password=form_password)
             login(request, user)
-            print(autenticado)
             return redirect('registerSMS/')
 
     return render(request, 'loggeos/register2.html', {'form': form})
@@ -520,7 +517,6 @@ def profile_view(request):
     form_change_photo = ChangePhotoForm()
     form = UsuarioFormEdit(initial = initial_dict)
     if request.method == 'POST':
-        print(request.POST)
         if "actualizarPerfil" in request.POST:
             form_change_password = ChangePasswordForm(request.POST)
             form = UsuarioFormEdit(request.POST)
@@ -623,7 +619,6 @@ def detalles_perfil(request, profile_id):
 
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
     tags_no_relacionadas = [t for t in usuario_loggeado.tags.all() if (t not in tags_relacionadas)]
-    print(tags_no_relacionadas)
     return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
      'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'tags_no_relacionadas':tags_no_relacionadas, 'mate':mate_mutuo})
 
