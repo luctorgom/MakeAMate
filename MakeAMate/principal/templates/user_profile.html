@@ -37,9 +37,8 @@
                     <div class="card-body">
                       <img src="{{perfil.url_perfil_relativa}}" class="img-fluid float-left" style="width:6em; height:6em; border-radius:100%">
                       <div>
-                        <!--<p class="info"> {{i.usuario.first_name}}, {{i.get_edad}} años</p>-->
                         {% if perfil.genero == "M" %}
-                          <p class="info">&nbsp;&nbsp;{{i.usuario.first_name}}, {{i.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género:<img class="alineadoTextoImagenCentro" src="../../static/images/icons/male.png"</p>
+                          <p class="info">&nbsp;&nbsp;{{perfil.usuario.first_name}}, {{perfil.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género:<img class="alineadoTextoImagenCentro" src="../../static/images/icons/male.png"</p>
                         {% elif perfil.genero == "F" %}
                           <p class="info">&nbsp;&nbsp;{{perfil.usuario.first_name}}, {{perfil.get_edad}} años &nbsp;&nbsp;&nbsp;&nbsp; Género: <img class="alineadoTextoImagenCentro" src="../../static/images/icons/female.png"></p>
                         {% elif perfil.genero == "O" %}  
