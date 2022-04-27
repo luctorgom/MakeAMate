@@ -24,58 +24,6 @@
     <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../static/assets_base/fonts/fontawesome-all.min.css">
 
-  <script>
-/*     $(document).ready(function() {
-    setTimeout(function() {
-        $(".content").fadeOut(1500);
-    },3000);
- 
-    setTimeout(function() {
-        $(".content2").fadeIn(1500);
-    },6000);
-    }); */
-    $(document).ready(function() {
-        $("button.accept-mate").click(function(e) {
-            e.preventDefault();
-            let id_us = this.id;
-            $.post( "{% url 'accept-mate' %}",
-            {
-                csrfmiddlewaretoken: '{{ csrf_token}}' ,
-                id_us : id_us
-            },
-            function(data) {
-                if(data.success){
-                    if(data.mate_achieved){
-                        // TO-DO: Animación de mate conseguido.
-                        setTimeout(function() {$(".animacion").fadeIn(500).fadeOut(5000)});
-
-                    }
-                }
-                else{
-                    alert("Ha habido un error. Por favor, intenta más tarde.");
-                }
-            });
-        });
-
-        $("button.reject-mate").click(function(e) {
-            e.preventDefault();
-            let id_us = this.id;
-            $.post( "{% url 'reject-mate' %}",
-            {
-                csrfmiddlewaretoken: '{{ csrf_token}}' ,
-                id_us : id_us
-            },
-            function(data) {
-                if(data.success){
-                }
-                else{
-                    alert("Ha habido un error. Por favor, intenta más tarde.");
-                }
-            });
-        });
-    }); 
-    </script>
-  
 {% endblock %}
 
 {% block content %}
@@ -132,9 +80,6 @@
                     <div class="card-body">
                       {% if mate == True %}
                         <button class="btn btn-success" disabled><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
-                      {% else %}
-                        <button class="accept-mate btn btn-light" id={{perfil.usuario.id}} type="button"><img src="../../static/images/icons/Choca_esos_5.png" height ="40" width="40"/></button>
-                        <button class="reject-mate btn btn-danger" id={{perfil.usuario.id}} type="button"><img src="../../static/images/icons/cruz.png" height ="40" width="40"/></button>
                       {% endif %}
                     </div>
                   </div>
