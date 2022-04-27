@@ -602,6 +602,12 @@ class RegistroTest(TestCase):
         avatar = create_image(None, 'avatar.png')
         avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
         self.data['foto_usuario'] = avatar_file
+
+        response = c.get('/logout/')
+        user = auth.get_user(c)
+        self.assertTrue(response.status_code == 302)
+        self.assertFalse(user.is_authenticated)
+
         response2 = c.post('/register/', self.data)
         num_usuarios = Usuario.objects.all().count()
         self.assertTrue(num_usuarios == 1)
@@ -618,6 +624,12 @@ class RegistroTest(TestCase):
         avatar = create_image(None, 'avatar.png')
         avatar_file = SimpleUploadedFile('front.png', avatar.getvalue())
         self.data['foto_usuario'] = avatar_file
+
+        response = c.get('/logout/')
+        user = auth.get_user(c)
+        self.assertTrue(response.status_code == 302)
+        self.assertFalse(user.is_authenticated)
+
         response2 = c.post('/register/', self.data)
         num_usuarios = Usuario.objects.all().count()
         self.assertTrue(num_usuarios == 1)
@@ -672,7 +684,7 @@ class EdicionTest(TestCase):
 
         
         piso_pepe = Piso.objects.create(zona="Calle Marqués Luca de Tena 3", descripcion="Descripción de prueba 2")
-        pepe= Usuario.objects.create(usuario=user_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, piso=piso_pepe)
+        pepe= Usuario.objects.create(usuario=user_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", telefono=tfn1, piso=piso_pepe, sms_validado=True)
         pepe.tags.set(Tag.objects.all())
         pepe.aficiones.set(Aficiones.objects.all())
         pepe.save()
@@ -748,8 +760,6 @@ class EdicionTest(TestCase):
         response1 = c.post('/login/', {'username':'pepe', 'pass':'asdfg'})
         response = c.post('/profile/', self.data)
         usuario_update = Usuario.objects.get(telefono="+34666777111")
-        print(usuario_update.piso.zona)
-        print(self.data['zona_piso'])
         self.assertTrue(usuario_update.piso.zona == self.data['zona_piso'])
         self.assertTrue(response.status_code == 302)
 
@@ -844,24 +854,24 @@ class EstadisticasTest(TestCase):
         
 
         fecha_premium=timezone.now() + timedelta(days=120)
-        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", fecha_premium=fecha_premium, telefono='+34111222333')
+        pepe= Usuario.objects.create(usuario=user, piso=piso_pepe, fecha_nacimiento=date(2000,12,31),lugar="Sevilla", fecha_premium=fecha_premium, telefono='+34111222333', sms_validado=True)
         pepe.save()
         pepe.tags.add(et1)
         pepe.tags.add(et2)
         pepe.tags.add(et3)
         pepe.aficiones.add(af1)
-        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla",telefono='+34111222334')
+        maria=Usuario.objects.create(usuario=user2, piso=piso_maria, fecha_nacimiento=date(2000,12,30),lugar="Sevilla",telefono='+34111222334', sms_validado=True)
         maria.save()
         maria.tags.add(et2)
         maria.aficiones.add(af2)
-        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz",telefono='+34111222335')
+        sara= Usuario.objects.create(usuario=user3, piso=piso_sara,fecha_nacimiento=date(2000,12,29),lugar="Cádiz",telefono='+34111222335', sms_validado=True)
         sara.save()
         sara.save()
         sara.tags.add(et1)
         sara.tags.add(et3)
         sara.aficiones.add(af2)
         sara.aficiones.add(af3)
-        juan= Usuario.objects.create(usuario=user4, piso=piso_juan,fecha_nacimiento=date(2000,1,2),lugar="Granada",telefono='+34111222336')
+        juan= Usuario.objects.create(usuario=user4, piso=piso_juan,fecha_nacimiento=date(2000,1,2),lugar="Granada",telefono='+34111222336', sms_validado=True)
         juan.save()
         juan.save()
         juan.tags.add(et1)
@@ -978,7 +988,6 @@ class DetallesPerfil(TestCase):
         id_user_pepe = str(Usuario.objects.get(telefono="+34111222333").id)
         url = "/details-profile/" + id_user_pepe
         response = c.get(url)
-        print(response)
         self.assertTrue(response.status_code == 200)
 
     #Pepe entra en Make A Mate y no puede ver el perfil de María

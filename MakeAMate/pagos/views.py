@@ -20,7 +20,7 @@ from chat.models import Chat,ChatRoom,LastConnection
 @csrf_protect
 def paypal(request,pk):
     if not request.user.is_authenticated:
-        return redirect("/login")
+        return redirect("login")
     elif Usuario.objects.get(usuario = request.user).sms_validado == False:
         return redirect("registerSMS")
     else:
