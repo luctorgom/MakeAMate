@@ -959,10 +959,11 @@ class InfoTest(TestCase):
 class DetallesPerfil(TestCase):
     def setUp(self):
 
+        # Maria es premium y puede ver perfiles de usuarios que le han dado mate
         userMaria=User(id=100,username="Maria")
         userMaria.set_password("asdfg")
         userMaria.save()
-        maria=Usuario.objects.create(id=100,usuario=userMaria, fecha_nacimiento="2000-1-1",lugar="Sevilla", telefono="+34666777222",genero='F',estudios="Informática", sms_validado=True)
+        maria=Usuario.objects.create(id=100,usuario=userMaria, fecha_nacimiento="2000-1-1",lugar="Sevilla", telefono="+34666777222",genero='F',estudios="Informática", sms_validado=True, fecha_premium=timezone.now() + relativedelta(months=1))
         maria.save()
 
         userPepe = User(id=101,username='usuario2')
@@ -985,7 +986,7 @@ class DetallesPerfil(TestCase):
     def test_positive_detalles(self):
         c = Client()
         c.post('/login/', {'username': 'Maria', 'pass': 'asdfg'})
-        id_user_pepe = str(Usuario.objects.get(telefono="+34111222333").id)
+        id_user_pepe = str(Usuario.objects.get(telefono="+34111222333").usuario.id)
         url = "/details-profile/" + id_user_pepe
         response = c.get(url)
         self.assertTrue(response.status_code == 200)
@@ -994,7 +995,7 @@ class DetallesPerfil(TestCase):
     def test_negative_detalles_no_mate(self):
         c = Client()
         c.post('/login/', {'username': 'usuario2', 'pass': 'qwery'})
-        id_user_maria = str(Usuario.objects.get(telefono="+34666777222").id)
+        id_user_maria = str(Usuario.objects.get(telefono="+34666777222").usuario.id)
         url = "/details-profile/" + id_user_maria
         response = c.get(url)
 
@@ -1003,7 +1004,7 @@ class DetallesPerfil(TestCase):
 
     def test_negative_detalles_no_login(self):
         c = Client()
-        id_user_maria = str(Usuario.objects.get(telefono="+34666777222").id)
+        id_user_maria = str(Usuario.objects.get(telefono="+34666777222").usuario.id)
         url = "/details-profile/" + id_user_maria
         response = c.get(url)
 
@@ -1012,7 +1013,7 @@ class DetallesPerfil(TestCase):
 
     def test_negative_detalles_sms_no_validado(self):
         c = Client()
-        id_user_no_sms = str(Usuario.objects.get(telefono="+34666555444").id)
+        id_user_no_sms = str(Usuario.objects.get(telefono="+34666555444").usuario.id)
         url = "/details-profile/" + id_user_no_sms
         response = c.get(url)
         self.assertTrue(response.status_code == 302)
