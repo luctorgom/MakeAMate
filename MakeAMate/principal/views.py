@@ -418,7 +418,7 @@ def twilio(request):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
-    servicio = "VAfd6998ee6818ae4ec6d0344f5a25c96d"
+    servicio = "VA51738886d417a131439dac49bb9b60c2"
     user = request.user
     perfil = Usuario.objects.get(usuario = user)
     piso = perfil.piso
@@ -451,28 +451,28 @@ def twilio(request):
             validaciones(e.code)
         
 
-    def check_verification(telefono, codigo, verification):
-        try:
-            if(verification.status=="pending"):
-                    
-                verification_check = client.verify \
-                                    .services(servicio) \
-                                    .verification_checks \
-                                    .create(to=telefono, code=codigo)
-                if verification_check.status=="approved":                 
-                    perfil.sms_validado = True
-                    perfil.save()
-                    messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
-                else:
-                    messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
+    def check_verification(telefono, codigo):
+        try:                  
+            verification_check = client.verify \
+                                .services(servicio) \
+                                .verification_checks \
+                                .create(to=telefono, code=codigo)
+            if verification_check.status=="approved":                 
+                perfil.sms_validado = True
+                perfil.save()
+                messages.success(request, message="Código validado correctamente. El usuario ha sido creado.")
+                return redirect("/")
+            else:
+                messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
         except TwilioRestException as e:
             validaciones(e.code)
 
-        return redirect("/")
 
-    verification = start_verification(telefono)
-    form_sms = SmsForm(initial = {'modificar_telefono': 'No'})
-    form_tfno = CambiarTelefonoForm()
+    if request.method == "GET":
+        verification = start_verification(telefono)
+        form_sms = SmsForm(initial = {'modificar_telefono': 'No'})
+        form_tfno = CambiarTelefonoForm()
+
     if request.method == 'POST':
         if "cambiarTelefono" in request.POST:
             form_tfno = CambiarTelefonoForm(request.POST)
@@ -484,13 +484,13 @@ def twilio(request):
                     perfil.telefono = telefono_nuevo
                     perfil.save()
                     telefono = telefono_nuevo
-            return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+            return redirect("registerSMS")
 
         if "verificarCodigo" in request.POST:
             form_sms = SmsForm(request.POST, request.FILES)
             if form_sms.is_valid():
                 codigo = form_sms.cleaned_data["codigo"]                
-                return check_verification(telefono, codigo, verification)
+                return check_verification(telefono, codigo)
 
     return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
 
