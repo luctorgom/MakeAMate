@@ -461,8 +461,10 @@ def twilio(request):
                 return redirect("/")
             else:
                 messages.error(request, message="El código es incorrecto. Inténtelo de nuevo.")
+                return redirect("registerSMS")
         except TwilioRestException as e:
             validaciones(e.code)
+            return redirect("registerSMS")
 
 
     if request.method == "GET":
@@ -473,7 +475,6 @@ def twilio(request):
     if request.method == 'POST':
         if "cambiarTelefono" in request.POST:
             form_tfno = CambiarTelefonoForm(request.POST)
-            form_sms = SmsForm(request.POST, request.FILES)
             if form_tfno.is_valid():
                 telefono_nuevo = form_tfno.cleaned_data["telefono_usuario"]
                 modificar_telefono = form_tfno.cleaned_data["modificar_telefono"]
@@ -481,13 +482,21 @@ def twilio(request):
                     perfil.telefono = telefono_nuevo
                     perfil.save()
                     telefono = telefono_nuevo
-            return redirect("registerSMS")
+                return redirect("registerSMS")
+            else:
+                form_sms = SmsForm()
+                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+
 
         if "verificarCodigo" in request.POST:
             form_sms = SmsForm(request.POST, request.FILES)
             if form_sms.is_valid():
                 codigo = form_sms.cleaned_data["codigo"]                
                 return check_verification(telefono, codigo)
+            else:
+                form_tfno = CambiarTelefonoForm()
+                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+
 
     return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
 
@@ -613,8 +622,8 @@ def detalles_perfil(request, profile_id):
 
     tags_relacionadas = usuario_loggeado.tags.all() & perfil.tags.all()
     tags_no_relacionadas = [t for t in usuario_loggeado.tags.all() if (t not in tags_relacionadas)]
-    
-    return render(request, 'user_profile.html', {'usuario_loggeado': usuario_loggeado, 'perfil':perfil,
+
+    return render(request, 'user_profile.html', {'usuario': usuario_loggeado, 'perfil':perfil,
      'notificaciones':lista_notificaciones, 'tags_relacionadas':tags_relacionadas, 'tags_no_relacionadas':tags_no_relacionadas, 'mate':mate_mutuo})
 
 

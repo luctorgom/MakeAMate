@@ -243,6 +243,9 @@
         width: 100%;
         object-fit: cover
     }
+    .errorlist {
+        color: #f10606;
+    }
 </style>
 </head>
 {% endblock %}
@@ -265,7 +268,8 @@
                         <fieldset>
                             <div class="form-card">
                                 <div class="row codigo">
-                                    <label class="fieldlabels ">Escribe el código: </label>{{ form_sms.codigo }}
+                                    <label class="fieldlabels ">Escribe el código: </label><span class = "errorlist"> {{  form_sms.codigo.errors | striptags  }} </span>  
+                                    <div class="codigo">{{ form_sms.codigo }}</div>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-outline-success codigo" value="verificarCodigo" name="verificarCodigo">Verificar teléfono</button>

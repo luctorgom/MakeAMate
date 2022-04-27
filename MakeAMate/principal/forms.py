@@ -26,8 +26,7 @@ class CambiarTelefonoForm(forms.Form):
             raise forms.ValidationError('Inserte un teléfono válido')
 
         existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
-        modificar_telefono = self.cleaned_data.get('modificar_telefono')
-        if existe_telefono and modificar_telefono:
+        if existe_telefono:
             raise forms.ValidationError('El teléfono ya está en uso')
 
         return telefono_usuario
