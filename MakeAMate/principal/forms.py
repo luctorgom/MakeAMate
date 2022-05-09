@@ -219,6 +219,13 @@ class UsuarioForm(forms.Form):
         if any(chr.isdigit() for chr in piso):
             raise forms.ValidationError('El piso no debe contener números')       
         return piso
+    
+    def clean_foto_usuario(self):
+        foto_usuario = self.cleaned_data.get('foto_usuario')
+
+        if foto_usuario == None:
+            raise forms.ValidationError("Debe añadir una foto")
+        return foto_usuario
 
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
