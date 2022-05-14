@@ -78,8 +78,6 @@ class ChatTestCase(TestCase):
         #El usuario 1 tiene un chat
         self.assertEqual(len(response.context['chats']),1)
 
-        #Hay 4 usuarios en la base de datos distintos del logeado
-        self.assertEqual(len(response.context['nombrechats']),4)
 
     def test_chat_user5_index(self):
         c = Client()
@@ -102,8 +100,6 @@ class ChatTestCase(TestCase):
         #El usuario 1 tiene un chat
         self.assertEqual(len(response.context['chats']),1)
 
-        #Hay 5 usuarios en la base de datos
-        self.assertEqual(len(response.context['nombrechats']),4)
 
     def test_chat_user5_chatroom(self):
         c = Client()
@@ -142,7 +138,7 @@ class ChatTestCase(TestCase):
 
         #Se comprueba que el nombre del chat sea GrupoTest
         response3 = c.get('/chat/1/')
-        self.assertEqual(response3.context['nombre_sala'], 'GrupoTest')
+        self.assertEqual(response3.context['chat_actual'].room_name, 'GrupoTest')
 
     async def test_consumer(self):
         application = WebsocketConsumer.as_asgi()
