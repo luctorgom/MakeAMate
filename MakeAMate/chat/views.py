@@ -28,25 +28,23 @@ def index(request):
 
             #lista chats
             lista_chat = []
-            lista_last_message = []
-            chats = ChatRoom.objects.all()
+            chats = ChatRoom.objects.all().order_by('-last_message')
+
             for c in chats:
+                lista_chat_aux = []
                 if request.user in c.participants.all():
-                    lista_chat.append(c)
+                    lista_chat_aux.append(c)
                     try:
-                        lista_last_message.append(Fernet(c.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+                        lista_chat_aux.append(Fernet(c.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
                     except IndexError:
-                        lista_last_message.append("No se ha enviado ningún mensaje")
-            lista_usuarios = []
-            usuarios = Usuario.objects.filter(~Q(usuario=request.user))
-            for u in usuarios:
-                lista_usuarios.append(u)
-            return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
-                                                    'usuario_actual': Usuario.objects.filter(usuario=request.user)[0], 'last_message':lista_last_message, 'form':form,
+                        lista_chat_aux.append("No se ha enviado ningún mensaje")
+                lista_chat.append(lista_chat_aux)
+            return render(request, 'chat/index.html',{'notificaciones':notificaciones(request),'users': lista_mates, 'chats':lista_chat,
+                                                    'usuario_actual': Usuario.objects.filter(usuario=request.user)[0], 'form':form,
                                                     'error_grupo':mensaje_grupo})
         else:
-            return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[], 'nombrechats':[], 'usuario_actual': Usuario.objects.filter(usuario=request.user)[0],
-                                                    'last_message':[], 'form':form,'error_grupo':mensaje_grupo})
+            return render(request, 'chat/index.html',{'notificaciones':[],'users': [], 'chats':[],'usuario_actual': Usuario.objects.filter(usuario=request.user)[0],
+                                                    'form':form,'error_grupo':mensaje_grupo})
     else:
         return redirect("/login")
 
@@ -58,7 +56,6 @@ def room(request, room_name):
         #Comprobación para que no se fuerce la URL
         try:
             chatroom = ChatRoom.objects.filter(name = room_name)[0]
-            lista_participantes = []
         except IndexError:
             raise PermissionDenied
 
@@ -70,42 +67,27 @@ def room(request, room_name):
         #lista chats
         lista_mates = notificaciones_mates(request)
         lista_chat = []
-        lista_last_message = []
-        chats = ChatRoom.objects.all()
+        chats = ChatRoom.objects.all().order_by('-last_message')
         for c in chats:
+            lista_chat_aux = []
             if request.user in c.participants.all():
-                lista_chat.append(c)
+                lista_chat_aux.append(c)
                 try:
-                    lista_last_message.append(Fernet(c.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
+                    lista_chat_aux.append(Fernet(c.publicKey.encode()).decrypt(bytes(Chat.objects.filter(timestamp = c.last_message)[0].content,'utf-8')).decode())
                 except IndexError:
-                    lista_last_message.append("No se ha enviado ningún mensaje")
-            
-        lista_usuarios = []
-        usuarios = Usuario.objects.filter(~Q(usuario=request.user))
-        for u in usuarios:
-            lista_usuarios.append(u)
-
-        for p in chatroom.participants.all():
-            lista_participantes.append(p.username)
-        nombre_sala = ""
-        es_grupo = False
-        if chatroom.group():
-            nombre_sala = chatroom.room_name
-            es_grupo = True
-        else:
-            nombre_sala = chatroom.participants.all().filter(~Q(id=request.user.id))[0].username
-
+                    lista_chat_aux.append("No se ha enviado ningún mensaje")
+            lista_chat.append(lista_chat_aux)
+        
         usuario_opuesto = ""
-        if es_grupo== False:
+        if chatroom.group()== False:
             usuario_opuesto = Usuario.objects.filter(usuario=chatroom.participants.all().filter(~Q(id=request.user.id))[0])[0]
 
         # Comprobación si el usuario pertenece a los participantes de ese grupo
-        if request.user.username in lista_participantes :
+        if request.user in chatroom.participants.all() :
 
-            return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'nombrechats':lista_usuarios, 
-                                                    'form':form, 'nombre_sala':nombre_sala, 'es_grupo':es_grupo, 'last_message':lista_last_message,
+            return render(request, 'chat/room.html', {'room_name': room_name,'users': lista_mates, 'chats':lista_chat, 'form':form,
                                                     'usuario_actual':Usuario.objects.filter(usuario=request.user)[0], 'usuario_opuesto':usuario_opuesto,
-                                                    'error_grupo':mensaje_grupo})
+                                                    'error_grupo':mensaje_grupo, 'chat_actual':chatroom})
         else:
             raise PermissionDenied
     else:
