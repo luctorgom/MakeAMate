@@ -10,10 +10,6 @@ from django.core.exceptions import PermissionDenied
 
 class ChatTestCase(TestCase):
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
-    
     def setUp(self):
         user1 = User(id=0,username="us1")
         user1.set_password('123')
@@ -145,10 +141,10 @@ class ChatTestCase(TestCase):
         response3 = c.get('/chat/1/')
         self.assertEqual(response3.context['chat_actual'].room_name, 'GrupoTest')
 
-    async def test_consumer(self):
-        application = WebsocketConsumer.as_asgi()
-        communicator = WebsocketCommunicator(application, path="/chat/5/")
-        connected, subprotocol = await communicator.connect()
-        assert connected
-        await communicator.send_to(text_data="hola")
-        await communicator.disconnect()
+    # async def test_consumer(self):
+    #     application = WebsocketConsumer.as_asgi()
+    #     communicator = WebsocketCommunicator(application, path="/chat/5/")
+    #     connected, subprotocol = await communicator.connect()
+    #     assert connected
+    #     await communicator.send_to(text_data="hola")
+    #     await communicator.disconnect()
