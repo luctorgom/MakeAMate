@@ -898,47 +898,43 @@
     <div id="sidepanel">
       <div id="profile">
         <div class="wrap">
-          <img id="profile-img" src="{{usuario_actual.url_perfil_relativa}}" class="online foto-perfil" alt=""/>
+          <img id="profile-img" src="{{usuario_actual.url_perfil_relativa}}" class="online foto-perfil" alt="" />
           <p>{{usuario_actual}}</p>
         </div>
       </div>
       <div id="contacts">
         <ul>
 
+
           {% for c in chats %}
-          <a class="posiblesChats" style="text-decoration: none;" href="/chat/{{c.name}}">
+          <a class="posiblesChats" style="text-decoration: none;" href="/chat/{{c.0.name}}">
             <li class="contact">
-              {% if c.group is not True %}
-              {% for p in c.participants.all %}
-              {% if request.user != p%}
-              {% for n in nombrechats%}
-              {% if p.username == n.usuario.username %}
+              {% if c.0.group is not True %}
+              {% for p in c.0.get_usuarios %}
+              {% if request.user != p.usuario%}
               <div class="wrap">
-                <div id="room_id" hidden>{{c.name}}</div>
-                <img src="{{n.url_perfil_relativa}}" alt="" class="foto-perfil"/>
+                <img src="{{p.url_perfil_relativa}}" alt="" class="foto-perfil"/>
                 <div class="meta">
-                  <p class="name">{{n.usuario}}</p>
-                  <p class="preview" id="preview-{{c.name}}"></p>
+                  <p class="name">{{p.usuario.first_name}}</p>
+                  <p class="preview" id="preview-{{c.0.name}}">{{c.1}}</p>
                 </div>
               </div>
             </li>
           </a>
-          {%endif%}
-          {% endfor %}
           {% endif %}
           {% endfor %}
           {% else %}
           <div class="wrap">
-            <div id="room_id" hidden>{{c.name}}</div>
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyGfUyNVGSmiYJKOHNr-VpBXr33B99GFCZA&usqp=CAU.png"
               alt="" class="foto-perfil"/>
             <div class="meta">
-              <p class="name">{{c.room_name}}</p>
-              <p class="preview" id="preview-{{c.name}}"></p>
+              <p class="name">{{c.0.room_name}}</p>
+              <p class="preview" id="preview-{{c.0.name}}">{{c.1}}</p>
             </div>
           </div>
           </li></a>
+
           {%endif%}
           </li>
           </a>
@@ -986,10 +982,6 @@
 
     </div>
 
-    <div class="name" id="usuarioProv" hidden>{{request.user.username}}</div>
-    <div class="name" id="es_grupo" hidden>{{es_grupo}}</div>
-    <div class="name" id="list_message" hidden>{{last_message}}</div>
-
 </body>
 {{ room_name|json_script:"room-name" }}
 <script
@@ -997,24 +989,6 @@
 <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 <script>
   const roomName = JSON.parse(document.getElementById('room-name').textContent);
-  var last_messages = document.getElementById('list_message').textContent;
-  chatlist = document.querySelectorAll("#room_id");
-  console.log(chatlist[0].textContent)
-  console.log(last_messages)
-
-  function last_messages_for(last_messages, chatlist) {
-    last_messages = last_messages.replace("[", "")
-    last_messages = last_messages.replace("]", "")
-    last_messages = last_messages.replaceAll("'", "")
-    list_messages = last_messages.split(",")
-    var results = [], item;
-    for (var i = 0; i < list_messages.length; i++) {
-      search = "preview-" + chatlist[i].textContent
-      item = document.getElementById(search);
-      item.innerHTML = list_messages[i]
-    }
-  }
-  last_messages_for(last_messages, chatlist)
   function openForm() {
     document.getElementById("myForm").style.display = "block";
     document.getElementById("messages").style.display = "none";

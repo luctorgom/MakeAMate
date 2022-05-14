@@ -264,8 +264,12 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 12px;
 }
 
-.btn-light, .btn-light:active {
+.btn-light{
     background-color: rgba(153,153,204,1) !important;
+}
+
+.btn-light:hover {
+    background-color: rgb(128, 128, 203) !important;
 }
 
 /*animacion*/
