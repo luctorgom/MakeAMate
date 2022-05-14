@@ -9,6 +9,11 @@ from django.core.exceptions import PermissionDenied
 # Create your tests here.
 
 class ChatTestCase(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+    
     def setUp(self):
         user1 = User(id=0,username="us1")
         user1.set_password('123')
