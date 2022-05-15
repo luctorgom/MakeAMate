@@ -313,7 +313,7 @@ p {
                                 </div>
                             </div> <label class="fieldlabels " style="font-family: Nunito"  >Email: * </label> <br>  <span class = "errorlist"> {{  form.correo.errors | striptags  }} </span>  {{  form.correo  }} <label class="fieldlabels">Usuario: *</label> <br>  <span class = "errorlist"> {{  form.username.errors | striptags  }} </span>  {{  form.username  }}  <label class="fieldlabels">Contraseña: *</label> <br>  <span class = "errorlist"> {{  form.password.errors | striptags  }} </span>  {{  form.password  }}  <label class="fieldlabels">Confirma contraseña: *</label>  <br>  <span class = "errorlist"> {{  form.password2.errors | striptags  }} </span> {{  form.password2  }} 
 
-                            <label class="fieldlabels" style="font-family: Nunito" >Teléfono: * (Debe empezar con el prefijo de tu pais, por ej +34)</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
+                            <label class="fieldlabels" style="font-family: Nunito" >Teléfono: * (El prefijo predeterminado es +34)</label> <br>  <span class = "errorlist"> {{  form.telefono_usuario.errors | striptags  }} </span>  {{  form.telefono_usuario }} 
 
                         </div><input type="button" style="font-family: Nunito"  name="next" id="next1" class="next action-button" value="Siguiente" />
                         ¿Ya estas registrado? <a href="/login" class="text">Accede a tu cuenta </a>
@@ -542,7 +542,8 @@ p {
 <script>
 function validar1(){
     var regexcorreo = /^([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+/;
-    var phoneno = /^\+?([0-9]{2})\)??([0-9]{9})$/;
+    var regex_no_prefijo = /^[0-9]{9}$/;
+    var regex_prefijo = /^\+[1-9]\d{1,14}$/; // E.164 Format
     var alerta = ""
     var correo = $("#id_correo").val();
         if (correo==="" || correo===null) {
@@ -576,9 +577,10 @@ function validar1(){
         var telefono = $("#id_telefono_usuario").val();
         if (telefono==="" || telefono===null) {
             alerta += "El teléfono no puede estar vacío \n"
-        }else if(!(telefono.match(phoneno))){
-            alerta += "El teléfono necesita el prefijo de tu pais y ademas no sigue el patron correcto \n"
+        }else if(!(telefono.match(regex_prefijo) || telefono.match(regex_no_prefijo))) {
+            alerta += "Inserte un teléfono válido"
         }
+        
         if(!(alerta === "")){
             alert(alerta)
             return false;

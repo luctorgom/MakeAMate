@@ -5,9 +5,8 @@ from django.contrib.auth.models import User
 import re
 from datetime import *
 from .models import Tag,Aficiones
-
 class CambiarTelefonoForm(forms.Form):
-    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '675942602'}))
     modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
 
     def clean_modificar_telefono(self):
@@ -20,12 +19,18 @@ class CambiarTelefonoForm(forms.Form):
 
     def clean_telefono_usuario(self):
         telefono_usuario = self.cleaned_data.get('telefono_usuario')
-        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+        regex_no_prefijo = re.compile(r"^\d{9}$")
+        regex_prefijo = re.compile(r"^\+[1-9]\d{1,14}$") # E.164 Format         
+        tiene_prefijo = re.fullmatch(regex_prefijo, telefono_usuario)
+        no_tiene_prefijo = re.fullmatch(regex_no_prefijo, telefono_usuario)
 
-        if not re.fullmatch(regex, telefono_usuario):
+        if not (tiene_prefijo or no_tiene_prefijo):
             raise forms.ValidationError('Inserte un teléfono válido')
-
+        elif no_tiene_prefijo:
+            telefono_usuario = "+34"+telefono_usuario
+        
         existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
+
         if existe_telefono:
             raise forms.ValidationError('El teléfono ya está en uso')
 
@@ -51,7 +56,7 @@ class UsuarioForm(forms.Form):
     correo = forms.EmailField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}),error_messages={'invalid': 'Inserta un correo electrónico válido'})
     piso_encontrado = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
     zona_piso = forms.CharField(required=False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class2'}))
-    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '675942602'}))
     foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
     fecha_nacimiento = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS, error_messages={'invalid': 'Inserta una fecha válida'})
     lugar = forms.CharField(required=False, max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
@@ -198,11 +203,16 @@ class UsuarioForm(forms.Form):
 
     def clean_telefono_usuario(self):
         telefono_usuario = self.cleaned_data.get('telefono_usuario')
-        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+        regex_no_prefijo = re.compile(r"^\d{9}$")
+        regex_prefijo = re.compile(r"^\+[1-9]\d{1,14}$") # E.164 Format         
+        tiene_prefijo = re.fullmatch(regex_prefijo, telefono_usuario)
+        no_tiene_prefijo = re.fullmatch(regex_no_prefijo, telefono_usuario)
 
-        if not re.fullmatch(regex, telefono_usuario):
+        if not (tiene_prefijo or no_tiene_prefijo):
             raise forms.ValidationError('Inserte un teléfono válido')
-
+        elif no_tiene_prefijo:
+            telefono_usuario = "+34"+telefono_usuario
+        
         existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
 
         if existe_telefono:

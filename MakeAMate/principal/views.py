@@ -468,7 +468,7 @@ def twilio(request):
 
 
     if request.method == "GET":
-        verification = start_verification(telefono)
+        # verification = start_verification(telefono)
         form_sms = SmsForm(initial = {'modificar_telefono': 'No'})
         form_tfno = CambiarTelefonoForm()
 
@@ -485,20 +485,20 @@ def twilio(request):
                 return redirect("registerSMS")
             else:
                 form_sms = SmsForm()
-                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
 
 
         if "verificarCodigo" in request.POST:
             form_sms = SmsForm(request.POST, request.FILES)
             if form_sms.is_valid():
                 codigo = form_sms.cleaned_data["codigo"]                
-                return check_verification(telefono, codigo)
+                # return check_verification(telefono, codigo)
             else:
                 form_tfno = CambiarTelefonoForm()
-                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
 
 
-    return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+    return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
 
 def profile_view(request):
     if not request.user.is_authenticated:

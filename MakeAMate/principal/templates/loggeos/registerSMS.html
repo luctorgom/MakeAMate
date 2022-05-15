@@ -268,7 +268,7 @@
                         <fieldset>
                             <div class="form-card">
                                 <div class="row codigo">
-                                    <label class="fieldlabels ">Escribe el código: </label><span class = "errorlist"> {{  form_sms.codigo.errors | striptags  }} </span>  
+                                    <label class="fieldlabels ">Escribe el código de verificación que se ha enviado al número {{ usuario.telefono }}:</label><span class = "errorlist"> {{  form_sms.codigo.errors | striptags  }} </span>  
                                     <div class="codigo">{{ form_sms.codigo }}</div>
                                 </div>
                             </div>
