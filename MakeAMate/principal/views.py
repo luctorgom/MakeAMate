@@ -468,7 +468,7 @@ def twilio(request):
 
 
     if request.method == "GET":
-        # verification = start_verification(telefono)
+        verification = start_verification(telefono)
         form_sms = SmsForm(initial = {'modificar_telefono': 'No'})
         form_tfno = CambiarTelefonoForm()
 
@@ -492,7 +492,7 @@ def twilio(request):
             form_sms = SmsForm(request.POST, request.FILES)
             if form_sms.is_valid():
                 codigo = form_sms.cleaned_data["codigo"]                
-                # return check_verification(telefono, codigo)
+                return check_verification(telefono, codigo)
             else:
                 form_tfno = CambiarTelefonoForm()
                 return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
