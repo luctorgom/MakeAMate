@@ -25,11 +25,19 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+	<link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+	<link rel="icon" type="image/png" href="/static/images/favicon.ico"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="../../static/assets_base/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/assets_base/fonts/fontawesome-all.min.css">
+    <script src="../../static/assets_base/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/assets_base/js/bs-init.js"></script>
+    <script src="../../static/assets_base/js/theme.js"></script>
 <!--===============================================================================================-->
 
 {% endblock %}
 {% block content %}
-	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
@@ -67,7 +75,30 @@
 							Registrarse
 						</a>
 					</div>
-					
+				<body>
+					<div class="modal fade" id="myModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<img width="50vh" height="50vh" class="logo" src="/static/logotipo.png">
+									<h5 class="modal-title" id="exampleModalLabel">Restaurar contraseña</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<p>Si ha olvidado su contraseña y desea cambiarla envíe un correo a la siguiente dirección <a href="mailto:makeamate.soporte@gmail.com?subject=Borrar%20datos">makeamate.soporte@gmail.com</a>.</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-bs-dismiss="modal">De acuerdo</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</body>	
+
+					<div class="w-full text-center">¿Has olvidado tu contraseña? Haz click<a style="cursor:pointer; color:blueviolet;" id="boton1" data-bs-toggle="modal" data-bs-target="#myModal3"> aquí</a></div>
+					 
+
 
 				</form>
 
