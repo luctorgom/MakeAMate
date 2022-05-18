@@ -69,7 +69,7 @@
                   <div class="col-sm-8 align-self-center">
                     <div class="card-body">
                       {% if perfil.descripcion == null %}
-                        <p class="card-text text-center description">Soy {{perfil.usuario.username}} estudio {{perfil.estudios}} en {{perfil.lugar}}</p>
+                        <p class="card-text text-center description">Soy {{perfil.usuario.username}} estudio en {{perfil.lugar}}</p>
                       {% elif perfil.descripcion != null %}
                         <p class="card-text text-center description">{{perfil.descripcion}}</p>
                       {% endif %}

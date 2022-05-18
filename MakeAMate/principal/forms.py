@@ -6,8 +6,9 @@ import re
 from datetime import *
 from .models import Tag,Aficiones
 
+
 class CambiarTelefonoForm(forms.Form):
-    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '675942602'}))
     modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
 
     def clean_modificar_telefono(self):
@@ -20,12 +21,18 @@ class CambiarTelefonoForm(forms.Form):
 
     def clean_telefono_usuario(self):
         telefono_usuario = self.cleaned_data.get('telefono_usuario')
-        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+        regex_no_prefijo = re.compile(r"^\d{9}$")
+        regex_prefijo = re.compile(r"^\+[1-9]\d{1,14}$") # E.164 Format         
+        tiene_prefijo = re.fullmatch(regex_prefijo, telefono_usuario)
+        no_tiene_prefijo = re.fullmatch(regex_no_prefijo, telefono_usuario)
 
-        if not re.fullmatch(regex, telefono_usuario):
+        if not (tiene_prefijo or no_tiene_prefijo):
             raise forms.ValidationError('Inserte un teléfono válido')
-
+        elif no_tiene_prefijo:
+            telefono_usuario = "+34"+telefono_usuario
+        
         existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
+
         if existe_telefono:
             raise forms.ValidationError('El teléfono ya está en uso')
 
@@ -51,7 +58,7 @@ class UsuarioForm(forms.Form):
     correo = forms.EmailField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Correo Electrónico'}),error_messages={'invalid': 'Inserta un correo electrónico válido'})
     piso_encontrado = forms.ChoiceField(choices=((True, 'Si'),(False,'No')))
     zona_piso = forms.CharField(required=False, max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Describe la zona de tu piso', 'class': 'select_field_class2'}))
-    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '+34675942602'}))
+    telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '675942602'}))
     foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
     fecha_nacimiento = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'dd-mm-yyyy'}), input_formats=settings.DATE_INPUT_FORMATS, error_messages={'invalid': 'Inserta una fecha válida'})
     lugar = forms.CharField(required=False, max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
@@ -193,16 +200,23 @@ class UsuarioForm(forms.Form):
         aficiones = self.cleaned_data.get('aficiones')
         if aficiones.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+        if aficiones.count() > 5:
+            raise forms.ValidationError('Por favor, elige como máximo cinco aficiones que te definan')
 
         return aficiones
 
     def clean_telefono_usuario(self):
         telefono_usuario = self.cleaned_data.get('telefono_usuario')
-        regex = re.compile(r"^\+\d{1,3}\d{9}$")
+        regex_no_prefijo = re.compile(r"^\d{9}$")
+        regex_prefijo = re.compile(r"^\+[1-9]\d{1,14}$") # E.164 Format         
+        tiene_prefijo = re.fullmatch(regex_prefijo, telefono_usuario)
+        no_tiene_prefijo = re.fullmatch(regex_no_prefijo, telefono_usuario)
 
-        if not re.fullmatch(regex, telefono_usuario):
+        if not (tiene_prefijo or no_tiene_prefijo):
             raise forms.ValidationError('Inserte un teléfono válido')
-
+        elif no_tiene_prefijo:
+            telefono_usuario = "+34"+telefono_usuario
+        
         existe_telefono = Usuario.objects.filter(telefono=telefono_usuario).exists()
 
         if existe_telefono:
@@ -219,12 +233,19 @@ class UsuarioForm(forms.Form):
         if any(chr.isdigit() for chr in piso):
             raise forms.ValidationError('El piso no debe contener números')       
         return piso
+    
+    def clean_foto_usuario(self):
+        foto_usuario = self.cleaned_data.get('foto_usuario')
+
+        if foto_usuario == None:
+            raise forms.ValidationError("Debe añadir una foto")
+        return foto_usuario
 
 #Formulario para editar perfil
 class UsuarioFormEdit(forms.Form):
     piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Sí'),(False,'No')))
     zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
-    lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    lugar = forms.CharField(required=False,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
     desactivar_perfil = forms.ChoiceField(choices=((True, 'Sí'),(False,'No')))
     estudios = forms.CharField(required = False, max_length = 100,widget=forms.TextInput(attrs={'placeholder': 'Ingeniería Informática'}))
@@ -272,6 +293,8 @@ class UsuarioFormEdit(forms.Form):
         aficiones = self.cleaned_data.get('aficiones')
         if aficiones.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+        if aficiones.count() > 5:
+            raise forms.ValidationError('Por favor, elige como máximo cinco aficiones que te definan')
 
         return aficiones
 
@@ -293,6 +316,8 @@ class UsuarioFormEdit(forms.Form):
     def clean_lugar(self):
         lugar = self.cleaned_data.get('lugar')
 
+        if len(lugar) <= 0:
+            raise forms.ValidationError('El lugar no debe estar vacío')
         if len(lugar) > 40:
             raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
         if any(chr.isdigit() for chr in lugar):
@@ -327,7 +352,6 @@ class ChangePasswordForm(forms.Form):
 
 class ChangePhotoForm(forms.Form):
     foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
-    #foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
     
     def clean_foto_usuario(self):
         foto_usuario = self.cleaned_data.get('foto_usuario')

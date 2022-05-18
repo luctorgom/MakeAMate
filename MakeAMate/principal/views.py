@@ -410,12 +410,12 @@ def registro(request):
 
 
 def twilio(request):
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated or Usuario.objects.get(usuario = request.user).sms_validado:
         redirect(homepage)
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
-    servicio = "VA51738886d417a131439dac49bb9b60c2"
+    servicio = "VAfd6998ee6818ae4ec6d0344f5a25c96d"
     user = request.user
     perfil = Usuario.objects.get(usuario = user)
     piso = perfil.piso
@@ -485,7 +485,7 @@ def twilio(request):
                 return redirect("registerSMS")
             else:
                 form_sms = SmsForm()
-                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
 
 
         if "verificarCodigo" in request.POST:
@@ -495,10 +495,10 @@ def twilio(request):
                 return check_verification(telefono, codigo)
             else:
                 form_tfno = CambiarTelefonoForm()
-                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+                return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
 
 
-    return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno})
+    return render(request, 'loggeos/registerSMS.html', {'form_sms': form_sms, 'form_tfno': form_tfno, 'usuario':perfil})
 
 def profile_view(request):
     if not request.user.is_authenticated:

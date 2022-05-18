@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 import base64, os
 from datetime import datetime
 from django.utils import timezone
+from principal.models import Usuario
 
 class Chat(models.Model):
     content = models.TextField(max_length=2000)
@@ -26,6 +27,9 @@ class ChatRoom(models.Model):
             return True
         else:
             return False
+
+    def get_usuarios(self):
+        return [Usuario.objects.get(usuario=u) for u in self.participants.all()]
 
 class LastConnection(models.Model):
     name = models.ForeignKey('ChatRoom', on_delete=models.CASCADE)
