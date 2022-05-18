@@ -1,4 +1,4 @@
-name: Python application  
+name: Python application   
 
 on: [push] 
 
@@ -57,3 +57,4 @@ jobs:
           heroku_app_name: "makeamate-ppl-deploy"
           heroku_email: "luctorgom@alum.us.es"
     - run: heroku run -a makeamate-ppl-deploy sh -c "python MakeAMate/manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='makeamate.ISPP2022') or User.objects.create_superuser('makeamate.ISPP2022', 'admin@example.com', 'makeamate.ISPP2022')\""
+
