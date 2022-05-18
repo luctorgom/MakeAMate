@@ -45,7 +45,7 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: MakeAMate/coverage.xml
   deploy:
-    if: ${{github.ref == 'refs/heads/despliegue-ppl-deploy'}} 
+    if: ${{github.ref == 'refs/heads/despliegue-PPL'}} 
     needs: build
     runs-on: ubuntu-latest
     steps:
