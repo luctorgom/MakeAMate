@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 import re
 from datetime import *
 from .models import Tag,Aficiones
+
+
 class CambiarTelefonoForm(forms.Form):
     telefono_usuario = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': '675942602'}))
     modificar_telefono = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((False,'No'),(True, 'Si')))
@@ -198,6 +200,8 @@ class UsuarioForm(forms.Form):
         aficiones = self.cleaned_data.get('aficiones')
         if aficiones.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+        if aficiones.count() > 5:
+            raise forms.ValidationError('Por favor, elige como máximo cinco aficiones que te definan')
 
         return aficiones
 
@@ -241,7 +245,7 @@ class UsuarioForm(forms.Form):
 class UsuarioFormEdit(forms.Form):
     piso_encontrado = forms.ChoiceField(error_messages={'required': 'El campo es obligatorio'},choices=((True, 'Sí'),(False,'No')))
     zona_piso = forms.CharField(required = False, max_length = 100, error_messages={'required': 'El campo es obligatorio'}, widget=forms.TextInput(attrs={'placeholder': 'La Macarena'}))
-    lugar = forms.CharField(required=True,error_messages={'required': 'El campo es obligatorio'},max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
+    lugar = forms.CharField(required=False,max_length=40,widget=forms.TextInput(attrs={'placeholder': 'Ciudad de estudios'}))
     genero = forms.ChoiceField(choices=(('F', 'Femenino'),('M','Masculino'),('O','Otro')),error_messages={'required': 'El campo es obligatorio'},required=True)
     desactivar_perfil = forms.ChoiceField(choices=((True, 'Sí'),(False,'No')))
     estudios = forms.CharField(required = False, max_length = 100,widget=forms.TextInput(attrs={'placeholder': 'Ingeniería Informática'}))
@@ -289,6 +293,8 @@ class UsuarioFormEdit(forms.Form):
         aficiones = self.cleaned_data.get('aficiones')
         if aficiones.count() < 3:
             raise forms.ValidationError('Por favor, elige al menos tres aficiones que te gusten')
+        if aficiones.count() > 5:
+            raise forms.ValidationError('Por favor, elige como máximo cinco aficiones que te definan')
 
         return aficiones
 
@@ -310,6 +316,8 @@ class UsuarioFormEdit(forms.Form):
     def clean_lugar(self):
         lugar = self.cleaned_data.get('lugar')
 
+        if len(lugar) <= 0:
+            raise forms.ValidationError('El lugar no debe estar vacío')
         if len(lugar) > 40:
             raise forms.ValidationError('El lugar debe contener menos de 40 caracteres')
         if any(chr.isdigit() for chr in lugar):
@@ -344,7 +352,6 @@ class ChangePasswordForm(forms.Form):
 
 class ChangePhotoForm(forms.Form):
     foto_usuario = forms.ImageField(label="Foto", error_messages={'required': 'El campo es obligatorio'})
-    #foto_usuario = forms.ImageField(required=False, label="Inserta una foto")
     
     def clean_foto_usuario(self):
         foto_usuario = self.cleaned_data.get('foto_usuario')
