@@ -393,11 +393,11 @@ def registro(request):
                 perfil = Usuario.objects.create(usuario = user, piso = piso,
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
                 
-                genero = form_genero,foto = form_foto,telefono=form_telefono_usuario)
+                genero = form_genero,foto = form_foto,telefono=form_telefono_usuario, sms_validado = True)
             else:
                 perfil = Usuario.objects.create(usuario = user, 
                 fecha_nacimiento = form_fecha_nacimiento, lugar = form_lugar,
-                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario) 
+                genero = form_genero, foto = form_foto, telefono=form_telefono_usuario, sms_validado = True) 
 
             perfil.tags.set(form_tags)
             perfil.aficiones.set(form_aficiones)
